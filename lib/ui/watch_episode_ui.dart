@@ -199,9 +199,15 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
   @override
   void dispose() {
     super.dispose();
-    timer.cancel();
+    try{
+      timer.cancel();
     _videoPlayerController.dispose();
     _chewieController.dispose();
+    }
+    catch (error){
+      //means the controllers were not initialized due to no episodes being available
+    }
+    
   }
 
   @override
