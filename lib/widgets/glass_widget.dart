@@ -2,28 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 
 class GlassWidget extends StatelessWidget {
-  late double _height, _width;
-  late Widget _child;
-  late Color _color;
+  final double height, width;
+  final Widget child;
+  final Color color;
 
-  GlassWidget(
-      {required double height,
-      required double width,
-      required Widget child,
-      required Color color}) {
-    _height = height;
-    _width = width;
-    _child = child;
-    _color = color;
-  }
+  const GlassWidget(
+      {super.key,
+      required this.height,
+      required this.width,
+      required this.child,
+      required this.color});
 
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-        height: _height,
-        width: _width,
+        height: height,
+        width: width,
         blur: 9,
-        color: _color.withOpacity(0.2),
+        color: color.withOpacity(0.2),
         // gradient: LinearGradient(
         //   begin: Alignment.topLeft,
         //   end: Alignment.bottomRight,
@@ -38,6 +34,6 @@ class GlassWidget extends StatelessWidget {
         // shape: BoxShape.circle,
         borderRadius: BorderRadius.circular(32),
         shadowColor: Colors.black.withOpacity(0.24),
-        child: _child);
+        child: child);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
 
 //local imports
 import '../screens/home_screen.dart';
@@ -10,8 +9,8 @@ import '../screens/settings_screen.dart';
 import '../ui/search_box_ui.dart';
 
 class GlassBottomBar extends StatefulWidget {
-  late int currIndex;
-  GlassBottomBar({super.key, required this.currIndex});
+  final int currIndex;
+  const GlassBottomBar({super.key, required this.currIndex});
 
   @override
   State<GlassBottomBar> createState() => _GlassBottomBarState();
@@ -51,7 +50,7 @@ class _GlassBottomBarState extends State<GlassBottomBar> {
                   showModalBottomSheet(
                       backgroundColor: Colors.transparent,
                       context: context,
-                      builder: (context) => SearchBoxUi());
+                      builder: (context) => const SearchBoxUi());
                 },
                 icon: Icon(CupertinoIcons.search,
                     color: widget.currIndex == 1 ? active : inactive)),

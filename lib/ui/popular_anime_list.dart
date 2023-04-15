@@ -20,7 +20,7 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
   List<Anime> list = [];
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     Provider.of<PopularAnime>(context, listen: false)
         .getPopularAnime()
@@ -36,13 +36,13 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
     list = Provider.of<PopularAnime>(context, listen: true).popularList;
 
     return _isLoading == true
-        ? Center(child: CupertinoActivityIndicator(color: Colors.white,))
-        : Container(
+        ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
+        : SizedBox(
           height: 220,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return GlassShowPanel(
             id: list[index].details["id"],

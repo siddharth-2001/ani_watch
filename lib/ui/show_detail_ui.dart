@@ -12,29 +12,26 @@ import '../ui/recommendation_list.dart';
 import '../provider/anime.dart';
 
 class ShowDetailUi extends StatefulWidget {
-  String _id = "";
+  final String id;
 
-  ShowDetailUi({required id}) {
-    _id = id;
-  }
+  const ShowDetailUi({super.key, required this.id});
 
   @override
   State<ShowDetailUi> createState() => _ShowDetailUiState();
 }
 
 class _ShowDetailUiState extends State<ShowDetailUi> {
-  var details;
+  Map details = {};
   late Anime anime;
   bool _isLoading = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Provider.of<AllAnime>(context, listen: false)
-        .getAnimeById(widget._id)
+        .getAnimeById(widget.id)
         .then((value) {
       anime = Provider.of<AllAnime>(context, listen: false)
-          .getAnimeFromMemory(widget._id);
+          .getAnimeFromMemory(widget.id);
 
       details = anime.details;
 
@@ -50,11 +47,12 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
   Widget genreText() {
     String result = "";
 
-    if (details["genres"].length == 0)
+    if (details["genres"].length == 0) {
       return Text(
         "Genres:  Not Available",
         style: detailLabelStyle,
       );
+    }
 
     for (var element in details["genres"]) {
       result = "${result + element},  ";
@@ -67,7 +65,6 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
 
   @override
   Widget build(BuildContext context) {
-    final screenPadding = MediaQuery.of(context).viewPadding;
     final theme = Theme.of(context);
     final screen = MediaQuery.of(context).size;
 
@@ -90,12 +87,12 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                Container(
+                SizedBox(
                   height: screen.height,
                   width: screen.width,
                   child: Column(
                     children: [
-                      Container(
+                      SizedBox(
                         height: screen.height * 0.2,
                         width: screen.width,
                         child: Image.network(
@@ -111,7 +108,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                           },
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         height: screen.height * 0.8,
                         width: screen.width,
                         child:
@@ -227,9 +224,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                             function: () {
                                               Navigator.of(context).pushNamed(
                                                   WatchEpisodeScreen.routeName,
-                                                  arguments: {
-                                                    "id": widget._id
-                                                  });
+                                                  arguments: {"id": widget.id});
                                             }),
                                         const SizedBox(
                                           width: 10,

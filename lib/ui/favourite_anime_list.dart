@@ -21,7 +21,7 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     Provider.of<AllAnime>(context, listen: false)
         .fetchLocalFavData()
@@ -42,13 +42,13 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
     final padding = MediaQuery.of(context).padding;
 
     return _isLoading
-        ? Center(child: CupertinoActivityIndicator(color: Colors.white,))
+        ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
         : Container(
-            child: favouriteList.length == 0
-                ? Text("Nothing to show", style: TextStyle(color: Colors.white,),)
+            child: favouriteList.isEmpty
+                ? const Text("Nothing to show", style: TextStyle(color: Colors.white,),)
                 : ListView.builder(
                     padding: EdgeInsets.only(top: 0, bottom: padding.bottom),
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: favouriteList.length,
                     itemBuilder: (context, index) {
                       final anime = favouriteList[index].details;

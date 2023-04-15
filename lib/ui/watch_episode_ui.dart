@@ -50,7 +50,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       showControls: true,
       zoomAndPan: true,
       controlsSafeAreaMinimum:
-          EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+          const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
       customControls: CupertinoControls(
           backgroundColor: Colors.black.withOpacity(0.15),
           iconColor: Colors.white,
@@ -429,8 +429,9 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                             fit: BoxFit.cover,
                                             loadingBuilder: (context, child,
                                                 loadingProgress) {
-                                              if (loadingProgress == null)
+                                              if (loadingProgress == null) {
                                                 return child;
+                                              }
                                               return const Center(
                                                 child:
                                                     CupertinoActivityIndicator(color: Colors.white,),

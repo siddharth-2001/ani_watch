@@ -2,23 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:flutter/cupertino.dart';
 //local imports
-import './glass_widget.dart';
 import '../screens/show_detail_screen.dart';
 
 class GlassRecentPanel extends StatelessWidget {
-  late String _id, _episodes, _name, _image;
+  final String id, episodes, name, image;
 
-  GlassRecentPanel(
+  const GlassRecentPanel(
       {super.key,
-      required String id,
-      required String episodes,
-      required String name,
-      required String image}) {
-    _id = id;
-    _episodes = episodes;
-    _name = name;
-    _image = image;
-  }
+      required this.id,
+      required this.episodes,
+      required this.name,
+      required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +34,7 @@ class GlassRecentPanel extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             Navigator.of(context)
-                .pushNamed(ShowDetailScreen.routeName, arguments: {"id": _id});
+                .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id});
           },
           child: Column(
             children: [
@@ -48,15 +42,17 @@ class GlassRecentPanel extends StatelessWidget {
                 height: 150,
                 clipBehavior: Clip.hardEdge,
                 width: screen.width - 30,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(32))),
                 child: Image.network(
-                  _image,
+                  image,
                   fit: BoxFit.cover,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return const Center(
-                      child: CupertinoActivityIndicator(color: Colors.white,),
+                      child: CupertinoActivityIndicator(
+                        color: Colors.white,
+                      ),
                     );
                   },
                 ),
@@ -67,7 +63,7 @@ class GlassRecentPanel extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      _name,
+                      name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: const TextStyle(
@@ -76,7 +72,7 @@ class GlassRecentPanel extends StatelessWidget {
                           color: Colors.white),
                     ),
                     Text(
-                      "Episode: $_episodes",
+                      "Episode: $episodes",
                       style: const TextStyle(fontSize: 11, color: Colors.white),
                     )
                   ],

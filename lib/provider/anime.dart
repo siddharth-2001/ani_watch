@@ -15,9 +15,9 @@ class Anime with ChangeNotifier {
   String _rating = "";
   String _status = "";
   String _image = "";
-  List<String> _genres = [];
-  List<Episode> _episodeList = [];
-  List<Anime> _recommendations = [];
+  final List<String> _genres = [];
+  final List<Episode> _episodeList = [];
+  final List<Anime> _recommendations = [];
 
   Anime(
       {required String id,
@@ -58,7 +58,7 @@ class Episode {
   String _episodeNumber = "";
   String _download = "";
   Duration _lastSeekPosition = Duration.zero;
-  bool _watched = false;
+  final bool _watched = false;
 
   // ignore: prefer_final_fields
   Map<String, String> _link = {};
@@ -128,7 +128,7 @@ class Episode {
 
 class AllAnime with ChangeNotifier {
   Map<String, Anime> animeData = {};
-  List<Anime> _searchList = [];
+  final List<Anime> _searchList = [];
   Map<String, dynamic> _favMap =
       {}; //This set saves anime id string since anime objects cant be used with local storage
   Future<void> fetchLocalFavData() async {
@@ -336,7 +336,7 @@ class AllAnime with ChangeNotifier {
 }
 
 class TrendingAnime with ChangeNotifier {
-  late List<Anime> _trendingList = [];
+  late final List<Anime> _trendingList = [];
 
   Future<void> getTrendingAnime() async {
     var url = Uri.https('api.consumet.org', '/meta/anilist/trending');

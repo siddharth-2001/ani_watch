@@ -14,7 +14,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
     return Scaffold(
-      bottomNavigationBar: GlassBottomBar(currIndex: 3),
+      bottomNavigationBar: const GlassBottomBar(currIndex: 3),
       extendBody: true,
       resizeToAvoidBottomInset: false,
       body: Container(

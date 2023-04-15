@@ -20,7 +20,6 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
   List<Anime> list = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Provider.of<TrendingAnime>(context, listen: false)
         .getTrendingAnime()
@@ -37,14 +36,14 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
     final size = MediaQuery.of(context).size;
 
     return _isLoading == true
-        ? Center(child: CupertinoActivityIndicator(color: Colors.white,))
-        : Container(
+        ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
+        : SizedBox(
             height: 220,
             width: size.width,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return GlassShowPanel(
                   id: list[index].details["id"],

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 //local imports
 import '../widgets/glass_show_panel.dart';
@@ -9,10 +8,9 @@ import '../widgets/glass_show_panel.dart';
 import '../provider/anime.dart';
 
 class RecommendedAnimeList extends StatefulWidget {
-  late List<Anime> _recommendationList;
-  RecommendedAnimeList({required List<Anime> recommendationList}) {
-    _recommendationList = recommendationList;
-  }
+  final List<Anime> recommendationList;
+  const RecommendedAnimeList(
+      {super.key, required this.recommendationList});
 
   @override
   State<RecommendedAnimeList> createState() => _RecommendedAnimeListState();
@@ -24,9 +22,8 @@ class _RecommendedAnimeListState extends State<RecommendedAnimeList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    list = widget._recommendationList;
+    list = widget.recommendationList;
     _isLoading = false;
   }
 
@@ -34,14 +31,17 @@ class _RecommendedAnimeListState extends State<RecommendedAnimeList> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return _isLoading == true
-        ? Center(child: CupertinoActivityIndicator(color: Colors.white,))
-        : Container(
-          height: 220,
-          width: size.width,
-          child: ListView.builder(
+        ? const Center(
+            child: CupertinoActivityIndicator(
+            color: Colors.white,
+          ))
+        : SizedBox(
+            height: 220,
+            width: size.width,
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return GlassShowPanel(
                   id: list[index].details["id"],
@@ -51,6 +51,6 @@ class _RecommendedAnimeListState extends State<RecommendedAnimeList> {
                 );
               },
             ),
-        );
+          );
   }
 }

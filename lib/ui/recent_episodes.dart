@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +20,7 @@ class _RecentEpisodeUiState extends State<RecentEpisodeUi> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     Provider.of<RecentEpisodes>(context, listen: false)
         .getRecentEpisodes()
@@ -39,13 +38,13 @@ class _RecentEpisodeUiState extends State<RecentEpisodeUi> {
    
     
     return _isLoading
-        ? CupertinoActivityIndicator()
-        : Container(
+        ? const CupertinoActivityIndicator()
+        : SizedBox(
           height: 200,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
-              physics: BouncingScrollPhysics(
+              physics: const BouncingScrollPhysics(
                   decelerationRate: ScrollDecelerationRate.fast),
               itemBuilder: (BuildContext context, int index) {
                 return GlassRecentPanel(

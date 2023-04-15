@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:provider/provider.dart';
 import 'package:stream_app/widgets/glass_bottom_bar.dart';
 
 //local imports
@@ -12,7 +8,6 @@ import '../ui/home_top_ui.dart';
 import '../ui/popular_anime_list.dart';
 
 //provider imports
-import '../provider/anime.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -21,15 +16,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenPadding = MediaQuery.of(context).viewPadding;
     final screen = MediaQuery.of(context).size;
-    final fontColor = Colors.white;
+    const fontColor = Colors.white;
 
     return Scaffold(
       backgroundColor: Colors.blueGrey.shade900,
       resizeToAvoidBottomInset: false,
       extendBody: true,
-      bottomNavigationBar: GlassBottomBar(
+      bottomNavigationBar: const GlassBottomBar(
         currIndex: 0,
       ),
       body: Stack(
@@ -55,7 +49,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 width: screen.width,
                 padding: const EdgeInsets.all(8),
-                child: Text(
+                child: const Text(
                   "Recent Episodes",
                   style: TextStyle(
                       color: fontColor,
@@ -64,13 +58,13 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              Container(
+              const SizedBox(
                 height: 200,
-                child: const RecentEpisodeUi()),
+                child: RecentEpisodeUi()),
               Container(
                 width: screen.width,
                 padding: const EdgeInsets.all(8),
-                child: Text(
+                child: const Text(
                   "Trending Anime",
                   style: TextStyle(
                       color: fontColor,
@@ -79,13 +73,13 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              Container(
+              const SizedBox(
                 height: 220,
-                child: const TrendingAnimeList()),
+                child: TrendingAnimeList()),
               Container(
                 width: screen.width,
                 padding: const EdgeInsets.all(8),
-                child: Text(
+                child: const Text(
                   "Popular Anime",
                   style: TextStyle(
                       color: fontColor,
@@ -94,9 +88,9 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              Container(
+              const SizedBox(
                 height: 220,
-                child: const PopularAnimeList()),
+                child: PopularAnimeList()),
             ],
           ),
         ],

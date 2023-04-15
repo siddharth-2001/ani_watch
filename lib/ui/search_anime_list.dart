@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 //local imports
@@ -26,12 +25,12 @@ class _SearchAnimeListState extends State<SearchAnimeList> {
       _isLoading = false;
     });
     return _isLoading == true
-        ? Center(child: CupertinoActivityIndicator())
+        ? const Center(child: CupertinoActivityIndicator())
         : ListView.builder(
             // scrollDirection: Axis.horizontal,
             padding: EdgeInsets.only(top: 0, bottom: padding.bottom),
             itemCount: list.length,
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return WideShowPanel(
                 id: list[index].details["id"],

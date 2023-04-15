@@ -10,12 +10,12 @@ import '../screens/search_screen.dart';
 import '../provider/anime.dart';
 
 class SearchBoxUi extends StatelessWidget {
-  SearchBoxUi({super.key});
+  const SearchBoxUi({super.key});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final _textController = TextEditingController();
+    final textController = TextEditingController();
     final theme = Theme.of(context);
 
     return GlassWidget(
@@ -28,14 +28,14 @@ class SearchBoxUi extends StatelessWidget {
             padding: const EdgeInsets.all(15.0),
             child: Container(
                 height: 50,
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 width: size.width,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(48)),
                 child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
+                    controller: textController,
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       icon: Icon(CupertinoIcons.search),
                     ),
@@ -46,7 +46,7 @@ class SearchBoxUi extends StatelessWidget {
           ElevatedButton(
               onPressed: () {
                 Provider.of<AllAnime>(context, listen: false)
-                    .searchAnime(_textController.value.text)
+                    .searchAnime(textController.value.text)
                     .then((value) {
                   Navigator.of(context).pushNamed(SearchScreen.routeName);
                 });
@@ -55,7 +55,7 @@ class SearchBoxUi extends StatelessWidget {
                   backgroundColor: theme.primaryColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(42))),
-              child: Text("Search"))
+              child: const Text("Search"))
         ],
       ),
     );

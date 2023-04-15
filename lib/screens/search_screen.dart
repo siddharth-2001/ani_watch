@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:stream_app/widgets/glass_bottom_bar.dart';
 
 //local imports
@@ -17,7 +16,7 @@ class SearchScreen extends StatelessWidget {
     final screen = MediaQuery.of(context).size;
 
     return Scaffold(
-      bottomNavigationBar: GlassBottomBar(currIndex: 1),
+      bottomNavigationBar: const GlassBottomBar(currIndex: 1),
       extendBody: true,
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -40,7 +39,7 @@ class SearchScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                       color: Colors.white, fontWeight: FontWeight.w800)),
             ),
-            Flexible(child: SearchAnimeList())
+            const Flexible(child: SearchAnimeList())
           ],
         ),
       ),

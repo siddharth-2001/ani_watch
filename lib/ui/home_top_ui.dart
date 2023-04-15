@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
 
 //local imports
-import '../widgets/glass_button.dart';
 
 class HomeUpperUi extends StatelessWidget {
   const HomeUpperUi({super.key});

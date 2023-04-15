@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 //local imports
 import '../widgets/glass_bottom_bar.dart';
@@ -17,7 +16,7 @@ class FavouriteScreen extends StatelessWidget {
     final screen = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     return Scaffold(
-      bottomNavigationBar: GlassBottomBar(
+      bottomNavigationBar: const GlassBottomBar(
         currIndex: 2,
       ),
       extendBody: true,
@@ -41,7 +40,7 @@ class FavouriteScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Text("Favourites", style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
             ),
-            Flexible(child: const FavouriteAnimeList()),
+            const Flexible(child: FavouriteAnimeList()),
           ],
         ),
       ),

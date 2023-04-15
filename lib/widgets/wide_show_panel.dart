@@ -8,15 +8,15 @@ import '../screens/show_detail_screen.dart';
 //provider imports
 
 class WideShowPanel extends StatelessWidget {
-  late String id;
-  late String name;
-  late String image;
-  late String episodes;
-  late String rating;
-  late List<String> genres;
-  late String year;
+  final String id;
+  final String name;
+  final String image;
+  final String episodes;
+  final String rating;
+  final List<String> genres;
+  final String year;
 
-  WideShowPanel({
+  const WideShowPanel({
     super.key,
     required this.id,
     required this.name,
@@ -33,7 +33,7 @@ class WideShowPanel extends StatelessWidget {
   Widget genreText() {
     String result = "";
 
-    if (genres.length == 0) return Text("Genres:  Not Available", style: detailLabelStyle,);
+    if (genres.isEmpty) return Text("Genres:  Not Available", style: detailLabelStyle,);
 
     for (var element in genres) {
       result = "${result + element},  ";
@@ -105,7 +105,7 @@ class WideShowPanel extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                           fontSize: 13),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -114,7 +114,7 @@ class WideShowPanel extends StatelessWidget {
                           CupertinoIcons.star,
                           color: Colors.yellow,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
@@ -123,17 +123,17 @@ class WideShowPanel extends StatelessWidget {
                                 : ((int.parse(rating) / 100) * 5)
                                     .toStringAsPrecision(2),
                             style: detailLabelStyle),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Text(year, style: detailLabelStyle),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Text("Episodes:  $episodes", style: detailLabelStyle),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     genreText(),

@@ -1,30 +1,25 @@
-import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:glassmorphism_ui/glassmorphism_ui.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:stream_app/widgets/glass_widget.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 //local imports
 import '../screens/show_detail_screen.dart';
 
 class GlassShowPanel extends StatelessWidget {
-  GlassShowPanel(
-      {required id, required name, required image, required episodes}) {
-    _id = id;
-    _image = image;
-    _name = name;
-    _episodes = episodes;
-  }
+  final String id, image, name, episodes;
 
-  String? _id, _image, _name, _episodes;
+  const GlassShowPanel(
+      {super.key,
+      required this.id,
+      required this.name,
+      required this.image,
+      required this.episodes});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
-      child: Container(
+      child: SizedBox(
         height: 220,
         width: 110,
         child: ZoomTapAnimation(
@@ -39,7 +34,7 @@ class GlassShowPanel extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               Navigator.of(context).pushNamed(ShowDetailScreen.routeName,
-                  arguments: {"id": _id});
+                  arguments: {"id": id});
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,12 +47,14 @@ class GlassShowPanel extends StatelessWidget {
                     borderRadius: BorderRadius.circular(32),
                   ),
                   child: Image.network(
-                    _image!,
+                    image,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return const Center(
-                        child: CupertinoActivityIndicator(color: Colors.white,),
+                        child: CupertinoActivityIndicator(
+                          color: Colors.white,
+                        ),
                       );
                     },
                   ),
@@ -66,7 +63,7 @@ class GlassShowPanel extends StatelessWidget {
                   padding:
                       const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                   child: Text(
-                    _name!,
+                    name,
                     // textAlign: TextAlign.start,
                     style: const TextStyle(
                         fontSize: 11,
@@ -79,7 +76,7 @@ class GlassShowPanel extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                   child: Text(
-                    "Episodes: $_episodes",
+                    "Episodes: $episodes",
                     style: const TextStyle(fontSize: 11, color: Colors.white),
                   ),
                 ),
