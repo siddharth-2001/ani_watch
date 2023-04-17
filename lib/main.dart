@@ -42,7 +42,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterDisplayMode.setHighRefreshRate();
+    
     return MaterialApp(
       theme: ThemeData(
           textTheme: GoogleFonts.montserratTextTheme(),

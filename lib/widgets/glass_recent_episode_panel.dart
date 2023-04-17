@@ -19,9 +19,8 @@ class GlassRecentPanel extends StatelessWidget {
     final screen = MediaQuery.of(context).size;
 
     return Container(
-      height: 200,
-      width: screen.width - 30,
-      padding: const EdgeInsets.all(8.0),
+      width: screen.width -50,
+      padding: EdgeInsets.symmetric(horizontal:screen.width * 0.015),
       child: ZoomTapAnimation(
         enableLongTapRepeatEvent: false,
         longTapRepeatDuration: const Duration(milliseconds: 100),
@@ -39,7 +38,7 @@ class GlassRecentPanel extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                height: 150,
+                height: screen.height * 0.17,
                 clipBehavior: Clip.hardEdge,
                 width: screen.width - 30,
                 decoration: const BoxDecoration(
@@ -58,7 +57,7 @@ class GlassRecentPanel extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 5.0),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

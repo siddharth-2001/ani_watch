@@ -17,51 +17,50 @@ class GlassShowPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: SizedBox(
-        height: 220,
-        width: 110,
-        child: ZoomTapAnimation(
-          enableLongTapRepeatEvent: false,
-          longTapRepeatDuration: const Duration(milliseconds: 100),
-          begin: 1.0,
-          end: 0.93,
-          beginDuration: const Duration(milliseconds: 20),
-          endDuration: const Duration(milliseconds: 120),
-          beginCurve: Curves.decelerate,
-          endCurve: Curves.fastOutSlowIn,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(ShowDetailScreen.routeName,
-                  arguments: {"id": id});
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 145,
-                  width: 110,
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                  child: Image.network(
-                    image,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return const Center(
-                        child: CupertinoActivityIndicator(
-                          color: Colors.white,
-                        ),
-                      );
-                    },
-                  ),
+    final size = MediaQuery.of(context).size;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
+      child: ZoomTapAnimation(
+        enableLongTapRepeatEvent: false,
+        longTapRepeatDuration: const Duration(milliseconds: 100),
+        begin: 1.0,
+        end: 0.93,
+        beginDuration: const Duration(milliseconds: 20),
+        endDuration: const Duration(milliseconds: 120),
+        beginCurve: Curves.decelerate,
+        endCurve: Curves.fastOutSlowIn,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id});
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: size.height *  0.16   ,
+                width: size.width * 0.27  ,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(1 / 5.5 * 145),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                child: Image.network(
+                  image,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CupertinoActivityIndicator(
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 4, right: 4, top: 8),
+                child: SizedBox(
+                  width: 110,
                   child: Text(
                     name,
                     // textAlign: TextAlign.start,
@@ -73,15 +72,8 @@ class GlassShowPanel extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: Text(
-                    "Episodes: $episodes",
-                    style: const TextStyle(fontSize: 11, color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -39,11 +39,11 @@ class _RecentEpisodeUiState extends State<RecentEpisodeUi> {
     
     return _isLoading
         ? const CupertinoActivityIndicator()
-        : SizedBox(
-          height: 200,
-          child: ListView.builder(
+        : 
+           ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
+              padding: EdgeInsets.symmetric(horizontal: 16),
               physics: const BouncingScrollPhysics(
                   decelerationRate: ScrollDecelerationRate.fast),
               itemBuilder: (BuildContext context, int index) {
@@ -54,7 +54,7 @@ class _RecentEpisodeUiState extends State<RecentEpisodeUi> {
                   image: list[index].details["image"]!,
                 );
               },
-            ),
+            
         );
   }
 }

@@ -20,35 +20,33 @@ class HomeScreen extends StatelessWidget {
     const fontColor = Colors.white;
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey.shade900,
-      resizeToAvoidBottomInset: false,
-      extendBody: true,
-      bottomNavigationBar: const GlassBottomBar(
-        currIndex: 0,
-      ),
-      body: Stack(
-        children: [
-          Container(
-            height: screen.height,
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-              colors: [Color(0xff1e2757), Color(0xff0a0d1d)],
-              stops: [0, 1],
-              begin: Alignment.bottomRight,
-              end: Alignment.topLeft,
-            )),
-          ),
-          ListView(
+        backgroundColor: Colors.blueGrey.shade900,
+        resizeToAvoidBottomInset: false,
+        extendBody: true,
+        bottomNavigationBar: const GlassBottomBar(
+          currIndex: 0,
+        ),
+        body: Container(
+          height: screen.height,
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+            colors: [Color(0xff1e2757), Color(0xff0a0d1d)],
+            stops: [0, 1],
+            begin: Alignment.bottomRight,
+            end: Alignment.topLeft,
+          )),
+          child: ListView(
             physics: const BouncingScrollPhysics(),
             children: [
-              const Padding(
+              Padding(
                 padding:
-                    EdgeInsets.only(top: 10, left: 15, right: 15, bottom: 10),
-                child: HomeUpperUi(),
+                    EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                child: const HomeUpperUi(),
               ),
               Container(
                 width: screen.width,
-                padding: const EdgeInsets.all(8),
+                padding:  
+                    EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
                 child: const Text(
                   "Recent Episodes",
                   style: TextStyle(
@@ -58,12 +56,10 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              const SizedBox(
-                height: 200,
-                child: RecentEpisodeUi()),
+              SizedBox(height: screen.height * 0.23  , child: RecentEpisodeUi()),
               Container(
                 width: screen.width,
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
                 child: const Text(
                   "Trending Anime",
                   style: TextStyle(
@@ -73,12 +69,10 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              const SizedBox(
-                height: 220,
-                child: TrendingAnimeList()),
+              SizedBox(height:screen.height * 0.2, child: const TrendingAnimeList()),
               Container(
                 width: screen.width,
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
                 child: const Text(
                   "Popular Anime",
                   style: TextStyle(
@@ -88,13 +82,9 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              const SizedBox(
-                height: 220,
-                child: PopularAnimeList()),
+              SizedBox(height: screen.height * 0.2, child: const PopularAnimeList()),
             ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

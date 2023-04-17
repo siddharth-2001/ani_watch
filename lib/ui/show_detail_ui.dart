@@ -123,7 +123,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,8 +135,8 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
                                     ),
-                                    const SizedBox(
-                                      height: 15,
+                                     SizedBox(
+                                      height: screen.height * 0.025,
                                     ),
                                     //First detail row
                                     Row(
@@ -180,27 +180,30 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                       ],
                                     ),
 
-                                    const SizedBox(
-                                      height: 15,
+                                    SizedBox(
+                                      height: screen.height * 0.025,
                                     ),
 
                                     //Genre Info row
                                     genreText(),
 
-                                    const SizedBox(
-                                      height: 15,
+                                     SizedBox(
+                                      height: screen.height * 0.025,
                                     ),
 
                                     Text("Status: ${details["status"]}",
                                         style: detailLabelStyle),
-                                    const SizedBox(
-                                      height: 15,
+                                    SizedBox(
+                                      height: screen.height * 0.025,
                                     ),
 
                                     //Summary about the anime
                                     Text(
                                       "Summary:",
                                       style: detailLabelStyle,
+                                    ),
+                                    SizedBox(
+                                      height: screen.height * 0.025,
                                     ),
                                     Text(
                                       "${details["description"]}",
@@ -209,8 +212,8 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                       style: const TextStyle(
                                           color: Colors.white, fontSize: 11),
                                     ),
-                                    const SizedBox(
-                                      height: 15,
+                                    SizedBox(
+                                      height: screen.height * 0.025,
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -249,17 +252,25 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                             }),
                                       ],
                                     ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Text("Recommendations",
+                                     Container(
+                                      padding: EdgeInsets.symmetric(vertical: screen.height * 0.025),
+                                      child: Text("Recommendations",
                                         style: detailLabelStyle),
+                                    ),
+                                    
                                   ],
                                 ),
                               ),
-                              RecommendedAnimeList(
-                                  recommendationList:
-                                      details["recommendations"]),
+                              SizedBox(
+                                height: screen.height * 0.225,
+                                width: screen.width,
+                                child: RecommendedAnimeList(
+                                    recommendationList:
+                                        details["recommendations"]),
+                              ),
+                              SizedBox(
+                                height: screen.height * 0.025,
+                              )
                             ],
                           ),
                         ),

@@ -49,18 +49,19 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       fullScreenByDefault: true,
       showControls: true,
       zoomAndPan: true,
-      controlsSafeAreaMinimum:
-          const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-      customControls: CupertinoControls(
-          backgroundColor: Colors.black.withOpacity(0.15),
-          iconColor: Colors.white,
-          showPlayButton: true),
+      customControls: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        child: CupertinoControls(
+            backgroundColor: Colors.black.withOpacity(0.15),
+            iconColor: Colors.white,
+            showPlayButton: true),
+      ),
       videoPlayerController: _videoPlayerController,
       allowMuting: true,
       allowPlaybackSpeedChanging: true,
       maxScale: 1.25,
       showControlsOnInitialize: true,
-      looping: true,
+      looping: false,
     );
 
     playerWidget = Chewie(
@@ -88,6 +89,8 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
         _videoPlayerController =
             VideoPlayerController.network(_allQualities[currQuality]!);
         video().then((value) {
+          _episodeList[0]
+              .setEpisodeLength(_videoPlayerController.value.duration);
           setState(() {
             _videoPlayerController
                 .seekTo(_episodeList[0].details["lastSeekPosition"]);
@@ -103,6 +106,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     await _videoPlayerController.position.then(
       (value) => _episodeList[currIndex].setLastSeekPosition(value!),
     );
+
     setState(() {
       _isLoading = true;
       currIndex = index;
@@ -115,6 +119,8 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
           VideoPlayerController.network(_allQualities[currQuality]!);
       video().then((value) {
         setState(() {
+          _episodeList[currIndex]
+              .setEpisodeLength(_videoPlayerController.value.duration);
           _videoPlayerController
               .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
           saveSeekPosition();
@@ -199,15 +205,13 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
   @override
   void dispose() {
     super.dispose();
-    try{
+    try {
       timer.cancel();
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
-    }
-    catch (error){
+      _videoPlayerController.dispose();
+      _chewieController.dispose();
+    } catch (error) {
       //means the controllers were not initialized due to no episodes being available
     }
-    
   }
 
   @override
@@ -247,19 +251,17 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                   ),
                   _isLoading
                       ? Container(
-                          height: 220,
+                          height: size.height * 0.3,
                           width: size.width,
                           child: const CupertinoActivityIndicator(
                             color: Colors.white,
                           ))
-                      : Container(
-                          height: 220,
-                          child: playerWidget),
+                      : Container(height: size.height * 0.3,width: size.width, child: playerWidget),
                   const SizedBox(
                     height: 15,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -281,7 +283,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding:  EdgeInsets.symmetric(horizontal: size.width * 0.05),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -415,8 +417,8 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                         endCurve: Curves.fastOutSlowIn,
                         child: GestureDetector(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 10),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 15, horizontal: size.width * 0.05),
                             child: Column(
                               children: [
                                 Row(
@@ -429,7 +431,8 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                           clipBehavior: Clip.hardEdge,
                                           decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(24)),
+                                                  BorderRadius.circular(
+                                                      1 / 6.4 * 130)),
                                           child: Image.network(
                                             episode["image"]!,
                                             fit: BoxFit.cover,
@@ -440,17 +443,33 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                               }
                                               return const Center(
                                                 child:
-                                                    CupertinoActivityIndicator(color: Colors.white,),
+                                                    CupertinoActivityIndicator(
+                                                  color: Colors.white,
+                                                ),
                                               );
                                             },
                                           ),
                                         ),
+                                        
                                         Positioned(
-                                            bottom: 0,
-                                            child: Container(
-                                              height: 20,
-                                              color: Colors.red,
-                                            ))
+                                          bottom: 0,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.greenAccent.shade400,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                       24)),
+                                            width: episode["length"] ==
+                                                    Duration.zero
+                                                ? 0
+                                                : episode["lastSeekPosition"]
+                                                        .inSeconds /
+                                                    episode["length"]
+                                                        .inSeconds *
+                                                    130,
+                                            height: 4,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     const SizedBox(

@@ -58,7 +58,7 @@ class Episode {
   String _episodeNumber = "";
   String _download = "";
   Duration _lastSeekPosition = Duration.zero;
-  final bool _watched = false;
+  Duration _length = Duration.zero;
 
   // ignore: prefer_final_fields
   Map<String, String> _link = {};
@@ -84,16 +84,17 @@ class Episode {
       "title": _title,
       "image": _image,
       "description": _description,
-      "watched": _watched,
       "lastSeekPosition": _lastSeekPosition,
+      "length": _length
     };
   }
 
-  Future<void> setLastSeekPosition(Duration position) async {
-    _lastSeekPosition = position;
+  Future<void> setEpisodeLength(Duration length) async {
+    _length = length;
     final LocalStorage storage = LocalStorage("episode_data");
     await storage.ready;
-    Map temp;
+
+    Map<String, dynamic> temp;
 
     try {
       temp = storage.getItem("episodeMap");
@@ -102,7 +103,33 @@ class Episode {
     } catch (error) {
       temp = {};
     }
-    temp[_id] = _lastSeekPosition.toString();
+
+    if (!temp.containsKey(_id)) temp[_id] = {};
+
+    temp[_id]["length"] = _length.toString();
+
+    storage.setItem("episode_data", temp);
+  }
+
+  //recieve the last known seek position to save progress
+  Future<void> setLastSeekPosition(Duration position) async {
+    _lastSeekPosition = position;
+    final LocalStorage storage = LocalStorage("episode_data");
+    await storage.ready;
+    Map<String, dynamic> temp;
+
+    try {
+      temp = storage.getItem("episodeMap");
+    } on Exception {
+      temp = {};
+    } catch (error) {
+      temp = {};
+    }
+
+    if (!temp.containsKey(_id)) temp[_id] = {};
+
+    temp[_id]["lastSeekPosition"] = _lastSeekPosition.toString();
+
     storage.setItem("episode_data", temp);
   }
 
@@ -285,8 +312,13 @@ class AllAnime with ChangeNotifier {
 
         //if the episode is already watched before set the last seek position
         if (episodeMap.containsKey(tempEpisode._id)) {
-          tempEpisode._lastSeekPosition =
-              parseTime(episodeMap[tempEpisode._id]);
+          if (episodeMap[tempEpisode._id].containsKey("lastSeekPosition"))
+            tempEpisode._lastSeekPosition =
+                parseTime(episodeMap[tempEpisode._id]["lastSeekPosition"]);
+
+          if (episodeMap[tempEpisode._id].containsKey("length"))
+            tempEpisode._length =
+                parseTime(episodeMap[tempEpisode._id]["length"]);
         }
 
         if (tempEpisode._title == "null") {

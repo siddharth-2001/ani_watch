@@ -20,7 +20,6 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
   List<Anime> list = [];
   @override
   void initState() {
-
     super.initState();
     Provider.of<PopularAnime>(context, listen: false)
         .getPopularAnime()
@@ -34,24 +33,29 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
   @override
   Widget build(BuildContext context) {
     list = Provider.of<PopularAnime>(context, listen: true).popularList;
+    final size = MediaQuery.of(context).size;
 
     return _isLoading == true
-        ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
-        : SizedBox(
-          height: 220,
-          child: ListView.builder(
+        ? const Center(
+            child: CupertinoActivityIndicator(
+            color: Colors.white,
+          ))
+        :  ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
               physics: const BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return GlassShowPanel(
-            id: list[index].details["id"],
-            name: list[index].details["name"],
-            image: list[index].details["image"],
-            episodes: list[index].details["episodes"],
-              );
+                return Center(
+                  child: GlassShowPanel(
+                    id: list[index].details["id"],
+                    name: list[index].details["name"],
+                    image: list[index].details["image"],
+                    episodes: list[index].details["episodes"],
+                  ),
+                );
               },
-            ),
-        );
+           
+          );
   }
 }

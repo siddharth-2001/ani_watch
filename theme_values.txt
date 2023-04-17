@@ -1,4 +1,5 @@
 Glass container color opacity: 0.15
 Glass container blur: 9
-Glass container box radius: 32
+Image blur = 25
+box border radius: 1/6.4 * size
 Body margin values: top :screenPadding.top + 5, left: 15, right: 15, bottom: 10
