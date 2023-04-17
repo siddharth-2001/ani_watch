@@ -123,7 +123,8 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: screen.width * 0.05),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +136,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
                                     ),
-                                     SizedBox(
+                                    SizedBox(
                                       height: screen.height * 0.025,
                                     ),
                                     //First detail row
@@ -187,7 +188,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                     //Genre Info row
                                     genreText(),
 
-                                     SizedBox(
+                                    SizedBox(
                                       height: screen.height * 0.025,
                                     ),
 
@@ -225,9 +226,16 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                               color: Colors.white,
                                             ),
                                             function: () {
+                                              Provider.of<AllAnime>(context,
+                                                      listen: false)
+                                                  .addToRecommendations(
+                                                      widget.id);
                                               Navigator.of(context).pushNamed(
                                                   WatchEpisodeScreen.routeName,
-                                                  arguments: {"id": widget.id});
+                                                  arguments: {
+                                                    "id": widget.id,
+                                                    "index": 0
+                                                  });
                                             }),
                                         const SizedBox(
                                           width: 10,
@@ -252,12 +260,12 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                             }),
                                       ],
                                     ),
-                                     Container(
-                                      padding: EdgeInsets.symmetric(vertical: screen.height * 0.025),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: screen.height * 0.025),
                                       child: Text("Recommendations",
-                                        style: detailLabelStyle),
+                                          style: detailLabelStyle),
                                     ),
-                                    
                                   ],
                                 ),
                               ),

@@ -43,7 +43,7 @@ class _RecentEpisodeUiState extends State<RecentEpisodeUi> {
            ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               physics: const BouncingScrollPhysics(
                   decelerationRate: ScrollDecelerationRate.fast),
               itemBuilder: (BuildContext context, int index) {

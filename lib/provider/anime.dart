@@ -156,8 +156,119 @@ class Episode {
 class AllAnime with ChangeNotifier {
   Map<String, Anime> animeData = {};
   final List<Anime> _searchList = [];
+  final List<Map<Anime, int>> _currWatchList = [];
+  List<Anime> _recommendedList = [];
+
   Map<String, dynamic> _favMap =
       {}; //This set saves anime id string since anime objects cant be used with local storage
+
+  List<Map<Anime, int>> get currWatchList {
+    return _currWatchList.reversed.toList();
+  }
+
+  Future<void> fetchRecommendations() async {
+    LocalStorage storage = LocalStorage("recommended_data");
+
+    await storage.ready;
+
+    _recommendedList.clear();
+
+    Set tempList;
+
+    try {
+      tempList = storage.getItem("recommendedList");
+    } catch (error) {
+      tempList = {};
+    }
+
+    for (var element in tempList) {
+      if (!animeData.containsKey(element)) await getAnimeById(element);
+      final tempAnime = animeData[element]!;
+      _recommendedList.add(tempAnime);
+    }
+
+    storage.dispose();
+
+    notifyListeners();
+  }
+
+  List<Anime> get recommendedList {
+    _recommendedList.shuffle();
+    return _recommendedList;
+  }
+
+  Future<void> addToRecommendations(String id) async {
+    LocalStorage storage = LocalStorage("recommended_data");
+
+    await storage.ready;
+
+    Set tempList;
+
+    try {
+      tempList = storage.getItem("recommendedList");
+    } catch (error) {
+      tempList = {};
+    }
+
+    final Anime tempAnime = animeData[id]!;
+
+    for (var element in tempAnime._recommendations) {
+      if (tempList.contains(id)) continue;
+
+      _recommendedList.add(element);
+      tempList.add(element._id);
+    }
+
+    await storage.setItem("recommendedList", tempList);
+
+    await fetchRecommendations();
+  }
+
+  //get anime that the user is currently watchng
+  Future<void> fetchCurrentlyWatching() async {
+    _currWatchList.clear();
+
+    final LocalStorage storage = LocalStorage('currently_watching');
+    await storage.ready;
+
+    Map<String, dynamic> temp;
+
+    try {
+      temp = storage.getItem("currWatchList");
+    } catch (error) {
+      temp = {};
+    }
+
+    for (var element in temp.keys) {
+      if (!animeData.containsKey(element)) await getAnimeById(element);
+      final tempAnime = animeData[element];
+      _currWatchList.add({tempAnime!: temp[element]});
+    }
+
+    notifyListeners();
+    // storage.dispose();
+  }
+
+  //add to currently watching
+  Future<void> addToCurrWatchList(String id, int epIndex) async {
+    final LocalStorage storage = LocalStorage('currently_watching');
+    await storage.ready;
+
+    Map<String, dynamic> temp;
+
+    try {
+      temp = storage.getItem("currWatchList");
+    } catch (error) {
+      temp = {};
+    }
+
+    temp[id] = epIndex;
+
+    await storage.setItem("currWatchList", temp);
+
+    await fetchCurrentlyWatching();
+  }
+
   Future<void> fetchLocalFavData() async {
     final LocalStorage storage = LocalStorage('favourite_anime');
     await storage.ready;
@@ -289,7 +400,7 @@ class AllAnime with ChangeNotifier {
       //recieve episode list, create episode object and add it to anime
       final episodeList = body["episodes"] as List<dynamic>;
 
-      final storage = LocalStorage("episode_data");
+      LocalStorage storage = LocalStorage("episode_data");
 
       await storage.ready;
 
@@ -312,13 +423,15 @@ class AllAnime with ChangeNotifier {
 
         //if the episode is already watched before set the last seek position
         if (episodeMap.containsKey(tempEpisode._id)) {
-          if (episodeMap[tempEpisode._id].containsKey("lastSeekPosition"))
+          if (episodeMap[tempEpisode._id].containsKey("lastSeekPosition")) {
             tempEpisode._lastSeekPosition =
                 parseTime(episodeMap[tempEpisode._id]["lastSeekPosition"]);
+          }
 
-          if (episodeMap[tempEpisode._id].containsKey("length"))
+          if (episodeMap[tempEpisode._id].containsKey("length")) {
             tempEpisode._length =
                 parseTime(episodeMap[tempEpisode._id]["length"]);
+          }
         }
 
         if (tempEpisode._title == "null") {
@@ -332,9 +445,13 @@ class AllAnime with ChangeNotifier {
         temp._episodeList.add(tempEpisode);
       }
 
-      await storage.setItem("episodeMap", episodeMap);
-
-      storage.dispose();
+      try {
+        await storage
+            .setItem("episodeMap", episodeMap)
+            .then((value) => storage.dispose());
+      } catch (error) {
+        print(error.toString());
+      }
 
       //recieve the genres as a list and assign to the anime created
       List genreList = body["genres"] as List<dynamic>;
@@ -361,9 +478,7 @@ class AllAnime with ChangeNotifier {
       //saving the created anime in a local map for future reference
       animeData[id] = temp;
       notifyListeners();
-    } else {
-      print(response.body);
-    }
+    } else {}
   }
 }
 
@@ -389,9 +504,7 @@ class TrendingAnime with ChangeNotifier {
       }
 
       notifyListeners();
-    } else {
-      print("error occured");
-    }
+    } else {}
   }
 
   List<Anime> get trendingList {
@@ -421,9 +534,7 @@ class PopularAnime with ChangeNotifier {
       }
 
       notifyListeners();
-    } else {
-      print("error occured");
-    }
+    } else {}
 
     // print(_popularList);
   }
@@ -456,9 +567,7 @@ class RecentEpisodes with ChangeNotifier {
       }
 
       notifyListeners();
-    } else {
-      print("error occured");
-    }
+    } else {}
 
     // print(_popularList);
   }

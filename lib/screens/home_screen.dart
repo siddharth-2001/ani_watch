@@ -6,6 +6,8 @@ import '../ui/recent_episodes.dart';
 import '../ui/trending_anime_list.dart';
 import '../ui/home_top_ui.dart';
 import '../ui/popular_anime_list.dart';
+import '../ui/current_watch_list.dart';
+import '../ui/you_may_like_list.dart';
 
 //provider imports
 
@@ -43,6 +45,46 @@ class HomeScreen extends StatelessWidget {
                     EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
                 child: const HomeUpperUi(),
               ),
+               Container(
+                width: screen.width,
+                padding:  
+                    EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                child: const Text(
+                  "Continue Watching",
+                  style: TextStyle(
+                      color: fontColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              SizedBox(height: screen.height * 0.23  , child: const CurrentWatchList()),
+               Container(
+                width: screen.width,
+                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                child: const Text(
+                  "You Might Like",
+                  style: TextStyle(
+                      color: fontColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              SizedBox(height:screen.height * 0.2, child: const YouMayLikeList()),
+               Container(
+                width: screen.width,
+                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                child: const Text(
+                  "Trending Anime",
+                  style: TextStyle(
+                      color: fontColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              SizedBox(height:screen.height * 0.2, child: const TrendingAnimeList()),
               Container(
                 width: screen.width,
                 padding:  
@@ -56,20 +98,8 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              SizedBox(height: screen.height * 0.23  , child: RecentEpisodeUi()),
-              Container(
-                width: screen.width,
-                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
-                child: const Text(
-                  "Trending Anime",
-                  style: TextStyle(
-                      color: fontColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              SizedBox(height:screen.height * 0.2, child: const TrendingAnimeList()),
+              SizedBox(height: screen.height * 0.23  , child: const RecentEpisodeUi()),
+             
               Container(
                 width: screen.width,
                 padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),

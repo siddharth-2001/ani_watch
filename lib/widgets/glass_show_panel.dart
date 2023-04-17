@@ -38,10 +38,18 @@ class GlassShowPanel extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: size.height *  0.16   ,
-                width: size.width * 0.27  ,
+                height: size.height * 0.16,
+                width: size.width * 0.27,
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
+                  boxShadow: [
+                     BoxShadow(
+        offset: const Offset(14, 18),
+        spreadRadius: -20,
+        blurRadius: 38,
+        color: Colors.black.withOpacity(0.5),
+    )
+                  ],
                   borderRadius: BorderRadius.circular(1 / 5.5 * 145),
                 ),
                 child: Image.network(

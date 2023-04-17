@@ -18,7 +18,8 @@ import '../provider/anime.dart';
 
 class WatchEpisodeUi extends StatefulWidget {
   final String animeId;
-  const WatchEpisodeUi({super.key, required this.animeId});
+  final int index;
+  const WatchEpisodeUi({super.key, required this.animeId, required this.index});
 
   @override
   State<WatchEpisodeUi> createState() => _WatchEpisodeUiState();
@@ -50,7 +51,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       showControls: true,
       zoomAndPan: true,
       customControls: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: CupertinoControls(
             backgroundColor: Colors.black.withOpacity(0.15),
             iconColor: Colors.white,
@@ -81,19 +82,20 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     totalEpisodes = _episodeList.length;
 
     totalPages = pagination(totalEpisodes);
+    currIndex = widget.index;
 
     if (totalEpisodes != 0) {
-      _episodeList[0].getLink().then((value) {
-        _allQualities = _episodeList[0].details["link"];
-        currQuality = _allQualities.keys.elementAt(0);
+      _episodeList[currIndex].getLink().then((value) {
+        _allQualities = _episodeList[currIndex].details["link"];
+        currQuality = _allQualities.keys.elementAt(currIndex);
         _videoPlayerController =
             VideoPlayerController.network(_allQualities[currQuality]!);
         video().then((value) {
-          _episodeList[0]
+          _episodeList[currIndex]
               .setEpisodeLength(_videoPlayerController.value.duration);
           setState(() {
             _videoPlayerController
-                .seekTo(_episodeList[0].details["lastSeekPosition"]);
+                .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
             saveSeekPosition();
             _isLoading = false;
           });
@@ -112,6 +114,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       currIndex = index;
       timer.cancel();
     });
+
     _videoPlayerController.dispose();
     _episodeList[currIndex].getLink().then((value) {
       _allQualities = _episodeList[currIndex].details["link"];
@@ -251,17 +254,21 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                   ),
                   _isLoading
                       ? Container(
-                          height: size.height * 0.3,
+                          height: 250,
                           width: size.width,
                           child: const CupertinoActivityIndicator(
                             color: Colors.white,
                           ))
-                      : Container(height: size.height * 0.3,width: size.width, child: playerWidget),
+                      : Container(
+                          height: 250,
+                          width: size.width,
+                          child: playerWidget),
                   const SizedBox(
                     height: 15,
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -283,7 +290,8 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                     ),
                   ),
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -430,6 +438,15 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                           width: 130,
                                           clipBehavior: Clip.hardEdge,
                                           decoration: BoxDecoration(
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  offset: Offset(14, 18),
+                                                  spreadRadius: -20,
+                                                  blurRadius: 38,
+                                                  color: Color.fromRGBO(
+                                                      0, 0, 0, 1),
+                                                )
+                                              ],
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       1 / 6.4 * 130)),
@@ -450,15 +467,14 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                             },
                                           ),
                                         ),
-                                        
                                         Positioned(
                                           bottom: 0,
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                color: Colors.greenAccent.shade400,
+                                                color:
+                                                    Colors.greenAccent.shade400,
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                       24)),
+                                                    BorderRadius.circular(24)),
                                             width: episode["length"] ==
                                                     Duration.zero
                                                 ? 0
@@ -503,6 +519,8 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                           ),
                           onTap: () {
                             selectEpisode(index);
+                            Provider.of<AllAnime>(context, listen: false)
+                                .addToCurrWatchList(anime.details["id"], index);
                           },
                         ),
                       );
