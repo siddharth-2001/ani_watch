@@ -39,10 +39,11 @@ class App extends StatelessWidget {
   const App({super.key});
 
   final transitionType = PageTransitionType.fade;
+  
 
   @override
   Widget build(BuildContext context) {
-    
+    final isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return MaterialApp(
       theme: ThemeData(
           textTheme: GoogleFonts.montserratTextTheme(),
@@ -54,24 +55,28 @@ class App extends StatelessWidget {
             return PageTransition(
                 child: const HomeScreen(),
                 type: transitionType,
+                isIos: isIos,
                 settings: settings);
 
           case ShowDetailScreen.routeName:
             return PageTransition(
                 child: const ShowDetailScreen(),
                 type: transitionType,
+                isIos: isIos,
                 settings: settings);
 
           case WatchEpisodeScreen.routeName:
             return PageTransition(
                 child: const WatchEpisodeScreen(),
                 type: transitionType,
+                isIos: isIos,
                 settings: settings);
 
           case SearchScreen.routeName:
             return PageTransition(
                 child: const SearchScreen(),
                 type: transitionType,
+                isIos: isIos,
                 settings: settings,
                 ctx: context);
 
@@ -79,6 +84,7 @@ class App extends StatelessWidget {
             return PageTransition(
                 child: const FavouriteScreen(),
                 type: transitionType,
+                isIos: isIos,
                 settings: settings,
                 ctx: context);
 
@@ -86,6 +92,7 @@ class App extends StatelessWidget {
             return PageTransition(
                 child: const SettingsScreen(),
                 type: transitionType,
+                isIos: isIos,
                 settings: settings,
                 ctx: context);
 
@@ -93,6 +100,7 @@ class App extends StatelessWidget {
             return PageTransition(
                 child: const HomeScreen(),
                 type: transitionType,
+                isIos: isIos,
                 settings: settings);
         }
       },
