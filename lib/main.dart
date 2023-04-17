@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 //local imoorts
 import 'screens/show_detail_screen.dart';

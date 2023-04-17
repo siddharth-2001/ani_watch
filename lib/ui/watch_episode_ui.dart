@@ -51,7 +51,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       showControls: true,
       zoomAndPan: true,
       customControls: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: CupertinoControls(
             backgroundColor: Colors.black.withOpacity(0.15),
             iconColor: Colors.white,

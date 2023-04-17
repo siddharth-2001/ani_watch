@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:stream_app/widgets/glass_bottom_bar.dart';
 
 //local imports
 import '../ui/search_anime_list.dart';
+import '../widgets/glass_bottom_bar.dart';
 
 //provider imports
 

@@ -3,7 +3,6 @@ import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:flutter/cupertino.dart';
 //local imports
 import '../screens/watch_episode_screen.dart';
-import '../screens/show_detail_screen.dart';
 
 class CurrentWatchPanel extends StatelessWidget {
   final String id, episodeIndex, name, image;

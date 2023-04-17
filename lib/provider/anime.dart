@@ -173,15 +173,15 @@ class AllAnime with ChangeNotifier {
 
     _recommendedList.clear();
 
-    Set tempList;
+    Map tempMap;
 
     try {
-      tempList = storage.getItem("recommendedList");
+      tempMap = storage.getItem("recommendedMap");
     } catch (error) {
-      tempList = {};
+      tempMap = {};
     }
 
-    for (var element in tempList) {
+    for (var element in tempMap.keys) {
       if (!animeData.containsKey(element)) await getAnimeById(element);
       final tempAnime = animeData[element]!;
       _recommendedList.add(tempAnime);
@@ -202,24 +202,29 @@ class AllAnime with ChangeNotifier {
 
     await storage.ready;
 
-    Set tempList;
+    Map tempMap;
 
     try {
-      tempList = storage.getItem("recommendedList");
+      tempMap = storage.getItem("recommendedMap");
     } catch (error) {
-      tempList = {};
+      tempMap = {};
     }
 
     final Anime tempAnime = animeData[id]!;
 
-    for (var element in tempAnime._recommendations) {
-      if (tempList.contains(id)) continue;
-
-      _recommendedList.add(element);
-      tempList.add(element._id);
+    if (tempMap.length > 10) {
+      for (int i = 0; i < 3; i++) {
+        tempMap.remove(tempMap.keys.first);
+      }
     }
 
-    await storage.setItem("recommendedList", tempList);
+    for (var element in tempAnime._recommendations.sublist(0, 3)) {
+      if (tempMap.keys.contains(id)) continue;
+
+      tempMap[element._id] = element._id;
+    }
+
+    await storage.setItem("recommendedMap", tempMap);
 
     await fetchRecommendations();
   }

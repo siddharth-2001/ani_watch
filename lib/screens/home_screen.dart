@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stream_app/widgets/glass_bottom_bar.dart';
 
 //local imports
 import '../ui/recent_episodes.dart';
@@ -8,6 +7,7 @@ import '../ui/home_top_ui.dart';
 import '../ui/popular_anime_list.dart';
 import '../ui/current_watch_list.dart';
 import '../ui/you_may_like_list.dart';
+import '../widgets/glass_bottom_bar.dart';
 
 //provider imports
 
