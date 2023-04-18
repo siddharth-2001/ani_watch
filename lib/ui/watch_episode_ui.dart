@@ -50,6 +50,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       fullScreenByDefault: true,
       showControls: true,
       zoomAndPan: true,
+      
       customControls: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: CupertinoControls(

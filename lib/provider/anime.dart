@@ -98,8 +98,9 @@ class Episode {
     Map tempMap;
 
     try {
-      tempMap = prefs.getString("episodeMap") as Map;
+      tempMap = json.decode(prefs.getString("episodeMap")!);
     } catch (error) {
+      log(error.toString());
       tempMap = {};
     }
 
@@ -107,7 +108,7 @@ class Episode {
 
     tempMap[_id]["length"] = _length.toString();
 
-    prefs.setString("episodeMap", jsonEncode(tempMap));
+    await prefs.setString("episodeMap", jsonEncode(tempMap));
   }
 
   //recieve the last known seek position to save progress
@@ -240,15 +241,17 @@ class AllAnime with ChangeNotifier {
     try {
       temp = jsonDecode(prefs.getString("currWatchMap")!);
     } catch (error) {
+      log(error.toString());
       temp = {};
     }
 
     for (var element in temp.keys) {
-      if (!animeData.containsKey(element)) await getAnimeById(element);
+      if (!animeData.containsKey(element)) {
+        await getAnimeById(element);
+      }
       final tempAnime = animeData[element]!;
       _currWatchList.add({tempAnime: temp[element]});
     }
-
     notifyListeners();
   }
 
@@ -261,6 +264,7 @@ class AllAnime with ChangeNotifier {
     try {
       temp = jsonDecode(prefs.getString("currWatchMap")!);
     } catch (error) {
+      log(error.toString());
       temp = {};
     }
 
@@ -277,6 +281,7 @@ class AllAnime with ChangeNotifier {
     try {
       _favMap = jsonDecode(prefs.getString("favouritesMap")!);
     } catch (error) {
+      log(error.toString() + 'line 281');
       _favMap = {};
     }
   }
@@ -460,12 +465,14 @@ class AllAnime with ChangeNotifier {
             rating: element["rating"].toString());
 
         temp._recommendations.add(recAnime);
-        animeData[recAnime._id] = recAnime;
       }
 
       //saving the created anime in a local map for future reference
       animeData[id] = temp;
-    } else {}
+      notifyListeners();
+    } else {
+      log(response.statusCode.toString());
+    }
   }
 }
 
