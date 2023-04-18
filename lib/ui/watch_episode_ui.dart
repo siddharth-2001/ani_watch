@@ -60,7 +60,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       videoPlayerController: _videoPlayerController,
       allowMuting: true,
       allowPlaybackSpeedChanging: true,
-      maxScale: 1.25,
+      maxScale: 2,
       showControlsOnInitialize: true,
       looping: false,
     );
@@ -87,7 +87,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     if (totalEpisodes != 0) {
       _episodeList[currIndex].getLink().then((value) {
         _allQualities = _episodeList[currIndex].details["link"];
-        currQuality = _allQualities.keys.elementAt(currIndex);
+        currQuality = _allQualities.keys.elementAt(0);
         _videoPlayerController =
             VideoPlayerController.network(_allQualities[currQuality]!);
         video().then((value) {

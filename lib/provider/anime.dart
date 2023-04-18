@@ -121,7 +121,6 @@ class Episode {
     try {
       tempMap = jsonDecode(prefs.getString("episodeMap")!);
     } catch (error) {
-      log(error.toString());
       tempMap = {};
     }
 
