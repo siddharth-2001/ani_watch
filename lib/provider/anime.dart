@@ -107,7 +107,7 @@ class Episode {
 
     tempMap[_id]["length"] = _length.toString();
 
-    prefs.setString("episodeMap", tempMap.toString());
+    prefs.setString("episodeMap", jsonEncode(tempMap));
   }
 
   //recieve the last known seek position to save progress
@@ -121,6 +121,7 @@ class Episode {
     try {
       tempMap = jsonDecode(prefs.getString("episodeMap")!);
     } catch (error) {
+      log(error.toString());
       tempMap = {};
     }
 
@@ -403,8 +404,9 @@ class AllAnime with ChangeNotifier {
 
       // if the episode data does not exist we continue with an empty map
       try {
-        tempMap = jsonDecode(prefs.getString("episodeMap")!);
+        tempMap = json.decode(prefs.getString("episodeMap")!);
       } catch (error) {
+        log(error.toString());
         tempMap = {};
       }
 
@@ -567,7 +569,8 @@ String selectAppropriateName(Map names) {
 
   if (names.containsKey("english") && names["english"] != null) {
     result = names["english"];
-  } else if (names.containsKey("userPreferred") && names["userreferred"] != null) {
+  } else if (names.containsKey("userPreferred") &&
+      names["userreferred"] != null) {
     result = names["userreferred"];
   } else {
     names["romaji"];
