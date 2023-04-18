@@ -32,7 +32,7 @@ class _YouMayLikeListState extends State<YouMayLikeList> {
 
   @override
   Widget build(BuildContext context) {
-    list = Provider.of<AllAnime>(context, listen: true).recommendedList;
+    list = Provider.of<AllAnime>(context).recommendedList;
     final size = MediaQuery.of(context).size;
 
     return _isLoading == true

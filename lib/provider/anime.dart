@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:duration/duration.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Anime with ChangeNotifier {
   String _id = "";
@@ -91,46 +92,44 @@ class Episode {
 
   Future<void> setEpisodeLength(Duration length) async {
     _length = length;
-    final LocalStorage storage = LocalStorage("episode_data");
-    await storage.ready;
 
-    Map<String, dynamic> temp;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Map tempMap;
 
     try {
-      temp = storage.getItem("episodeMap");
-    } on Exception {
-      temp = {};
+      tempMap = prefs.getString("episodeMap") as Map;
     } catch (error) {
-      temp = {};
+      tempMap = {};
     }
 
-    if (!temp.containsKey(_id)) temp[_id] = {};
+    if (!tempMap.containsKey(_id)) tempMap[_id] = {};
 
-    temp[_id]["length"] = _length.toString();
+    tempMap[_id]["length"] = _length.toString();
 
-    storage.setItem("episode_data", temp);
+    prefs.setString("episodeMap", tempMap.toString());
   }
 
   //recieve the last known seek position to save progress
   Future<void> setLastSeekPosition(Duration position) async {
     _lastSeekPosition = position;
-    final LocalStorage storage = LocalStorage("episode_data");
-    await storage.ready;
-    Map<String, dynamic> temp;
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Map tempMap;
 
     try {
-      temp = storage.getItem("episodeMap");
-    } on Exception {
-      temp = {};
+      tempMap = jsonDecode(prefs.getString("episodeMap")!);
     } catch (error) {
-      temp = {};
+      log(error.toString());
+      tempMap = {};
     }
 
-    if (!temp.containsKey(_id)) temp[_id] = {};
+    if (!tempMap.containsKey(_id)) tempMap[_id] = {};
 
-    temp[_id]["lastSeekPosition"] = _lastSeekPosition.toString();
+    tempMap[_id]["lastSeekPosition"] = _lastSeekPosition.toString();
 
-    storage.setItem("episode_data", temp);
+    await prefs.setString("episodeMap", jsonEncode(tempMap));
   }
 
   Future<void> getLink() async {
@@ -155,9 +154,12 @@ class Episode {
 
 class AllAnime with ChangeNotifier {
   Map<String, Anime> animeData = {};
-  final List<Anime> _searchList = [];
+
+  final List<Anime> _recommendedList = [], _searchList = [];
+
   final List<Map<Anime, int>> _currWatchList = [];
-  List<Anime> _recommendedList = [];
+
+  int checkIndex = 0;
 
   Map<String, dynamic> _favMap =
       {}; //This set saves anime id string since anime objects cant be used with local storage
@@ -167,46 +169,46 @@ class AllAnime with ChangeNotifier {
   }
 
   Future<void> fetchRecommendations() async {
-    LocalStorage storage = LocalStorage("recommended_data");
+    //grab data from local disk
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    await storage.ready;
-
-    _recommendedList.clear();
+    //clear the set to avoid showing anime that arent in the list anymore
 
     Map tempMap;
 
+    //try to fetch data if not available create it
     try {
-      tempMap = storage.getItem("recommendedMap");
+      tempMap = jsonDecode(prefs.getString("recommendedMap")!);
     } catch (error) {
       tempMap = {};
     }
+    _recommendedList.clear();
 
     for (var element in tempMap.keys) {
       if (!animeData.containsKey(element)) await getAnimeById(element);
+
       final tempAnime = animeData[element]!;
+
       _recommendedList.add(tempAnime);
     }
-
-    storage.dispose();
 
     notifyListeners();
   }
 
   List<Anime> get recommendedList {
-    _recommendedList.shuffle();
     return _recommendedList;
   }
 
+  //add anime to recommendations
   Future<void> addToRecommendations(String id) async {
-    LocalStorage storage = LocalStorage("recommended_data");
-
-    await storage.ready;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     Map tempMap;
 
     try {
-      tempMap = storage.getItem("recommendedMap");
+      tempMap = jsonDecode(prefs.getString("recommendedMap")!);
     } catch (error) {
+      log(error.toString());
       tempMap = {};
     }
 
@@ -219,69 +221,61 @@ class AllAnime with ChangeNotifier {
     }
 
     for (var element in tempAnime._recommendations.sublist(0, 3)) {
-      if (tempMap.keys.contains(id)) continue;
-
       tempMap[element._id] = element._id;
     }
 
-    await storage.setItem("recommendedMap", tempMap);
+    await prefs.setString("recommendedMap", jsonEncode(tempMap));
 
-    await fetchRecommendations();
+    fetchRecommendations();
   }
 
   //get anime that the user is currently watchng
   Future<void> fetchCurrentlyWatching() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
     _currWatchList.clear();
 
-    final LocalStorage storage = LocalStorage('currently_watching');
-    await storage.ready;
-
-    Map<String, dynamic> temp;
+    Map temp;
 
     try {
-      temp = storage.getItem("currWatchList");
+      temp = jsonDecode(prefs.getString("currWatchMap")!);
     } catch (error) {
       temp = {};
     }
 
     for (var element in temp.keys) {
       if (!animeData.containsKey(element)) await getAnimeById(element);
-      final tempAnime = animeData[element];
-      _currWatchList.add({tempAnime!: temp[element]});
+      final tempAnime = animeData[element]!;
+      _currWatchList.add({tempAnime: temp[element]});
     }
 
     notifyListeners();
-    // storage.dispose();
   }
 
   //add to currently watching
   Future<void> addToCurrWatchList(String id, int epIndex) async {
-    final LocalStorage storage = LocalStorage('currently_watching');
-    await storage.ready;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> temp;
+    Map temp;
 
     try {
-      temp = storage.getItem("currWatchList");
+      temp = jsonDecode(prefs.getString("currWatchMap")!);
     } catch (error) {
       temp = {};
     }
 
     temp[id] = epIndex;
 
-    await storage.setItem("currWatchList", temp);
+    await prefs.setString("currWatchMap", jsonEncode(temp));
 
     await fetchCurrentlyWatching();
   }
 
   Future<void> fetchLocalFavData() async {
-    final LocalStorage storage = LocalStorage('favourite_anime');
-    await storage.ready;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
-      _favMap = storage.getItem("favMap");
-    } on Exception {
-      _favMap = {};
+      _favMap = jsonDecode(prefs.getString("favouritesMap")!);
     } catch (error) {
       _favMap = {};
     }
@@ -293,15 +287,14 @@ class AllAnime with ChangeNotifier {
 
   Future<void> addToFavourite(String id) async {
     //Also deletes an item if it is already added
-    final LocalStorage storage = LocalStorage('favourite_anime');
-    await storage.ready;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (_favMap.containsKey(id)) {
       _favMap.remove(id);
     } else {
       _favMap[id] = id;
     }
-    storage.setItem("favMap", _favMap);
+    await prefs.setString("favouritesMap", jsonEncode(_favMap));
     notifyListeners();
   }
 
@@ -339,7 +332,7 @@ class AllAnime with ChangeNotifier {
       for (var element in list) {
         Anime temp = Anime(
             id: element["id"],
-            name: element["title"]["userPreferred"],
+            name: selectAppropriateName(element["title"]),
             image: element["image"],
             rating: element["rating"].toString(),
             episodes: element["totalEpisodes"].toString());
@@ -371,7 +364,7 @@ class AllAnime with ChangeNotifier {
 
       Anime temp = Anime(
           id: body["id"],
-          name: body["title"]["romaji"],
+          name: selectAppropriateName(body["title"]),
           image: body["image"],
           rating: body["rating"].toString(),
           episodes: body["totalEpisodes"].toString());
@@ -405,17 +398,15 @@ class AllAnime with ChangeNotifier {
       //recieve episode list, create episode object and add it to anime
       final episodeList = body["episodes"] as List<dynamic>;
 
-      LocalStorage storage = LocalStorage("episode_data");
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      await storage.ready;
-
-      Map<String, dynamic> episodeMap = {};
+      Map tempMap;
 
       // if the episode data does not exist we continue with an empty map
       try {
-        episodeMap = storage.getItem("episodeMap");
+        tempMap = jsonDecode(prefs.getString("episodeMap")!);
       } catch (error) {
-        episodeMap = {};
+        tempMap = {};
       }
 
       for (var element in episodeList) {
@@ -427,15 +418,14 @@ class AllAnime with ChangeNotifier {
             title: element["title"].toString());
 
         //if the episode is already watched before set the last seek position
-        if (episodeMap.containsKey(tempEpisode._id)) {
-          if (episodeMap[tempEpisode._id].containsKey("lastSeekPosition")) {
+        if (tempMap.containsKey(tempEpisode._id)) {
+          if (tempMap[tempEpisode._id].containsKey("lastSeekPosition")) {
             tempEpisode._lastSeekPosition =
-                parseTime(episodeMap[tempEpisode._id]["lastSeekPosition"]);
+                parseTime(tempMap[tempEpisode._id]["lastSeekPosition"]);
           }
 
-          if (episodeMap[tempEpisode._id].containsKey("length")) {
-            tempEpisode._length =
-                parseTime(episodeMap[tempEpisode._id]["length"]);
+          if (tempMap[tempEpisode._id].containsKey("length")) {
+            tempEpisode._length = parseTime(tempMap[tempEpisode._id]["length"]);
           }
         }
 
@@ -448,14 +438,6 @@ class AllAnime with ChangeNotifier {
         }
 
         temp._episodeList.add(tempEpisode);
-      }
-
-      try {
-        await storage
-            .setItem("episodeMap", episodeMap)
-            .then((value) => storage.dispose());
-      } catch (error) {
-        print(error.toString());
       }
 
       //recieve the genres as a list and assign to the anime created
@@ -482,7 +464,6 @@ class AllAnime with ChangeNotifier {
 
       //saving the created anime in a local map for future reference
       animeData[id] = temp;
-      notifyListeners();
     } else {}
   }
 }
@@ -502,7 +483,7 @@ class TrendingAnime with ChangeNotifier {
         Anime temp = Anime(
             id: element["id"],
             rating: element["rating"].toString(),
-            name: element["title"]["english"],
+            name: selectAppropriateName(element["title"]),
             image: element["image"],
             episodes: element["totalEpisodes"].toString());
         _trendingList.add(temp);
@@ -532,7 +513,7 @@ class PopularAnime with ChangeNotifier {
         Anime temp = Anime(
             id: element["id"],
             rating: element["rating"].toString(),
-            name: element["title"]["english"],
+            name: selectAppropriateName(element["title"]),
             image: element["image"],
             episodes: element["totalEpisodes"].toString());
         _popularList.add(temp);
@@ -564,7 +545,7 @@ class RecentEpisodes with ChangeNotifier {
         Anime temp = Anime(
             id: element["id"],
             rating: element["rating"].toString(),
-            name: element["title"]["userPreferred"],
+            name: selectAppropriateName(element["title"]),
             image: element["image"],
             episodes: element["episodeNumber"].toString());
 
@@ -580,4 +561,18 @@ class RecentEpisodes with ChangeNotifier {
   List<Anime> get recentList {
     return _recentList;
   }
+}
+
+String selectAppropriateName(Map names) {
+  String result = "";
+
+  if (names.containsKey("english") && names["english"] != null) {
+    result = names["english"];
+  } else if (names.containsKey("userPreferred") && names["userreferred"] != null) {
+    result = names["userreferred"];
+  } else {
+    names["romaji"];
+  }
+
+  return result;
 }
