@@ -14,8 +14,9 @@ import '../provider/anime.dart';
 class ShowDetailUi extends StatefulWidget {
   final String id;
   final String image;
+  final String tag;
 
-  const ShowDetailUi({super.key, required this.id, required this.image});
+  const ShowDetailUi({super.key, required this.id, required this.image, required this.tag});
 
   @override
   State<ShowDetailUi> createState() => _ShowDetailUiState();
@@ -72,14 +73,17 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
     return SingleChildScrollView(
       child: Stack(
         children: [
-          GlassImage(
-            height: screen.height,
-            width: screen.width,
-            overlayColor: Colors.black.withOpacity(0.7),
-            blur: 25,
-            image: Image.network(
-              widget.image,
-              fit: BoxFit.cover,
+          Hero(
+            tag: widget.id + widget.tag,
+            child: GlassImage(
+              height: screen.height,
+              width: screen.width,
+              overlayColor: Colors.black.withOpacity(0.7),
+              blur: 25,
+              image: Image.network(
+                widget.image,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           SizedBox(
@@ -93,20 +97,23 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                   )
                 : Column(
                     children: [
-                      SizedBox(
-                        height: screen.height * 0.2,
-                        width: screen.width,
-                        child: Image.network(
-                          details["cover"],
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: CupertinoActivityIndicator(
-                                color: Colors.white,
-                              ),
-                            );
-                          },
+                      Hero(
+                        tag: "${widget.id}watch",
+                        child: SizedBox(
+                          height: screen.height * 0.2,
+                          width: screen.width,
+                          child: Image.network(
+                            details["cover"],
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(
+                                child: CupertinoActivityIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -222,22 +229,24 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                           MainAxisAlignment.start,
                                       children: [
                                         GlassButton(
-                                            icon: const Icon(
-                                              CupertinoIcons.play_rectangle,
-                                              color: Colors.white,
-                                            ),
-                                            function: () {
-                                              Provider.of<AllAnime>(context,
-                                                      listen: false)
-                                                  .addToRecommendations(
-                                                      widget.id);
-                                              Navigator.of(context).pushNamed(
-                                                  WatchEpisodeScreen.routeName,
-                                                  arguments: {
-                                                    "id": widget.id,
-                                                    "index": 0
-                                                  });
-                                            }),
+                                              icon: const Icon(
+                                                CupertinoIcons.play_rectangle,
+                                                color: Colors.white,
+                                              ),
+                                              function: () {
+                                                Provider.of<AllAnime>(context,
+                                                        listen: false)
+                                                    .addToRecommendations(
+                                                        widget.id);
+                                                Navigator.of(context).pushNamed(
+                                                    WatchEpisodeScreen.routeName,
+                                                    arguments: {
+                                                      "id": widget.id,
+                                                      "index": 0,
+                                                      "tag": "watch",
+                                                    });
+                                              }),
+                            
                                         const SizedBox(
                                           width: 10,
                                         ),

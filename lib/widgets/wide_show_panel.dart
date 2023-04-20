@@ -64,83 +64,86 @@ class WideShowPanel extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context)
-              .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id, "image" :image});
+              .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id, "image" :image, "tag":"recent"});
         },
-        child: Container(
-          height: 155,
-          width: screen.width - 50,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          child: Row(
-            children: [
-              Container(
-                height: 155,
-                width: 110,
-                clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(32))),
-                child: Image.network(
-                  image,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return const Center(
-                        child: CupertinoActivityIndicator(color: Colors.white,),
-                      );
-                    },
+        child: Hero(
+          tag: id+"recent",
+          child: Container(
+            height: 155,
+            width: screen.width - 50,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            child: Row(
+              children: [
+                Container(
+                  height: 155,
+                  width: 110,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(32))),
+                  child: Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(
+                          child: CupertinoActivityIndicator(color: Colors.white,),
+                        );
+                      },
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      name,
-                      maxLines: 3,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          CupertinoIcons.star,
-                          color: Colors.yellow,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                            rating == "null"
-                                ? "Not Available"
-                                : ((int.parse(rating) / 100) * 5)
-                                    .toStringAsPrecision(2),
-                            style: detailLabelStyle),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(year, style: detailLabelStyle),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text("Episodes:  $episodes", style: detailLabelStyle),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    genreText(),
-                  ],
+                const SizedBox(
+                  width: 10,
                 ),
-              )
-            ],
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        name,
+                        maxLines: 3,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            CupertinoIcons.star,
+                            color: Colors.yellow,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              rating == "null"
+                                  ? "Not Available"
+                                  : ((int.parse(rating) / 100) * 5)
+                                      .toStringAsPrecision(2),
+                              style: detailLabelStyle),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(year, style: detailLabelStyle),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text("Episodes:  $episodes", style: detailLabelStyle),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      genreText(),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

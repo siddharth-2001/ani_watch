@@ -33,51 +33,54 @@ class CurrentWatchPanel extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).pushNamed(WatchEpisodeScreen.routeName,
-                arguments: {"id": id, "index": int.parse(episodeIndex)});
+                arguments: {"id": id, "index": int.parse(episodeIndex),"tag":"watch"});
           },
-          child: Column(
-            children: [
-              Container(
-                height: screen.height * 0.17,
-                clipBehavior: Clip.hardEdge,
-                width: screen.width - 30,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(32))),
-                child: Image.network(
-                  image,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return const Center(
-                      child: CupertinoActivityIndicator(
-                        color: Colors.white,
+          child: Hero(
+            tag: id+"watch",
+            child: Column(
+              children: [
+                Container(
+                  height: screen.height * 0.17,
+                  clipBehavior: Clip.hardEdge,
+                  width: screen.width - 30,
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(32))),
+                  child: Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: CupertinoActivityIndicator(
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        name,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white),
                       ),
-                    );
-                  },
+                      Text(
+                        "Episode: ${int.parse(episodeIndex) + 1}",
+                        style: const TextStyle(fontSize: 11, color: Colors.white),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      name,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    ),
-                    Text(
-                      "Episode: ${int.parse(episodeIndex) + 1}",
-                      style: const TextStyle(fontSize: 11, color: Colors.white),
-                    )
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

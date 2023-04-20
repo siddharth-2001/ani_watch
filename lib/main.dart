@@ -47,7 +47,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
           textTheme: GoogleFonts.montserratTextTheme(),
           primaryColor: Colors.greenAccent.shade400),
-          home: HomeScreen(),
+          home: const HomeScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case HomeScreen.routeName:

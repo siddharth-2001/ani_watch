@@ -19,7 +19,8 @@ import '../provider/anime.dart';
 class WatchEpisodeUi extends StatefulWidget {
   final String animeId;
   final int index;
-  const WatchEpisodeUi({super.key, required this.animeId, required this.index});
+  final String tag;
+  const WatchEpisodeUi({super.key, required this.animeId, required this.index, required this.tag});
 
   @override
   State<WatchEpisodeUi> createState() => _WatchEpisodeUiState();
@@ -50,7 +51,6 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       fullScreenByDefault: true,
       showControls: true,
       zoomAndPan: true,
-      
       customControls: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: CupertinoControls(
@@ -226,19 +226,19 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     return Stack(
       children: [
-        Container(
-          height: size.height,
-          width: size.width,
+        Hero(
+          tag: widget.animeId + widget.tag,
           child: GlassImage(
-            height: size.height,
-            width: size.width,
-            image: Image.network(
-              anime.details["image"],
-              fit: BoxFit.cover,
+              height: size.height,
+              width: size.width,
+              image: Image.network(
+                anime.details["image"],
+                fit: BoxFit.cover,
+              ),
+              blur: 25,
+              overlayColor: Colors.black.withOpacity(0.7),
             ),
-            blur: 25,
-            overlayColor: Colors.black.withOpacity(0.7),
-          ),
+          
         ),
         totalEpisodes == 0
             ? const Center(
@@ -261,9 +261,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                             color: Colors.white,
                           ))
                       : Container(
-                          height: 250,
-                          width: size.width,
-                          child: playerWidget),
+                          height: 250, width: size.width, child: playerWidget),
                   const SizedBox(
                     height: 15,
                   ),

@@ -48,6 +48,7 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
               itemBuilder: (BuildContext context, int index) {
                 return Center(
                   child: GlassShowPanel(
+                    tag: "popular",
                     id: list[index].details["id"],
                     name: list[index].details["name"],
                     image: list[index].details["image"],

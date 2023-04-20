@@ -281,7 +281,7 @@ class AllAnime with ChangeNotifier {
     try {
       _favMap = jsonDecode(prefs.getString("favouritesMap")!);
     } catch (error) {
-      log(error.toString() + 'line 281');
+      log('${error}line 281');
       _favMap = {};
     }
   }

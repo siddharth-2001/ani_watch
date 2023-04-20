@@ -45,6 +45,7 @@ class _YouMayLikeListState extends State<YouMayLikeList> {
               itemBuilder: (BuildContext context, int index) {
                 return Center(
                   child: GlassShowPanel(
+                    tag: "you_may_like",
                     id: list[index].details["id"],
                     name: list[index].details["name"],
                     image: list[index].details["image"],

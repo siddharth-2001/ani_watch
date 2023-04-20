@@ -1,4 +1,5 @@
 
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
 
 //local imports
@@ -20,13 +21,34 @@ class _WatchEpisodeScreenState extends State<WatchEpisodeScreen> {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final size = MediaQuery.of(context).size;
 
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      resizeToAvoidBottomInset: false,
-      body: 
-           WatchEpisodeUi(animeId: args["id"]!, index: args["index"]!,)
+    return DismissiblePage(
+      onDismissed: () => Navigator.of(context).pop(),
+    
+      disabled: false,
+      minRadius: 10,
+      maxRadius: 10,
+      dragSensitivity: 1.0,
+      maxTransformValue: .8,
+      direction: DismissiblePageDismissDirection.down,
+
+  
+      dismissThresholds: const {
+        DismissiblePageDismissDirection.vertical: .2,
+      },
+      minScale: .8,
+      reverseDuration: const Duration(milliseconds: 250),
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        resizeToAvoidBottomInset: false,
+        body: 
+             SingleChildScrollView(child: SizedBox(
+              height: size.height,
+              width: size.width,
+              child: WatchEpisodeUi(animeId: args["id"]!, index: args["index"]!, tag: args["tag"],)))
+      ),
     );
   }
 }

@@ -45,6 +45,7 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
               itemBuilder: (BuildContext context, int index) {
                 return Center(
                   child: GlassShowPanel(
+                    tag: "trending",
                     id: list[index].details["id"],
                     name: list[index].details["name"],
                     image: list[index].details["image"],

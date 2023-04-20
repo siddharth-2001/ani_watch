@@ -43,6 +43,7 @@ class _RecommendedAnimeListState extends State<RecommendedAnimeList> {
               itemBuilder: (BuildContext context, int index) {
                 return Center(
                   child: GlassShowPanel(
+                    tag: "recommended",
                     id: list[index].details["id"],
                     name: list[index].details["name"],
                     image: list[index].details["image"],
