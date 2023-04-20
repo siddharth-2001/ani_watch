@@ -29,7 +29,7 @@ class ShowDetailScreen extends StatelessWidget {
           end: Alignment.topLeft,
         )
         ),
-        child: ShowDetailUi(id: args["id"]))
+        child: ShowDetailUi(id: args["id"], image: args["image"],))
     );
   }
 }

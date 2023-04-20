@@ -13,8 +13,9 @@ import '../provider/anime.dart';
 
 class ShowDetailUi extends StatefulWidget {
   final String id;
+  final String image;
 
-  const ShowDetailUi({super.key, required this.id});
+  const ShowDetailUi({super.key, required this.id, required this.image});
 
   @override
   State<ShowDetailUi> createState() => _ShowDetailUiState();
@@ -68,29 +69,29 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
     final theme = Theme.of(context);
     final screen = MediaQuery.of(context).size;
 
-    return _isLoading == true
-        ? const Center(
-            child: CupertinoActivityIndicator(
-              color: Colors.white,
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          GlassImage(
+            height: screen.height,
+            width: screen.width,
+            overlayColor: Colors.black.withOpacity(0.7),
+            blur: 25,
+            image: Image.network(
+              widget.image,
+              fit: BoxFit.cover,
             ),
-          )
-        : SingleChildScrollView(
-            child: Stack(
-              children: [
-                GlassImage(
-                  height: screen.height,
-                  width: screen.width,
-                  overlayColor: Colors.black.withOpacity(0.7),
-                  blur: 25,
-                  image: Image.network(
-                    details["image"],
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SizedBox(
-                  height: screen.height,
-                  width: screen.width,
-                  child: Column(
+          ),
+          SizedBox(
+            height: screen.height,
+            width: screen.width,
+            child: _isLoading == true
+                ? const Center(
+                    child: CupertinoActivityIndicator(
+                      color: Colors.white,
+                    ),
+                  )
+                : Column(
                     children: [
                       SizedBox(
                         height: screen.height * 0.2,
@@ -285,9 +286,9 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          );
+          ),
+        ],
+      ),
+    );
   }
 }

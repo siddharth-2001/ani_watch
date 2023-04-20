@@ -64,7 +64,7 @@ class WideShowPanel extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context)
-              .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id});
+              .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id, "image" :image});
         },
         child: Container(
           height: 155,

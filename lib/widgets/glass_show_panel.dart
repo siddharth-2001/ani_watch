@@ -32,7 +32,7 @@ class GlassShowPanel extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             Navigator.of(context)
-                .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id});
+                .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id, "image":image});
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
