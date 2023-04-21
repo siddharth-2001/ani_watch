@@ -1,11 +1,14 @@
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'package:provider/provider.dart';
 
 //local imports
 import '../screens/show_detail_screen.dart';
 
 //provider imports
+import '../provider/settings.dart';
 
 class WideShowPanel extends StatelessWidget {
   final String id;
@@ -33,7 +36,11 @@ class WideShowPanel extends StatelessWidget {
   Widget genreText() {
     String result = "";
 
-    if (genres.isEmpty) return Text("Genres:  Not Available", style: detailLabelStyle,);
+    if (genres.isEmpty)
+      return Text(
+        "Genres:  Not Available",
+        style: detailLabelStyle,
+      );
 
     for (var element in genres) {
       result = "${result + element},  ";
@@ -51,29 +58,33 @@ class WideShowPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+    final appSettings = Provider.of<AppSettings>(context);
 
     return ZoomTapAnimation(
-       enableLongTapRepeatEvent: false,
-          longTapRepeatDuration: const Duration(milliseconds: 100),
-          begin: 1.0,
-          end: 0.93,
-          beginDuration: const Duration(milliseconds: 20),
-          endDuration: const Duration(milliseconds: 120),
-          beginCurve: Curves.decelerate,
-          endCurve: Curves.fastOutSlowIn,
+      enableLongTapRepeatEvent: false,
+      longTapRepeatDuration: const Duration(milliseconds: 100),
+      begin: 1.0,
+      end: 0.93,
+      beginDuration: const Duration(milliseconds: 20),
+      endDuration: const Duration(milliseconds: 120),
+      beginCurve: Curves.decelerate,
+      endCurve: Curves.fastOutSlowIn,
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context)
-              .pushNamed(ShowDetailScreen.routeName, arguments: {"id": id, "image" :image, "tag":"recent"});
+          context.pushTransparentRoute(
+              transitionDuration: appSettings.transitionDuration,
+              reverseTransitionDuration: appSettings.reverseTransitionDuration,
+              ShowDetailScreen(id: id, image: image, tag:"search"));
         },
-        child: Hero(
-          tag: id+"recent",
-          child: Container(
+        child:  Container(
             height: 155,
             width: screen.width - 50,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
             child: Row(
               children: [
+                Hero(
+          tag: id + "search",
+          child:
                 Container(
                   height: 155,
                   width: 110,
@@ -84,13 +95,15 @@ class WideShowPanel extends StatelessWidget {
                     image,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(
-                          child: CupertinoActivityIndicator(color: Colors.white,),
-                        );
-                      },
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: CupertinoActivityIndicator(
+                          color: Colors.white,
+                        ),
+                      );
+                    },
                   ),
-                ),
+                ),),
                 const SizedBox(
                   width: 10,
                 ),
@@ -146,7 +159,7 @@ class WideShowPanel extends StatelessWidget {
             ),
           ),
         ),
-      ),
+     
     );
   }
 }

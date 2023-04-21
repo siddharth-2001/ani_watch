@@ -13,6 +13,7 @@ import './screens/settings_screen.dart';
 
 //provider imports
 import './provider/anime.dart';
+import './provider/settings.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -29,6 +30,9 @@ void main() {
       ChangeNotifierProvider(
         create: (context) => RecentEpisodes(),
       ),
+      ChangeNotifierProvider(
+        create: (context) => AppSettings(),
+      ),
     ],
     child: const App(),
   ));
@@ -38,7 +42,6 @@ class App extends StatelessWidget {
   const App({super.key});
 
   final transitionType = PageTransitionType.fade;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -47,26 +50,12 @@ class App extends StatelessWidget {
       theme: ThemeData(
           textTheme: GoogleFonts.montserratTextTheme(),
           primaryColor: Colors.greenAccent.shade400),
-          home: const HomeScreen(),
+      home: const HomeScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case HomeScreen.routeName:
             return PageTransition(
                 child: const HomeScreen(),
-                type: transitionType,
-                isIos: isIos,
-                settings: settings);
-
-          case ShowDetailScreen.routeName:
-            return PageTransition(
-                child: const ShowDetailScreen(),
-                type: transitionType,
-                isIos: isIos,
-                settings: settings);
-
-          case WatchEpisodeScreen.routeName:
-            return PageTransition(
-                child: const WatchEpisodeScreen(),
                 type: transitionType,
                 isIos: isIos,
                 settings: settings);

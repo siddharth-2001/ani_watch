@@ -5,28 +5,30 @@ import 'package:flutter/material.dart';
 import '../ui/show_detail_ui.dart';
 
 class ShowDetailScreen extends StatelessWidget {
-  const ShowDetailScreen({super.key});
+  final String id, image, tag;
+  const ShowDetailScreen({super.key, required this.id, required this.image, required this.tag});
 
   static const routeName = '/show-detail';
+  
 
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
-
+  
     return DismissiblePage(
       onDismissed: () => Navigator.of(context).pop(),
-      direction: DismissiblePageDismissDirection.vertical,
-      backgroundColor: Colors.black,
+      direction: DismissiblePageDismissDirection.multi,
+      backgroundColor: Colors.transparent,
       dismissThresholds: const {
+
         DismissiblePageDismissDirection.vertical: .2,
       },
+
       minScale: .8,
       reverseDuration: const Duration(milliseconds: 250),
       child: Scaffold(
+
           resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.black,
           // bottomNavigationBar: GlassBottomBar(),
           body: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -41,9 +43,9 @@ class ShowDetailScreen extends StatelessWidget {
                   end: Alignment.topLeft,
                 )),
                 child: ShowDetailUi(
-                  id: args["id"],
-                  image: args["image"],
-                  tag: args["tag"],
+                  id: id,
+                  image: image,
+                  tag: tag,
                 )),
           )),
     );

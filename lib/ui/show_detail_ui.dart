@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:ani_watch/widgets/blur_image.dart';
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,13 +14,15 @@ import '../ui/recommendation_list.dart';
 
 //provider imports
 import '../provider/anime.dart';
+import '../provider/settings.dart';
 
 class ShowDetailUi extends StatefulWidget {
   final String id;
   final String image;
   final String tag;
 
-  const ShowDetailUi({super.key, required this.id, required this.image, required this.tag});
+  const ShowDetailUi(
+      {super.key, required this.id, required this.image, required this.tag});
 
   @override
   State<ShowDetailUi> createState() => _ShowDetailUiState();
@@ -36,10 +42,13 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
           .getAnimeFromMemory(widget.id);
 
       details = anime.details;
-
-      setState(() {
+      if(context.mounted){
+        setState(() {
         _isLoading = false;
       });
+
+      }
+      
     });
   }
 
@@ -69,22 +78,14 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screen = MediaQuery.of(context).size;
+    final appSettings = Provider.of<AppSettings>(context);
 
     return SingleChildScrollView(
       child: Stack(
         children: [
           Hero(
             tag: widget.id + widget.tag,
-            child: GlassImage(
-              height: screen.height,
-              width: screen.width,
-              overlayColor: Colors.black.withOpacity(0.7),
-              blur: 25,
-              image: Image.network(
-                widget.image,
-                fit: BoxFit.cover,
-              ),
-            ),
+            child: BlurImageBackground(image: widget.image),
           ),
           SizedBox(
             height: screen.height,
@@ -229,24 +230,25 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                           MainAxisAlignment.start,
                                       children: [
                                         GlassButton(
-                                              icon: const Icon(
-                                                CupertinoIcons.play_rectangle,
-                                                color: Colors.white,
-                                              ),
-                                              function: () {
-                                                Provider.of<AllAnime>(context,
-                                                        listen: false)
-                                                    .addToRecommendations(
-                                                        widget.id);
-                                                Navigator.of(context).pushNamed(
-                                                    WatchEpisodeScreen.routeName,
-                                                    arguments: {
-                                                      "id": widget.id,
-                                                      "index": 0,
-                                                      "tag": "watch",
-                                                    });
-                                              }),
-                            
+                                            icon: const Icon(
+                                              CupertinoIcons.play_rectangle,
+                                              color: Colors.white,
+                                            ),
+                                            function: () {
+                                              Provider.of<AllAnime>(context,
+                                                      listen: false)
+                                                  .addToRecommendations(
+                                                      widget.id);
+                                              context.pushTransparentRoute(
+                                                  reverseTransitionDuration:
+                                                    appSettings.transitionDuration,
+                                                  transitionDuration: appSettings.reverseTransitionDuration,
+                                                  WatchEpisodeScreen(
+                                                    id: widget.id,
+                                                    tag: "watch",
+                                                    index: 0,
+                                                  ));
+                                            }),
                                         const SizedBox(
                                           width: 10,
                                         ),

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:math';
+import 'package:ani_watch/widgets/blur_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:chewie/chewie.dart';
@@ -20,7 +21,11 @@ class WatchEpisodeUi extends StatefulWidget {
   final String animeId;
   final int index;
   final String tag;
-  const WatchEpisodeUi({super.key, required this.animeId, required this.index, required this.tag});
+  const WatchEpisodeUi(
+      {super.key,
+      required this.animeId,
+      required this.index,
+      required this.tag});
 
   @override
   State<WatchEpisodeUi> createState() => _WatchEpisodeUiState();
@@ -94,12 +99,15 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
         video().then((value) {
           _episodeList[currIndex]
               .setEpisodeLength(_videoPlayerController.value.duration);
-          setState(() {
-            _videoPlayerController
-                .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
-            saveSeekPosition();
-            _isLoading = false;
-          });
+
+          if (context.mounted) {
+            setState(() {
+              _videoPlayerController
+                  .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
+              saveSeekPosition();
+              _isLoading = false;
+            });
+          }
         });
       });
     }
@@ -154,11 +162,13 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
 
   //change
   void changeQuality(String value) {
-    setState(() {
-      _isLoading = true;
-      currQuality = value;
-      timer.cancel();
-    });
+    if (context.mounted) {
+      setState(() {
+        _isLoading = true;
+        currQuality = value;
+        timer.cancel();
+      });
+    }
 
     _videoPlayerController.dispose();
 
@@ -228,17 +238,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       children: [
         Hero(
           tag: widget.animeId + widget.tag,
-          child: GlassImage(
-              height: size.height,
-              width: size.width,
-              image: Image.network(
-                anime.details["image"],
-                fit: BoxFit.cover,
-              ),
-              blur: 25,
-              overlayColor: Colors.black.withOpacity(0.7),
-            ),
-          
+          child: BlurImageBackground(image: anime.details["image"]),
         ),
         totalEpisodes == 0
             ? const Center(

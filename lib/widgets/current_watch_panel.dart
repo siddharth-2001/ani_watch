@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:dismissible_page/dismissible_page.dart';
+
 //local imports
 import '../screens/watch_episode_screen.dart';
+
+//provider imports
+import '../provider/settings.dart';
 
 class CurrentWatchPanel extends StatelessWidget {
   final String id, episodeIndex, name, image;
@@ -17,6 +23,7 @@ class CurrentWatchPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+    final appSettings = Provider.of<AppSettings>(context);
 
     return Container(
       width: screen.width - 50,
@@ -32,13 +39,17 @@ class CurrentWatchPanel extends StatelessWidget {
         endCurve: Curves.fastOutSlowIn,
         child: GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed(WatchEpisodeScreen.routeName,
-                arguments: {"id": id, "index": int.parse(episodeIndex),"tag":"watch"});
+            context.pushTransparentRoute(
+              transitionDuration: appSettings.transitionDuration,
+              reverseTransitionDuration: appSettings.reverseTransitionDuration,
+              WatchEpisodeScreen(id: id, tag:"watch", index: int.parse(episodeIndex),));
+
           },
-          child: Hero(
-            tag: id+"watch",
-            child: Column(
+          child:  Column(
               children: [
+                Hero(
+            tag: id+"watch",
+            child:
                 Container(
                   height: screen.height * 0.17,
                   clipBehavior: Clip.hardEdge,
@@ -57,7 +68,7 @@ class CurrentWatchPanel extends StatelessWidget {
                       );
                     },
                   ),
-                ),
+                ),),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                   child: Column(
@@ -83,7 +94,7 @@ class CurrentWatchPanel extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      
     );
   }
 }
