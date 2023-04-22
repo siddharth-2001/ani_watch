@@ -38,7 +38,7 @@ class _CurrentWatchListState extends State<CurrentWatchList> {
     return _isLoading
         ? const CupertinoActivityIndicator()
         : SizedBox(
-          height: size.height * 0.27,
+          height: size.height * 0.22,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,

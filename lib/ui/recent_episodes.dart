@@ -42,7 +42,7 @@ class _RecentEpisodeUiState extends State<RecentEpisodeUi> {
         ? const CupertinoActivityIndicator()
         : 
            SizedBox(
-            height: size.height * 0.27,
+            height: size.height * 0.22,
              child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: list.length,

@@ -8,6 +8,7 @@ import '../ui/popular_anime_list.dart';
 import '../ui/current_watch_list.dart';
 import '../ui/you_may_like_list.dart';
 import '../widgets/glass_bottom_bar.dart';
+import '../widgets/blur_image.dart';
 
 //provider imports
 
@@ -20,111 +21,113 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
     const fontColor = Colors.white;
-    final listHeight = screen.height * 0.25;
-    final wideListHeight = screen.height * 0.3;
+    final listHeight = screen.height * 0.22;
+    final wideListHeight = screen.height * 0.25;
 
     return Scaffold(
-        backgroundColor: Colors.blueGrey.shade900,
+        backgroundColor: Colors.black,
         resizeToAvoidBottomInset: false,
         extendBody: true,
         bottomNavigationBar: const GlassBottomBar(
           currIndex: 0,
         ),
-        body: Container(
-          height: screen.height,
-          decoration: const BoxDecoration(color: Colors.black),
-          child: ListView(
-            physics: const BouncingScrollPhysics(),
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.025),
-                child: const HomeUpperUi(),
+        body:  Stack(
+          children: [
+            BlurImageBackground(image: "none"),
+            ListView(
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screen.width * 0.05,
+                        vertical: screen.height * 0.025),
+                    child: const HomeUpperUi(),
+                  ),
+                  Container(
+                    width: screen.width,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screen.width * 0.05,
+                        vertical: screen.height * 0.025),
+                    child: const Text(
+                      "Continue Watching",
+                      style: TextStyle(
+                          color: fontColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  SizedBox(
+                      height: wideListHeight,
+                      child: const Center(child: CurrentWatchList())),
+                  Container(
+                    width: screen.width,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screen.width * 0.05,
+                        vertical: screen.height * 0.025),
+                    child: const Text(
+                      "You Might Like",
+                      style: TextStyle(
+                          color: fontColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  SizedBox(
+                      height: listHeight,
+                      child: const Center(child: YouMayLikeList())),
+                  Container(
+                    width: screen.width,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screen.width * 0.05,
+                        vertical: screen.height * 0.025),
+                    child: const Text(
+                      "Trending Anime",
+                      style: TextStyle(
+                          color: fontColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  SizedBox(height: listHeight, child: const Center(child: TrendingAnimeList())),
+                  Container(
+                    width: screen.width,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screen.width * 0.05,
+                        vertical: screen.height * 0.025),
+                    child: const Text(
+                      "Recent Episodes",
+                      style: TextStyle(
+                          color: fontColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  SizedBox(
+                      height: wideListHeight, child: const Center(child: RecentEpisodeUi())),
+                  Container(
+                    width: screen.width,
+                    
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screen.width * 0.05,
+                        vertical: screen.height * 0.025),
+                    child: const Text(
+                      "Popular Anime",
+                      style: TextStyle(
+                          color: fontColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  SizedBox(height: listHeight, child: const Center(child: PopularAnimeList())),
+                ],
               ),
-              Container(
-                width: screen.width,
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.025),
-                child: const Text(
-                  "Continue Watching",
-                  style: TextStyle(
-                      color: fontColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              SizedBox(
-                  height: wideListHeight,
-                  child: const Center(child: CurrentWatchList())),
-              Container(
-                width: screen.width,
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.025),
-                child: const Text(
-                  "You Might Like",
-                  style: TextStyle(
-                      color: fontColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              SizedBox(
-                  height: listHeight,
-                  child: const Center(child: YouMayLikeList())),
-              Container(
-                width: screen.width,
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.025),
-                child: const Text(
-                  "Trending Anime",
-                  style: TextStyle(
-                      color: fontColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              SizedBox(height: listHeight, child: const Center(child: TrendingAnimeList())),
-              Container(
-                width: screen.width,
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.025),
-                child: const Text(
-                  "Recent Episodes",
-                  style: TextStyle(
-                      color: fontColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              SizedBox(
-                  height: wideListHeight, child: const Center(child: RecentEpisodeUi())),
-              Container(
-                width: screen.width,
-                
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.025),
-                child: const Text(
-                  "Popular Anime",
-                  style: TextStyle(
-                      color: fontColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              SizedBox(height: listHeight, child: const Center(child: PopularAnimeList())),
-            ],
-          ),
-        ));
+          ],
+        ),
+        );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,32 +27,37 @@ class GlassShowPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final appSettings = Provider.of<AppSettings>(context, listen: false);
-    return  Padding(
-      padding: EdgeInsets.symmetric(horizontal: size.width *0.01),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
       child: ZoomTapAnimation(
-          enableLongTapRepeatEvent: false,
-          longTapRepeatDuration: const Duration(milliseconds: 100),
-          begin: 1.0,
-          end: 0.93,
-          beginDuration: const Duration(milliseconds: 20),
-          endDuration: const Duration(milliseconds: 120),
-          beginCurve: Curves.decelerate,
-          endCurve: Curves.fastOutSlowIn,
-          child: GestureDetector(
-            onTap: () {
-              context.pushTransparentRoute(
-                  transitionDuration: appSettings.transitionDuration,
-                  reverseTransitionDuration: appSettings.reverseTransitionDuration,
-                  ShowDetailScreen(id: id, image: image, tag: tag));
-            },
-            child:  Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Hero(
-              tag: id + tag,
-              child:
-                  Container(
-                    height: size.height * 0.18,
+        enableLongTapRepeatEvent: false,
+        longTapRepeatDuration: const Duration(milliseconds: 100),
+        begin: 1.0,
+        end: 0.93,
+        beginDuration: const Duration(milliseconds: 20),
+        endDuration: const Duration(milliseconds: 120),
+        beginCurve: Curves.decelerate,
+        endCurve: Curves.fastOutSlowIn,
+        child: GestureDetector(
+          onTap: () {
+            context.pushTransparentRoute(
+                transitionDuration: appSettings.transitionDuration,
+                reverseTransitionDuration:
+                    appSettings.reverseTransitionDuration,
+                ShowDetailScreen(id: id, image: image, tag: tag));
+          },
+          child: Container(
+            height: size.height * 0.2,
+            width: size.width * 0.3,
+            clipBehavior: Clip.hardEdge,
+            decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(1 / 5.5 * 145))),
+            child: Stack(
+              children: [
+                Hero(
+                  tag: id + tag,
+                  child: Container(
+                    height: size.height * 0.2,
                     width: size.width * 0.3,
                     clipBehavior: Clip.hardEdge,
                     decoration: BoxDecoration(
@@ -76,26 +83,45 @@ class GlassShowPanel extends StatelessWidget {
                         );
                       },
                     ),
-                  ),),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                    child: SizedBox(
-                      width: 110,
-                      child: Text(
-                        name,
-                        // textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontSize: 11,
-                            
-                            color: Colors.grey.shade200),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        tileMode: TileMode.decal,
+                        sigmaX: 10,
+                        sigmaY: 10,
+                      ),
+                      child: Container(
+                        color: Colors.black.withOpacity(0.2),
+                        width: size.width * 0.3,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                          child: SizedBox(
+                            width: 110,
+                            child: Text(
+                              name,
+                              // textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
+        ),
       ),
     );
   }

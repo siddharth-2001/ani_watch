@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class BlurImageBackground extends StatelessWidget {
   final String image;
-  const BlurImageBackground({super.key, required this.image});
+  final Image localImage = Image.asset("assets/bg2.jpg", fit: BoxFit.cover,);
+  BlurImageBackground({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class BlurImageBackground extends StatelessWidget {
               sigmaX: 15,
               sigmaY: 15,
             ),
-            child: Image.network(
+            child: image == "none" ? localImage : Image.network(
               image,
               fit: BoxFit.cover,
             ),

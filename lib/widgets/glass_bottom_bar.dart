@@ -17,7 +17,7 @@ class GlassBottomBar extends StatefulWidget {
 }
 
 class _GlassBottomBarState extends State<GlassBottomBar> {
-  final Color active = Colors.deepPurpleAccent.shade100, inactive = Colors.white;
+  final Color active = Colors.greenAccent.shade400, inactive = Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class _GlassBottomBarState extends State<GlassBottomBar> {
         height: 70,
         width: screen.width,
         blur: 9,
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.blueGrey.withOpacity(0.2),
         border: const Border.fromBorderSide(BorderSide.none),
         shadowStrength: 5,
         borderRadius: BorderRadius.circular(32),

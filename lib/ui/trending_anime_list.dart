@@ -38,7 +38,7 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
     return _isLoading == true
         ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
         :  SizedBox(
-          height: size.height *0.22,
+          height: size.height *0.2,
           child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: list.length,
