@@ -16,10 +16,9 @@ class SearchBoxUi extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final textController = TextEditingController();
-    final theme = Theme.of(context);
 
     return GlassWidget(
-      color: Colors.blueGrey,
+      color: Colors.deepPurple.shade100,
       height: 900,
       width: size.width,
       child: Column(
@@ -52,7 +51,7 @@ class SearchBoxUi extends StatelessWidget {
                 });
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
+                  backgroundColor: Colors.deepPurpleAccent.shade100,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(42))),
               child: const Text("Search"))

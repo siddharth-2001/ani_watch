@@ -14,7 +14,7 @@ class HomeUpperUi extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Ani", style: theme.textTheme.headlineSmall!.copyWith(color: Colors.greenAccent.shade400 , fontWeight: FontWeight.w900),),
+            Text("Ani", style: theme.textTheme.headlineSmall!.copyWith(color: Colors.deepPurpleAccent.shade100  , fontWeight: FontWeight.w900),),
             Text("Watch+", style: theme.textTheme.headlineSmall!.copyWith(color: Colors.white , fontWeight: FontWeight.w900),),
           ],
         ),

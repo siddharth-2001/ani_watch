@@ -21,7 +21,6 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
 
   @override
   void initState() {
-
     super.initState();
     Provider.of<AllAnime>(context, listen: false)
         .fetchLocalFavData()
@@ -40,14 +39,29 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
   @override
   Widget build(BuildContext context) {
     final padding = MediaQuery.of(context).padding;
+    final size = MediaQuery.of(context).size;
 
     return _isLoading
-        ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
+        ? const Center(
+            child: CupertinoActivityIndicator(
+            color: Colors.white,
+          ))
         : Container(
             child: favouriteList.isEmpty
-                ? const Text("Nothing to show", style: TextStyle(color: Colors.white,),)
+                ? const Center(
+                  child: Text(
+                      "Nothing to show",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                )
                 : ListView.builder(
-                    padding: EdgeInsets.only(top: 0, bottom: padding.bottom),
+                    padding: EdgeInsets.only(
+                        top: 0,
+                        bottom: padding.bottom,
+                        left: size.width * 0.05,
+                        right: size.width * 0.05),
                     physics: const BouncingScrollPhysics(),
                     itemCount: favouriteList.length,
                     itemBuilder: (context, index) {

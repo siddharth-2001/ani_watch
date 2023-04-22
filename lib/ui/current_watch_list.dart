@@ -33,24 +33,28 @@ class _CurrentWatchListState extends State<CurrentWatchList> {
   @override
   Widget build(BuildContext context) {
     list = Provider.of<AllAnime>(context, listen: true).currWatchList;
+    final size = MediaQuery.of(context).size;
 
     return _isLoading
         ? const CupertinoActivityIndicator()
-        : ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: list.length,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            physics: const BouncingScrollPhysics(
-                decelerationRate: ScrollDecelerationRate.fast),
-            itemBuilder: (BuildContext context, int index) {
-              final Anime anime = list[index].keys.first;
-              return CurrentWatchPanel(
-                id: anime.details["id"]!,
-                name: anime.details["name"]!,
-                episodeIndex: list[index].values.first.toString(),
-                image: anime.details["image"]!,
-              );
-            },
-          );
+        : SizedBox(
+          height: size.height * 0.27,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: list.length,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              physics: const BouncingScrollPhysics(
+                  decelerationRate: ScrollDecelerationRate.fast),
+              itemBuilder: (BuildContext context, int index) {
+                final Anime anime = list[index].keys.first;
+                return CurrentWatchPanel(
+                  id: anime.details["id"]!,
+                  name: anime.details["name"]!,
+                  episodeIndex: list[index].values.first.toString(),
+                  image: anime.details["image"]!,
+                );
+              },
+            ),
+        );
   }
 }

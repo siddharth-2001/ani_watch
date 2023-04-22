@@ -25,20 +25,15 @@ class FavouriteScreen extends StatelessWidget {
         height: screen.height,
         width: screen.width,
         decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [Color(0xff1e2757), Color(0xff0a0d1d)],
-          stops: [0, 1],
-          begin: Alignment.bottomRight,
-          end: Alignment.topLeft,
-        )),
+            color: Colors.black),
         padding: EdgeInsets.only(top: padding.top),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Text("Favourites", style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+              padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05 , vertical: screen.height*0.025),
+              child: Text("Favourites", style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.deepPurpleAccent.shade100, fontWeight: FontWeight.w800)),
             ),
             const Flexible(child: FavouriteAnimeList()),
           ],

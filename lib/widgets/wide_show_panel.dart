@@ -36,11 +36,12 @@ class WideShowPanel extends StatelessWidget {
   Widget genreText() {
     String result = "";
 
-    if (genres.isEmpty)
+    if (genres.isEmpty) {
       return Text(
         "Genres:  Not Available",
         style: detailLabelStyle,
       );
+    }
 
     for (var element in genres) {
       result = "${result + element},  ";
@@ -83,7 +84,7 @@ class WideShowPanel extends StatelessWidget {
             child: Row(
               children: [
                 Hero(
-          tag: id + "search",
+          tag: "${id}search",
           child:
                 Container(
                   height: 155,

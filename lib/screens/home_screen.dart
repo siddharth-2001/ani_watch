@@ -20,6 +20,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
     const fontColor = Colors.white;
+    final listHeight = screen.height * 0.25;
+    final wideListHeight = screen.height * 0.3;
 
     return Scaffold(
         backgroundColor: Colors.blueGrey.shade900,
@@ -30,25 +32,21 @@ class HomeScreen extends StatelessWidget {
         ),
         body: Container(
           height: screen.height,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            colors: [Color(0xff1e2757), Color(0xff0a0d1d)],
-            stops: [0, 1],
-            begin: Alignment.bottomRight,
-            end: Alignment.topLeft,
-          )),
+          decoration: const BoxDecoration(color: Colors.black),
           child: ListView(
             physics: const BouncingScrollPhysics(),
             children: [
               Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                padding: EdgeInsets.symmetric(
+                    horizontal: screen.width * 0.05,
+                    vertical: screen.height * 0.025),
                 child: const HomeUpperUi(),
               ),
-               Container(
+              Container(
                 width: screen.width,
-                padding:  
-                    EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                padding: EdgeInsets.symmetric(
+                    horizontal: screen.width * 0.05,
+                    vertical: screen.height * 0.025),
                 child: const Text(
                   "Continue Watching",
                   style: TextStyle(
@@ -58,10 +56,14 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              SizedBox(height: screen.height * 0.23  , child: const CurrentWatchList()),
-               Container(
+              SizedBox(
+                  height: wideListHeight,
+                  child: const Center(child: CurrentWatchList())),
+              Container(
                 width: screen.width,
-                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                padding: EdgeInsets.symmetric(
+                    horizontal: screen.width * 0.05,
+                    vertical: screen.height * 0.025),
                 child: const Text(
                   "You Might Like",
                   style: TextStyle(
@@ -71,10 +73,14 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              SizedBox(height:screen.height * 0.2, child: const YouMayLikeList()),
-               Container(
+              SizedBox(
+                  height: listHeight,
+                  child: const Center(child: YouMayLikeList())),
+              Container(
                 width: screen.width,
-                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                padding: EdgeInsets.symmetric(
+                    horizontal: screen.width * 0.05,
+                    vertical: screen.height * 0.025),
                 child: const Text(
                   "Trending Anime",
                   style: TextStyle(
@@ -84,11 +90,12 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              SizedBox(height:screen.height * 0.2, child: const TrendingAnimeList()),
+              SizedBox(height: listHeight, child: const Center(child: TrendingAnimeList())),
               Container(
                 width: screen.width,
-                padding:  
-                    EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                padding: EdgeInsets.symmetric(
+                    horizontal: screen.width * 0.05,
+                    vertical: screen.height * 0.025),
                 child: const Text(
                   "Recent Episodes",
                   style: TextStyle(
@@ -98,11 +105,14 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              SizedBox(height: screen.height * 0.23  , child: const RecentEpisodeUi()),
-             
+              SizedBox(
+                  height: wideListHeight, child: const Center(child: RecentEpisodeUi())),
               Container(
                 width: screen.width,
-                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05, vertical: screen.height * 0.025),
+                
+                padding: EdgeInsets.symmetric(
+                    horizontal: screen.width * 0.05,
+                    vertical: screen.height * 0.025),
                 child: const Text(
                   "Popular Anime",
                   style: TextStyle(
@@ -112,7 +122,7 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              SizedBox(height: screen.height * 0.2, child: const PopularAnimeList()),
+              SizedBox(height: listHeight, child: const Center(child: PopularAnimeList())),
             ],
           ),
         ));

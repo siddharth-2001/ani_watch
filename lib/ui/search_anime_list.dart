@@ -21,6 +21,7 @@ class _SearchAnimeListState extends State<SearchAnimeList> {
   Widget build(BuildContext context) {
     list = Provider.of<AllAnime>(context, listen: true).getSearchList;
     final padding = MediaQuery.of(context).padding;
+    final size = MediaQuery.of(context).size;
     setState(() {
       _isLoading = false;
     });
@@ -28,7 +29,7 @@ class _SearchAnimeListState extends State<SearchAnimeList> {
         ? const Center(child: CupertinoActivityIndicator())
         : ListView.builder(
             // scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.only(top: 0, bottom: padding.bottom),
+            padding: EdgeInsets.only(top: 0, bottom: padding.bottom ,left: size.width * 0.05, right: size.width * 0.05),
             itemCount: list.length,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {

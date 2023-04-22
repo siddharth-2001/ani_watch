@@ -4,9 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 //local imoorts
-import 'screens/show_detail_screen.dart';
 import 'screens/home_screen.dart';
-import './screens/watch_episode_screen.dart';
 import './screens/search_screen.dart';
 import './screens/favourite_screen.dart';
 import './screens/settings_screen.dart';

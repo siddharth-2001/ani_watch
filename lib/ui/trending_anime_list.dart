@@ -37,23 +37,25 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
 
     return _isLoading == true
         ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
-        :  ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: list.length,
-              padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return Center(
-                  child: GlassShowPanel(
-                    tag: "trending",
-                    id: list[index].details["id"],
-                    name: list[index].details["name"],
-                    image: list[index].details["image"],
-                    episodes: list[index].details["episodes"],
-                  ),
-                );
-              },
-            
-          );
+        :  SizedBox(
+          height: size.height *0.22,
+          child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: list.length,
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return  GlassShowPanel(
+                      tag: "trending",
+                      id: list[index].details["id"],
+                      name: list[index].details["name"],
+                      image: list[index].details["image"],
+                      episodes: list[index].details["episodes"],
+                    )
+                  ;
+                },
+              
+            ),
+        );
   }
 }

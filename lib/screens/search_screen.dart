@@ -24,20 +24,15 @@ class SearchScreen extends StatelessWidget {
         width: screen.width,
         padding: EdgeInsets.only(top:screenPadding.top),
         decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [Color(0xff1e2757), Color(0xff0a0d1d)],
-          stops: [0, 1],
-          begin: Alignment.bottomRight,
-          end: Alignment.topLeft,
-        )),
+            color: Colors.black),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05 , vertical: screen.height*0.025),
               child: Text("Search Results",
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      color: Colors.white, fontWeight: FontWeight.w800)),
+                      color: Colors.deepPurpleAccent.shade100, fontWeight: FontWeight.w800)),
             ),
             const Flexible(child: SearchAnimeList())
           ],

@@ -10,7 +10,7 @@ class BlurImageBackground extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        Container(
+        SizedBox(
           height: size.height,
           width: size.width,
           child: ImageFiltered(

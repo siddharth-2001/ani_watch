@@ -23,7 +23,7 @@ class GlassButton extends StatelessWidget {
           height: 60,
           width: 60,
           blur: 9,
-          color: Colors.blueGrey.withOpacity(0.2),
+          color: Colors.black.withOpacity(0.2),
           // gradient: LinearGradient(
           //   begin: Alignment.topLeft,
           //   end: Alignment.bottomRight,

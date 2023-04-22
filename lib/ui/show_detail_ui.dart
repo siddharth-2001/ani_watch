@@ -1,11 +1,9 @@
-import 'dart:ui';
 
 import 'package:ani_watch/widgets/blur_image.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 
 //local imports
 import '../widgets/glass_button.dart';

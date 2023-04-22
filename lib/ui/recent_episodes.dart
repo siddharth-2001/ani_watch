@@ -35,26 +35,30 @@ class _RecentEpisodeUiState extends State<RecentEpisodeUi> {
   Widget build(BuildContext context) {
 
     list = Provider.of<RecentEpisodes>(context, listen: true).recentList;
+    final size = MediaQuery.of(context).size;
    
     
     return _isLoading
         ? const CupertinoActivityIndicator()
         : 
-           ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: list.length,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              physics: const BouncingScrollPhysics(
-                  decelerationRate: ScrollDecelerationRate.fast),
-              itemBuilder: (BuildContext context, int index) {
-                return GlassRecentPanel(
-                  id: list[index].details["id"]!,
-                  name: list[index].details["name"]!,
-                  episodes: list[index].details["episodes"]!,
-                  image: list[index].details["image"]!,
-                );
-              },
-            
-        );
+           SizedBox(
+            height: size.height * 0.27,
+             child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: list.length,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                physics: const BouncingScrollPhysics(
+                    decelerationRate: ScrollDecelerationRate.fast),
+                itemBuilder: (BuildContext context, int index) {
+                  return GlassRecentPanel(
+                    id: list[index].details["id"]!,
+                    name: list[index].details["name"]!,
+                    episodes: list[index].details["episodes"]!,
+                    image: list[index].details["image"]!,
+                  );
+                },
+              
+                   ),
+           );
   }
 }
