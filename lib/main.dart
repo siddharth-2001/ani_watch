@@ -15,6 +15,9 @@ import './provider/anime.dart';
 import './provider/settings.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.light
+  );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -44,7 +47,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isIos = Theme.of(context).platform == TargetPlatform.iOS;
+    final isIos = false;
     return MaterialApp(
       theme: ThemeData(
           textTheme: GoogleFonts.montserratTextTheme(),

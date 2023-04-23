@@ -24,12 +24,12 @@ class _GlassBottomBarState extends State<GlassBottomBar> {
     final screen = MediaQuery.of(context).size;
     final gh = MediaQuery.of(context).viewPadding;
     return Padding(
-      padding:  EdgeInsets.only(left: 10, right: 10, bottom: gh.bottom+10),
+      padding:  EdgeInsets.only(left: 10, right: 10, bottom: 15),
       child: GlassContainer(
         height: 70,
         width: screen.width,
         blur: 9,
-        color: Colors.blueGrey.withOpacity(0.2),
+        color: Colors.black.withOpacity(0.2),
         border: const Border.fromBorderSide(BorderSide.none),
         shadowStrength: 5,
         borderRadius: BorderRadius.circular(32),
@@ -40,7 +40,7 @@ class _GlassBottomBarState extends State<GlassBottomBar> {
             IconButton(
                 onPressed: () {
                   if (widget.currIndex == 0) return;
-                  Navigator.of(context).pushNamed(HomeScreen.routeName);
+                  Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
                 },
                 icon: Icon(
                   CupertinoIcons.home,
@@ -58,7 +58,7 @@ class _GlassBottomBarState extends State<GlassBottomBar> {
             IconButton(
                 onPressed: () {
                   if (widget.currIndex == 2) return;
-                  Navigator.of(context).pushNamed(FavouriteScreen.routeName);
+                  Navigator.of(context).pushReplacementNamed(FavouriteScreen.routeName);
                 },
                 icon: Icon(CupertinoIcons.heart,
                     color: widget.currIndex == 2 ? active : inactive)),
@@ -66,7 +66,7 @@ class _GlassBottomBarState extends State<GlassBottomBar> {
                 onPressed: () {
                   if (widget.currIndex == 3) return;
 
-                  Navigator.of(context).pushNamed(
+                  Navigator.of(context).pushReplacementNamed(
                     SettingsScreen.routeName
                   );
                 },

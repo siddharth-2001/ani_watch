@@ -96,21 +96,24 @@ class GlassShowPanel extends StatelessWidget {
                       ),
                       child: Container(
                         color: Colors.black.withOpacity(0.2),
+                        height: 32,
                         width: size.width * 0.3,
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                          child: SizedBox(
-                            width: 110,
-                            child: Text(
-                              name,
-                              // textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                        child: Center(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(vertical: 4, horizontal: 14),
+                            child: SizedBox(
+                              width: 110,
+                              child: Text(
+                                name,
+                                // textAlign: TextAlign.start,
+                                style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                         ),

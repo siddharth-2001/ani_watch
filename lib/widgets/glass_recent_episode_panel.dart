@@ -95,14 +95,14 @@ class GlassRecentPanel extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: const TextStyle(
-                                      fontSize: 11,
+                                      fontSize: 10,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white),
                                 ),
                                 Text(
-                                  "Episode: ${int.parse(episodes) + 1}",
+                                  "Episode: ${int.parse(episodes)}",
                                   style: const TextStyle(
-                                      fontSize: 11, color: Colors.white),
+                                      fontSize: 10, color: Colors.white),
                                 )
                               ],
                             ),
