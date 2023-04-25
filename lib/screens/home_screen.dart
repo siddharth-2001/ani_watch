@@ -24,8 +24,6 @@ class HomeScreen extends StatelessWidget {
     const fontColor = Colors.white;
     final listHeight = screen.height * 0.22;
     final wideListHeight = screen.height * 0.25;
-    final user = UserService();
-    user.login("test@test.com", "test@test");
 
     return Scaffold(
       backgroundColor: Colors.black,

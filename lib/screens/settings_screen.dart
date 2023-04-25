@@ -21,6 +21,7 @@ class SettingsScreen extends StatelessWidget {
 
     final padding = MediaQuery.of(context).padding;
     return Scaffold(
+      backgroundColor: Colors.black,
       bottomNavigationBar: const GlassBottomBar(currIndex: 3),
       extendBody: true,
       resizeToAvoidBottomInset: false,

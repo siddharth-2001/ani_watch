@@ -16,13 +16,14 @@ class FavouriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.black,
       bottomNavigationBar: const GlassBottomBar(
         currIndex: 2,
       ),
       extendBody: true,
       resizeToAvoidBottomInset: false,
       body: Stack(
+        
         children: [
           const BlurImageBackground(image: "assets/fav_bg.jpg", isAsset: true),
           Container(

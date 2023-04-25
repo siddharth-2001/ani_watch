@@ -17,6 +17,7 @@ class SearchScreen extends StatelessWidget {
     final screen = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: Colors.black,
       bottomNavigationBar: const GlassBottomBar(currIndex: 1),
       extendBody: true,
       resizeToAvoidBottomInset: false,
