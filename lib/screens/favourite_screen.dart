@@ -24,7 +24,7 @@ class FavouriteScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          BlurImageBackground(image: "assets/fav_bg.jpg", isAsset: true),
+          const BlurImageBackground(image: "assets/fav_bg.jpg", isAsset: true),
           Container(
             height: screen.height,
             width: screen.width,

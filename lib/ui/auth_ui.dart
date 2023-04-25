@@ -1,10 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
-import 'dart:developer';
 import 'package:ani_watch/provider/anime.dart';
 import 'package:ani_watch/screens/home_screen.dart';
-import 'package:ani_watch/ui/favourite_anime_list.dart';
 import 'package:flutter/material.dart';
-import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +13,7 @@ import '../provider/auth.dart';
 enum AuthMode { login, register }
 
 class AuthUi extends StatefulWidget {
-  AuthUi({super.key});
+  const AuthUi({super.key});
 
   @override
   State<AuthUi> createState() => _AuthUiState();
@@ -37,7 +34,6 @@ class _AuthUiState extends State<AuthUi> {
       title: Text(message),
       actions: [
         CupertinoDialogAction(
-          child: Text("Close"),
           isDefaultAction: true,
           onPressed: () {
             Navigator.of(context).pop();
@@ -45,6 +41,7 @@ class _AuthUiState extends State<AuthUi> {
               _isLoading = false;
             });
           },
+          child: const Text("Close"),
         )
       ],
     );
@@ -103,7 +100,7 @@ class _AuthUiState extends State<AuthUi> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     //try to use data on disk to auto login the user
     Provider.of<UserService>(context, listen: false).autoLogin().then((value) {
@@ -122,11 +119,11 @@ class _AuthUiState extends State<AuthUi> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Container(
+    return SizedBox(
       height: size.width * 0.8,
       width: size.width * 0.8,
       child: _isLoading
-          ? CupertinoActivityIndicator(
+          ? const CupertinoActivityIndicator(
               color: Colors.white,
             )
           : Form(
@@ -141,7 +138,7 @@ class _AuthUiState extends State<AuthUi> {
                           .copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w800)),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Container(
@@ -163,6 +160,7 @@ class _AuthUiState extends State<AuthUi> {
                           _errorMessage = "- Please enter a valid email.";
                           return "email error";
                         }
+                        return null;
                       },
                     ),
                   ),
@@ -192,6 +190,7 @@ class _AuthUiState extends State<AuthUi> {
                               "\n- Password must be 8 characters long.";
                           return "password error";
                         }
+                        return null;
                       },
                       maxLines: 1,
                     ),
@@ -199,7 +198,7 @@ class _AuthUiState extends State<AuthUi> {
                   if (_authMode == AuthMode.register)
                     Container(
                       height: 40,
-                      margin: EdgeInsets.only(top: 16),
+                      margin: const EdgeInsets.only(top: 16),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       width: size.width,
                       decoration: BoxDecoration(
@@ -220,8 +219,11 @@ class _AuthUiState extends State<AuthUi> {
                                       "\n- Passwords do not match.";
                                   return "password error";
                                 }
+                                return null;
                               }
-                            : (value) {},
+                            : (value) {
+                              return null;
+                            },
                         maxLines: 1,
                       ),
                     ),
@@ -231,7 +233,7 @@ class _AuthUiState extends State<AuthUi> {
                           _authMode == AuthMode.login
                               ? "Dont have an account?"
                               : "Already a user?",
-                          style: TextStyle(color: Colors.white)),
+                          style: const TextStyle(color: Colors.white)),
                       CupertinoButton(
                           child: Text(
                             _authMode == AuthMode.login ? "Register " : "Login",
@@ -250,7 +252,7 @@ class _AuthUiState extends State<AuthUi> {
                   CupertinoButton(
                     color: Colors.greenAccent.shade400,
                     borderRadius: BorderRadius.circular(16),
-                    child: Text(
+                    child: const Text(
                       "Submit",
                       style: TextStyle(fontWeight: FontWeight.w800),
                     ),

@@ -7,7 +7,6 @@ import '../screens/home_screen.dart';
 import '../screens/favourite_screen.dart';
 import '../screens/settings_screen.dart';
 import '../ui/search_box_ui.dart';
-import '../screens/auth_screen.dart';
 
 class GlassBottomBar extends StatefulWidget {
   final int currIndex;
@@ -23,9 +22,8 @@ class _GlassBottomBarState extends State<GlassBottomBar> {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
-    final gh = MediaQuery.of(context).viewPadding;
     return Padding(
-      padding:  EdgeInsets.all(10),
+      padding:  const EdgeInsets.all(10),
       child: GlassContainer(
         height: 80,
         width: screen.width,

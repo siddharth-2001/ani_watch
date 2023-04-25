@@ -26,7 +26,7 @@ class SettingsScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          BlurImageBackground(image: "assets/settings_bg.jpg", isAsset: true),
+          const BlurImageBackground(image: "assets/settings_bg.jpg", isAsset: true),
 
           Container(
             height: screen.height,
@@ -47,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
                 Center(
                   child: CupertinoButton(
                     color: Colors.greenAccent.shade400,
-                    child: Text("Logout", style: TextStyle(fontWeight: FontWeight.w800),),
+                    child: const Text("Logout", style: TextStyle(fontWeight: FontWeight.w800),),
                     onPressed: () => Provider.of<UserService>(context, listen: false)
                         .logout()
                         .then((value) => Navigator.of(context)

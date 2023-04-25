@@ -22,7 +22,7 @@ class SearchScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          BlurImageBackground(image: "assets/bg2.jpg", isAsset: true),
+          const BlurImageBackground(image: "assets/bg2.jpg", isAsset: true),
           Container(
             height: screen.height,
             width: screen.width,

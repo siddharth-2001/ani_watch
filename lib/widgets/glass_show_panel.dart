@@ -107,7 +107,7 @@ class GlassShowPanel extends StatelessWidget {
                               child: Text(
                                 name,
                                 // textAlign: TextAlign.start,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 9,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),

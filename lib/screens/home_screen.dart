@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          BlurImageBackground(image: "assets/bg1.jpg", isAsset: true,),
+          const BlurImageBackground(image: "assets/bg1.jpg", isAsset: true,),
           ListView(
             physics: const BouncingScrollPhysics(),
             children: [
