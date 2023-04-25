@@ -22,6 +22,13 @@ To install AniWatch+ on an iOS device, follow these steps:
 
 Note: You will need a developer account to sign the iOS build or otherwise your app will need to be refreshed every 7 days.
 
+## Screenshots
+
+![Alt text](/screenshots/IMG_1004.PNG?raw=true "Home Screen")
+![Alt text](/screenshots/IMG_1005.PNG?raw=true "Anime Detail Screen")
+![Alt text](/screenshots/IMG_1006.PNG?raw=true "Watch Screen")
+![Alt text](/screenshots/IMG_1007.PNG?raw=true "Favourite Screen")
+
 ## Features
 
 - A vast and diverse library of anime shows and movies, ranging from classic titles to the latest releases.
