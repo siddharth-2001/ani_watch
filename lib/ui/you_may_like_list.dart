@@ -21,7 +21,7 @@ class _YouMayLikeListState extends State<YouMayLikeList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AllAnime>(context, listen: false)
+    Provider.of<AnimeService>(context, listen: false)
         .fetchRecommendations()
         .then((value) {
       setState(() {
@@ -32,7 +32,7 @@ class _YouMayLikeListState extends State<YouMayLikeList> {
 
   @override
   Widget build(BuildContext context) {
-    list = Provider.of<AllAnime>(context).recommendedList;
+    list = Provider.of<AnimeService>(context).recommendedList;
     final size = MediaQuery.of(context).size;
 
     return _isLoading == true

@@ -21,7 +21,7 @@ class _CurrentWatchListState extends State<CurrentWatchList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AllAnime>(context, listen: false)
+    Provider.of<AnimeService>(context, listen: false)
         .fetchCurrentlyWatching()
         .then((value) {
       setState(() {
@@ -32,7 +32,7 @@ class _CurrentWatchListState extends State<CurrentWatchList> {
 
   @override
   Widget build(BuildContext context) {
-    list = Provider.of<AllAnime>(context, listen: true).currWatchList;
+    list = Provider.of<AnimeService>(context, listen: true).currWatchList;
     final size = MediaQuery.of(context).size;
 
     return _isLoading

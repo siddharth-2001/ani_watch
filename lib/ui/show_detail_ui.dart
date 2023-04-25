@@ -33,10 +33,10 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AllAnime>(context, listen: false)
+    Provider.of<AnimeService>(context, listen: false)
         .getAnimeById(widget.id)
         .then((value) {
-      anime = Provider.of<AllAnime>(context, listen: false)
+      anime = Provider.of<AnimeService>(context, listen: false)
           .getAnimeFromMemory(widget.id);
 
       details = anime.details;
@@ -83,7 +83,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
         children: [
           Hero(
             tag: widget.id + widget.tag,
-            child: BlurImageBackground(image: widget.image),
+            child: BlurImageBackground(image: widget.image, isAsset: false,),
           ),
           SizedBox(
             height: screen.height,
@@ -233,7 +233,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                               color: Colors.white,
                                             ),
                                             function: () {
-                                              Provider.of<AllAnime>(context,
+                                              Provider.of<AnimeService>(context,
                                                       listen: false)
                                                   .addToRecommendations(
                                                       widget.id);
@@ -251,7 +251,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                           width: 10,
                                         ),
                                         GlassButton(
-                                            icon: Provider.of<AllAnime>(context)
+                                            icon: Provider.of<AnimeService>(context)
                                                     .isFavourite(details["id"])
                                                 ? const Icon(
                                                     CupertinoIcons.heart_fill,
@@ -262,7 +262,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                                     color: Colors.white,
                                                   ),
                                             function: () {
-                                              Provider.of<AllAnime>(context,
+                                              Provider.of<AnimeService>(context,
                                                       listen: false)
                                                   .addToFavourite(
                                                       details["id"]);

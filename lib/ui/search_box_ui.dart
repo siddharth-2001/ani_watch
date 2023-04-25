@@ -18,7 +18,7 @@ class SearchBoxUi extends StatelessWidget {
     final textController = TextEditingController();
 
     return GlassWidget(
-      color: Colors.deepPurple.shade100,
+      color: Colors.blueGrey,
       height: 900,
       width: size.width,
       child: Column(
@@ -44,17 +44,17 @@ class SearchBoxUi extends StatelessWidget {
           ),
           ElevatedButton(
               onPressed: () {
-                Provider.of<AllAnime>(context, listen: false)
+                Provider.of<AnimeService>(context, listen: false)
                     .searchAnime(textController.value.text)
                     .then((value) {
                   Navigator.of(context).pushNamed(SearchScreen.routeName);
                 });
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurpleAccent.shade100,
+                  backgroundColor: Colors.greenAccent.shade400,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(42))),
-              child: const Text("Search"))
+              child: const Text("Search", style: TextStyle(fontWeight: FontWeight.w800),))
         ],
       ),
     );

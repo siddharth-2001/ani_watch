@@ -19,7 +19,7 @@ class _SearchAnimeListState extends State<SearchAnimeList> {
   List<Anime> list = [];
   @override
   Widget build(BuildContext context) {
-    list = Provider.of<AllAnime>(context, listen: true).getSearchList;
+    list = Provider.of<AnimeService>(context, listen: true).getSearchList;
     final padding = MediaQuery.of(context).padding;
     final size = MediaQuery.of(context).size;
     setState(() {

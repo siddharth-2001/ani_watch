@@ -9,22 +9,19 @@ import 'screens/home_screen.dart';
 import './screens/search_screen.dart';
 import './screens/favourite_screen.dart';
 import './screens/settings_screen.dart';
+import './screens/auth_screen.dart';
 
 //provider imports
 import './provider/anime.dart';
 import './provider/settings.dart';
+import './provider/auth.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle.light
-  );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
         create: (context) => TrendingAnime(),
-      ),
-      ChangeNotifierProvider(
-        create: (context) => AllAnime(),
       ),
       ChangeNotifierProvider(
         create: (context) => PopularAnime(),
@@ -34,6 +31,15 @@ void main() {
       ),
       ChangeNotifierProvider(
         create: (context) => AppSettings(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => UserService(),
+      ),
+      ChangeNotifierProxyProvider<UserService, AnimeService>(
+        create: (context) => AnimeService(),
+        update: (context, user, animeService) {
+          return animeService!..setUser(user);
+        },
       ),
     ],
     child: const App(),
@@ -47,26 +53,23 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isIos = false;
     return MaterialApp(
       theme: ThemeData(
           textTheme: GoogleFonts.montserratTextTheme(),
           primaryColor: Colors.greenAccent.shade400),
-      home: const HomeScreen(),
+      home: const AuthScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case HomeScreen.routeName:
             return PageTransition(
                 child: const HomeScreen(),
                 type: transitionType,
-                isIos: isIos,
                 settings: settings);
 
           case SearchScreen.routeName:
             return PageTransition(
                 child: const SearchScreen(),
                 type: transitionType,
-                isIos: isIos,
                 settings: settings,
                 ctx: context);
 
@@ -74,7 +77,6 @@ class App extends StatelessWidget {
             return PageTransition(
                 child: const FavouriteScreen(),
                 type: transitionType,
-                isIos: isIos,
                 settings: settings,
                 ctx: context);
 
@@ -82,7 +84,13 @@ class App extends StatelessWidget {
             return PageTransition(
                 child: const SettingsScreen(),
                 type: transitionType,
-                isIos: isIos,
+                settings: settings,
+                ctx: context);
+
+          case AuthScreen.routeName:
+            return PageTransition(
+                child: const AuthScreen(),
+                type: transitionType,
                 settings: settings,
                 ctx: context);
 
@@ -90,7 +98,6 @@ class App extends StatelessWidget {
             return PageTransition(
                 child: const HomeScreen(),
                 type: transitionType,
-                isIos: isIos,
                 settings: settings);
         }
       },

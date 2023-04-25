@@ -1,3 +1,4 @@
+import 'package:ani_watch/widgets/blur_image.dart';
 import 'package:flutter/material.dart';
 
 //local imports
@@ -19,24 +20,27 @@ class SearchScreen extends StatelessWidget {
       bottomNavigationBar: const GlassBottomBar(currIndex: 1),
       extendBody: true,
       resizeToAvoidBottomInset: false,
-      body: Container(
-        height: screen.height,
-        width: screen.width,
-        padding: EdgeInsets.only(top:screenPadding.top),
-        decoration: const BoxDecoration(
-            color: Colors.black),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05 , vertical: screen.height*0.025),
-              child: Text("Search Results",
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      color: Colors.deepPurpleAccent.shade100, fontWeight: FontWeight.w800)),
+      body: Stack(
+        children: [
+          BlurImageBackground(image: "assets/bg2.jpg", isAsset: true),
+          Container(
+            height: screen.height,
+            width: screen.width,
+            padding: EdgeInsets.only(top:screenPadding.top),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: screen.width * 0.05 , vertical: screen.height*0.025),
+                  child: Text("Search Results",
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          color: Colors.greenAccent.shade400, fontWeight: FontWeight.w800)),
+                ),
+                const Flexible(child: SearchAnimeList())
+              ],
             ),
-            const Flexible(child: SearchAnimeList())
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

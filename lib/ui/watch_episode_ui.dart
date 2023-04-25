@@ -81,7 +81,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     super.initState();
     final animeId = widget.animeId;
 
-    anime = Provider.of<AllAnime>(context, listen: false)
+    anime = Provider.of<AnimeService>(context, listen: false)
         .getAnimeFromMemory(animeId);
     _episodeList = anime.details["episodeList"];
 
@@ -238,7 +238,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       children: [
         Hero(
           tag: widget.animeId + widget.tag,
-          child: BlurImageBackground(image: anime.details["image"]),
+          child: BlurImageBackground(image: anime.details["image"], isAsset: false,),
         ),
         totalEpisodes == 0
             ? const Center(
@@ -518,7 +518,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                           ),
                           onTap: () {
                             selectEpisode(index);
-                            Provider.of<AllAnime>(context, listen: false)
+                            Provider.of<AnimeService>(context, listen: false)
                                 .addToCurrWatchList(anime.details["id"], index);
                           },
                         ),

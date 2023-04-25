@@ -22,10 +22,10 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AllAnime>(context, listen: false)
+    Provider.of<AnimeService>(context, listen: false)
         .fetchLocalFavData()
         .then((value) {
-      Provider.of<AllAnime>(context, listen: false)
+      Provider.of<AnimeService>(context, listen: false)
           .getFavourites()
           .then((value) {
         favouriteList = value;
