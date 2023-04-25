@@ -25,7 +25,7 @@ class _GlassBottomBarState extends State<GlassBottomBar> {
     return Padding(
       padding:  const EdgeInsets.all(10),
       child: GlassContainer(
-        height: 80,
+        height: 70,
         width: screen.width,
         blur: 9,
         color: Colors.black.withOpacity(0.2),
