@@ -348,7 +348,6 @@ class AnimeService with ChangeNotifier {
         }
 
         _searchList.add(temp);
-        _animeData[temp._id] = temp;
       }
 
       notifyListeners();
@@ -389,7 +388,11 @@ class AnimeService with ChangeNotifier {
       }
 
       //add cover anime
-      temp._cover = body["cover"];
+      if(body["cover"] == "") {
+        temp._cover = temp._image;
+      } else {
+        temp._cover = body["cover"];
+      }
 
       //adding status of anime
       temp._status = body["status"];
@@ -576,7 +579,7 @@ String selectAppropriateName(Map names) {
       names["userreferred"] != null) {
     result = names["userreferred"];
   } else {
-    names["romaji"];
+    result = names["romaji"];
   }
 
   return result;

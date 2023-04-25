@@ -17,6 +17,7 @@ class AuthScreen extends StatelessWidget {
     return Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.black,
       body: 
       
       Stack(
