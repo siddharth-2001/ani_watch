@@ -97,6 +97,10 @@ class UserService with ChangeNotifier {
   Future<void> updateUserWatchData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("userWatchData", jsonEncode(userWatchData));
+
+    final url = Uri.parse(
+        "https://aniwatch-ca64e-default-rtdb.asia-southeast1.firebasedatabase.app/$_id/watch_data.json");
+    await http.put(url,body: jsonEncode(userWatchData));
   }
 
   Future<void> fetchUserWatchData() async {

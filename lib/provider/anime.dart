@@ -295,7 +295,7 @@ class AnimeService with ChangeNotifier {
       _favMap[id] = id;
     }
     _user.userWatchData["favouritesData"] = _favMap;
-    await _user.updateUserWatchData();
+    _user.updateUserWatchData();
     notifyListeners();
   }
 
