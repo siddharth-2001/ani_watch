@@ -68,11 +68,11 @@ class _AuthUiState extends State<AuthUi> {
                 .then((value) => Navigator.of(context)
                     .pushReplacementNamed(HomeScreen.routeName))
                 .timeout(
-              Duration(seconds: 3),
+              const Duration(seconds: 3),
               onTimeout: () {
-                log("time up");
                 Navigator.of(context)
                     .pushReplacementNamed(HomeScreen.routeName);
+                return null;
               },
             );
           } else {
@@ -118,11 +118,12 @@ class _AuthUiState extends State<AuthUi> {
       if (value) {
         loadUserData().then((value) =>
             Navigator.of(context).pushReplacementNamed(HomeScreen.routeName)).timeout(
-              Duration(seconds: 3),
+              const Duration(seconds: 3),
               onTimeout: () {
                 log("time up");
                 Navigator.of(context)
                     .pushReplacementNamed(HomeScreen.routeName);
+                return null;
               },
             );
       } else {

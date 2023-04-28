@@ -11,7 +11,6 @@ import '../widgets/glass_bottom_bar.dart';
 import '../widgets/blur_image.dart';
 
 //provider imports
-import '../provider/auth.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

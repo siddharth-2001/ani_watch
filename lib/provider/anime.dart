@@ -102,7 +102,7 @@ class Episode {
     try {
       tempMap = _user.userWatchData["episodeData"];
     } catch (error) {
-      log(error.toString() + 'line 105');
+      log('${error}line 105');
       tempMap = {};
     }
 
@@ -124,7 +124,7 @@ class Episode {
     try {
       tempMap = _user.userWatchData["episodeData"];
     } catch (error) {
-      log(error.toString() + '127');
+      log('${error}127');
       tempMap = {};
     }
 
@@ -210,7 +210,7 @@ class AnimeService with ChangeNotifier {
     try {
       tempMap = _user.userWatchData["recommendedData"];
     } catch (error) {
-      log(error.toString() + 'line 213');
+      log('${error}line 213');
       tempMap = {};
     }
 
@@ -242,7 +242,7 @@ class AnimeService with ChangeNotifier {
     try {
       temp = _user.userWatchData["currWatchData"];
     } catch (error) {
-      log(error.toString() + '245');
+      log('${error}245');
       temp = {};
     }
 
@@ -262,7 +262,7 @@ class AnimeService with ChangeNotifier {
     try {
       temp = _user.userWatchData["currWatchData"];
     } catch (error) {
-      log(error.toString() + 'line 265');
+      log('${error}line 265');
       temp = {};
     }
 

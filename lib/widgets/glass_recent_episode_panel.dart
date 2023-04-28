@@ -28,7 +28,7 @@ class GlassRecentPanel extends StatelessWidget {
     final appSettings = Provider.of<AppSettings>(context);
 
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         child: ZoomTapAnimation(
           enableLongTapRepeatEvent: false,
           longTapRepeatDuration: const Duration(milliseconds: 100),
@@ -56,7 +56,7 @@ class GlassRecentPanel extends StatelessWidget {
                 children: [
                   Hero(
                     tag: "${id}recents",
-                    child: Container(
+                    child: SizedBox(
                       height: screen.height * 0.22,
                   
                       width: screen.width * 0.9,

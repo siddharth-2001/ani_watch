@@ -29,7 +29,7 @@ class GlassShowPanel extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final appSettings = Provider.of<AppSettings>(context, listen: false);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: ZoomTapAnimation(
         enableLongTapRepeatEvent: false,
         longTapRepeatDuration: const Duration(milliseconds: 100),
