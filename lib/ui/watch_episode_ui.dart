@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:ani_watch/widgets/blur_image.dart';
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:chewie/chewie.dart';
@@ -434,10 +435,10 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                       children: [
                                         Container(
                                           height: 90,
-                                          width: 130,
+                                          width: 160,
                                           clipBehavior: Clip.hardEdge,
-                                          decoration: BoxDecoration(
-                                              boxShadow: const [
+                                          decoration: ShapeDecoration(
+                                            shadows:  const [
                                                 BoxShadow(
                                                   offset: Offset(14, 18),
                                                   spreadRadius: -20,
@@ -446,9 +447,9 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                                       0, 0, 0, 1),
                                                 )
                                               ],
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      1 / 6.4 * 130)),
+                                            shape: SmoothRectangleBorder(
+                                            borderRadius: SmoothBorderRadius(cornerRadius: 16, cornerSmoothing: 1)
+                                          )),
                                           child: Image.network(
                                             episode["image"]!,
                                             fit: BoxFit.cover,

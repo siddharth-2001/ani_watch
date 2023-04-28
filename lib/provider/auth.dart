@@ -96,35 +96,45 @@ class UserService with ChangeNotifier {
 
   Future<void> updateUserWatchData() async {
     final prefs = await SharedPreferences.getInstance();
+
+    // try {
+    //   final oldData = prefs.getString("userWatchData");
+    // } catch (error) {
+    //   final oldData = {};
+    // }
+
     await prefs.setString("userWatchData", jsonEncode(userWatchData));
+
+    
 
     final url = Uri.parse(
         "https://aniwatch-ca64e-default-rtdb.asia-southeast1.firebasedatabase.app/$_id/watch_data.json");
-    await http.put(url,body: jsonEncode(userWatchData));
+    await http.put(url, body: jsonEncode(userWatchData));
   }
 
   Future<void> fetchUserWatchData() async {
-    final prefs = await SharedPreferences.getInstance();
-
     try {
-      userWatchData = jsonDecode(prefs.getString("userWatchData")!);
-      notifyListeners();
-      return;
-    } catch (error) {
-      //try to fetch data from disk if none available fetch it from firebase
-    }
+      final url = Uri.parse(
+          "https://aniwatch-ca64e-default-rtdb.asia-southeast1.firebasedatabase.app/$_id/watch_data.json");
 
-    final url = Uri.parse(
-        "https://aniwatch-ca64e-default-rtdb.asia-southeast1.firebasedatabase.app/$_id/watch_data.json");
-
-    try {
-      final response = await http.get(url);
-      final body = jsonDecode(response.body);
-      userWatchData = body;
-      notifyListeners();
+      try {
+        final response = await http.get(url);
+        final body = jsonDecode(response.body);
+        userWatchData = body;
+        notifyListeners();
+      } catch (error) {
+        log("error occured at line 117");
+        log(error.toString());
+      }
     } catch (error) {
-      log("error occured at line 112");
-      log(error.toString());
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        userWatchData = jsonDecode(prefs.getString("userWatchData")!);
+        notifyListeners();
+        return;
+      } catch (error) {
+        //try to fetch data from disk if none available fetch it from firebase
+      }
     }
   }
 

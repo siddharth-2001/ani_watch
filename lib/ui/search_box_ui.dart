@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:figma_squircle/figma_squircle.dart';
 
 //local imports
 import '../widgets/glass_widget.dart';
@@ -29,9 +30,11 @@ class SearchBoxUi extends StatelessWidget {
                 height: 50,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 width: size.width,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(48)),
+                decoration:ShapeDecoration(
+                      color: Colors.white,
+                      shape: SmoothRectangleBorder(
+                      borderRadius: SmoothBorderRadius(cornerRadius: 10, cornerSmoothing: 1)
+                    )),
                 child: TextField(
                     controller: textController,
                     decoration: const InputDecoration(

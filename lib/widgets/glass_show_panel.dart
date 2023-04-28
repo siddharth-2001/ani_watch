@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:provider/provider.dart';
+import 'package:figma_squircle/figma_squircle.dart';
 
 //local imports
 import '../screens/show_detail_screen.dart';
@@ -28,7 +29,7 @@ class GlassShowPanel extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final appSettings = Provider.of<AppSettings>(context, listen: false);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
+      padding: EdgeInsets.symmetric(horizontal: 4),
       child: ZoomTapAnimation(
         enableLongTapRepeatEvent: false,
         longTapRepeatDuration: const Duration(milliseconds: 100),
@@ -50,8 +51,14 @@ class GlassShowPanel extends StatelessWidget {
             height: size.height * 0.2,
             width: size.width * 0.3,
             clipBehavior: Clip.hardEdge,
-            decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(1 / 5.5 * 145))),
+            decoration: ShapeDecoration(
+        shape: SmoothRectangleBorder(
+            borderRadius: SmoothBorderRadius(
+              cornerRadius: 16,
+              cornerSmoothing: 1,
+            ),
+        ),
+    ),
             child: Stack(
               children: [
                 Hero(
@@ -69,7 +76,10 @@ class GlassShowPanel extends StatelessWidget {
                           color: Colors.black.withOpacity(0.5),
                         )
                       ],
-                      borderRadius: BorderRadius.circular(1 / 5.5 * 145),
+                      borderRadius: SmoothBorderRadius(
+              cornerRadius: 16,
+              cornerSmoothing: 1,
+            ),
                     ),
                     child: Image.network(
                       image,

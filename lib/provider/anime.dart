@@ -102,7 +102,7 @@ class Episode {
     try {
       tempMap = _user.userWatchData["episodeData"];
     } catch (error) {
-      log(error.toString());
+      log(error.toString() + 'line 105');
       tempMap = {};
     }
 
@@ -124,7 +124,7 @@ class Episode {
     try {
       tempMap = _user.userWatchData["episodeData"];
     } catch (error) {
-      log(error.toString());
+      log(error.toString() + '127');
       tempMap = {};
     }
 
@@ -210,7 +210,7 @@ class AnimeService with ChangeNotifier {
     try {
       tempMap = _user.userWatchData["recommendedData"];
     } catch (error) {
-      log(error.toString());
+      log(error.toString() + 'line 213');
       tempMap = {};
     }
 
@@ -242,7 +242,7 @@ class AnimeService with ChangeNotifier {
     try {
       temp = _user.userWatchData["currWatchData"];
     } catch (error) {
-      log(error.toString());
+      log(error.toString() + '245');
       temp = {};
     }
 
@@ -262,9 +262,11 @@ class AnimeService with ChangeNotifier {
     try {
       temp = _user.userWatchData["currWatchData"];
     } catch (error) {
-      log(error.toString());
+      log(error.toString() + 'line 265');
       temp = {};
     }
+
+    if (temp.length > 4) temp.remove(temp.keys.elementAt(0));
 
     temp[id] = epIndex;
 
@@ -274,7 +276,7 @@ class AnimeService with ChangeNotifier {
     await fetchCurrentlyWatching();
   }
 
-  Future<void> fetchLocalFavData() async {
+  Future<void> fetchFavData() async {
     try {
       _favMap = _user.userWatchData["favouritesData"];
     } catch (error) {
@@ -359,118 +361,123 @@ class AnimeService with ChangeNotifier {
 
     final url = Uri.https("api.consumet.org", "/meta/anilist/info/$id");
 
-    var response = await http.get(url);
+    try {
+      var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
 
-      Anime temp = Anime(
-          id: body["id"],
-          name: selectAppropriateName(body["title"]),
-          image: body["image"],
-          rating: body["rating"].toString(),
-          episodes: body["totalEpisodes"].toString());
+        Anime temp = Anime(
+            id: body["id"],
+            name: selectAppropriateName(body["title"]),
+            image: body["image"],
+            rating: body["rating"].toString(),
+            episodes: body["totalEpisodes"].toString());
 
-      if (body["rating"] == null) {
-        temp._rating = "null";
-      }
+        if (body["rating"] == null) {
+          temp._rating = "null";
+        }
 
-      if (body["releaseDate"] == null) {
-        temp._releaseDate = "TBA";
-      } else {
-        temp._releaseDate = body["releaseDate"].toString();
-      }
+        if (body["releaseDate"] == null) {
+          temp._releaseDate = "TBA";
+        } else {
+          temp._releaseDate = body["releaseDate"].toString();
+        }
 
-      if (body["totalEpisodes"] == null) {
-        temp._episodes = "TBA";
-      } else {
-        temp._episodes = body["totalEpisodes"].toString();
-      }
+        if (body["totalEpisodes"] == null) {
+          temp._episodes = "TBA";
+        } else {
+          temp._episodes = body["totalEpisodes"].toString();
+        }
 
-      //add cover anime
-      if(body["cover"] == "") {
-        temp._cover = temp._image;
-      } else {
-        temp._cover = body["cover"];
-      }
+        //add cover anime
+        if (body["cover"] == "") {
+          temp._cover = temp._image;
+        } else {
+          temp._cover = body["cover"];
+        }
 
-      //adding status of anime
-      temp._status = body["status"];
+        //adding status of anime
+        temp._status = body["status"];
 
-      //adding the summary of anime
-      final details = Bidi.stripHtmlIfNeeded(body["description"].toString());
-      temp._description = details;
+        //adding the summary of anime
+        final details = Bidi.stripHtmlIfNeeded(body["description"].toString());
+        temp._description = details;
 
-      //recieve episode list, create episode object and add it to anime
-      final episodeList = body["episodes"] as List<dynamic>;
+        //recieve episode list, create episode object and add it to anime
+        final episodeList = body["episodes"] as List<dynamic>;
 
-      Map tempMap;
+        Map tempMap;
 
-      // if the episode data does not exist we continue with an empty map
-      try {
-        tempMap = _user.userWatchData["episodeData"];
-      } catch (error) {
-        tempMap = {};
-      }
+        // if the episode data does not exist we continue with an empty map
+        try {
+          tempMap = _user.userWatchData["episodeData"];
+        } catch (error) {
+          tempMap = {};
+        }
 
-      for (var element in episodeList) {
-        Episode tempEpisode = Episode(
-            user: _user,
-            id: element["id"],
-            episodeNumber: element["number"].toString(),
-            image: element["image"],
-            description: element["description"].toString(),
-            title: element["title"].toString());
+        for (var element in episodeList) {
+          Episode tempEpisode = Episode(
+              user: _user,
+              id: element["id"],
+              episodeNumber: element["number"].toString(),
+              image: element["image"],
+              description: element["description"].toString(),
+              title: element["title"].toString());
 
-        //if the episode is already watched before set the last seek position
-        if (tempMap.containsKey(tempEpisode._id)) {
-          if (tempMap[tempEpisode._id].containsKey("lastSeekPosition")) {
-            tempEpisode._lastSeekPosition =
-                parseTime(tempMap[tempEpisode._id]["lastSeekPosition"]);
+          //if the episode is already watched before set the last seek position
+          if (tempMap.containsKey(tempEpisode._id)) {
+            if (tempMap[tempEpisode._id].containsKey("lastSeekPosition")) {
+              tempEpisode._lastSeekPosition =
+                  parseTime(tempMap[tempEpisode._id]["lastSeekPosition"]);
+            }
+
+            if (tempMap[tempEpisode._id].containsKey("length")) {
+              tempEpisode._length =
+                  parseTime(tempMap[tempEpisode._id]["length"]);
+            }
           }
 
-          if (tempMap[tempEpisode._id].containsKey("length")) {
-            tempEpisode._length = parseTime(tempMap[tempEpisode._id]["length"]);
+          if (tempEpisode._title == "null") {
+            tempEpisode._title = "Title Not Available";
           }
+
+          if (tempEpisode._description == "null") {
+            tempEpisode._description = "Description Not Available";
+          }
+
+          temp._episodeList.add(tempEpisode);
         }
 
-        if (tempEpisode._title == "null") {
-          tempEpisode._title = "Title Not Available";
+        //recieve the genres as a list and assign to the anime created
+        List genreList = body["genres"] as List<dynamic>;
+
+        for (var element in genreList) {
+          temp._genres.add(element);
         }
 
-        if (tempEpisode._description == "null") {
-          tempEpisode._description = "Description Not Available";
+        //adding all the recommended anime recieved from the server
+        List recommendedList = body["recommendations"] as List<dynamic>;
+
+        for (var element in recommendedList) {
+          Anime recAnime = Anime(
+              id: element["id"].toString(),
+              name: selectAppropriateName(element["title"]),
+              image: element["image"].toString(),
+              episodes: element["episodes"].toString(),
+              rating: element["rating"].toString());
+
+          temp._recommendations.add(recAnime);
         }
 
-        temp._episodeList.add(tempEpisode);
+        //saving the created anime in a local map for future reference
+        _animeData[id] = temp;
+        notifyListeners();
+      } else {
+        log(response.statusCode.toString());
       }
-
-      //recieve the genres as a list and assign to the anime created
-      List genreList = body["genres"] as List<dynamic>;
-
-      for (var element in genreList) {
-        temp._genres.add(element);
-      }
-
-      //adding all the recommended anime recieved from the server
-      List recommendedList = body["recommendations"] as List<dynamic>;
-
-      for (var element in recommendedList) {
-        Anime recAnime = Anime(
-            id: element["id"].toString(),
-            name: selectAppropriateName(element["title"]),
-            image: element["image"].toString(),
-            episodes: element["episodes"].toString(),
-            rating: element["rating"].toString());
-
-        temp._recommendations.add(recAnime);
-      }
-
-      //saving the created anime in a local map for future reference
-      _animeData[id] = temp;
-      notifyListeners();
-    } else {
-      log(response.statusCode.toString());
+    } catch (error) {
+     
     }
   }
 }

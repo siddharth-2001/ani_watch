@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,7 +28,7 @@ class GlassRecentPanel extends StatelessWidget {
     final appSettings = Provider.of<AppSettings>(context);
 
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: screen.width * 0.015),
+        padding: EdgeInsets.symmetric(horizontal: 4),
         child: ZoomTapAnimation(
           enableLongTapRepeatEvent: false,
           longTapRepeatDuration: const Duration(milliseconds: 100),
@@ -50,18 +51,16 @@ class GlassRecentPanel extends StatelessWidget {
               height: screen.height * 0.22,
               clipBehavior: Clip.hardEdge,
               width: screen.width * 0.9,
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(32))),
+              decoration: ShapeDecoration(shape: SmoothRectangleBorder(borderRadius: SmoothBorderRadius(cornerRadius: 24, cornerSmoothing: 1))),
               child: Stack(
                 children: [
                   Hero(
                     tag: "${id}recents",
                     child: Container(
                       height: screen.height * 0.22,
-                      clipBehavior: Clip.hardEdge,
+                  
                       width: screen.width * 0.9,
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(32))),
+                
                       child: Image.network(
                         image,
                         fit: BoxFit.cover,

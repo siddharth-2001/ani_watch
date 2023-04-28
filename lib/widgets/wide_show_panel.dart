@@ -1,4 +1,5 @@
 import 'package:dismissible_page/dismissible_page.dart';
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -31,7 +32,7 @@ class WideShowPanel extends StatelessWidget {
   });
 
   final detailLabelStyle = const TextStyle(
-      fontSize: 11, color: Colors.white, fontWeight: FontWeight.w700);
+      fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500);
 
   Widget genreText() {
     String result = "";
@@ -78,7 +79,7 @@ class WideShowPanel extends StatelessWidget {
               ShowDetailScreen(id: id, image: image, tag:"search"));
         },
         child:  Container(
-            height: 155,
+            height: 180,
             width: screen.width - 50,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
             child: Row(
@@ -87,11 +88,12 @@ class WideShowPanel extends StatelessWidget {
           tag: "${id}search",
           child:
                 Container(
-                  height: 155,
-                  width: 110,
+                  height: 180,
+                  width: 120,
                   clipBehavior: Clip.hardEdge,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(32))),
+                  decoration: ShapeDecoration(shape: SmoothRectangleBorder(
+                    borderRadius: SmoothBorderRadius(cornerRadius: 16, cornerSmoothing: 1)
+                  )),
                   child: Image.network(
                     image,
                     fit: BoxFit.cover,

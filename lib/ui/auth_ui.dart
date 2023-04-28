@@ -1,6 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
+
 import 'package:ani_watch/provider/anime.dart';
 import 'package:ani_watch/screens/home_screen.dart';
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -61,8 +64,17 @@ class _AuthUiState extends State<AuthUi> {
             .login(_authData["email"], _authData["password"])
             .then((value) {
           if (value) {
-            loadUserData().then((value) => Navigator.of(context)
-                .pushReplacementNamed(HomeScreen.routeName));
+            loadUserData()
+                .then((value) => Navigator.of(context)
+                    .pushReplacementNamed(HomeScreen.routeName))
+                .timeout(
+              Duration(seconds: 3),
+              onTimeout: () {
+                log("time up");
+                Navigator.of(context)
+                    .pushReplacementNamed(HomeScreen.routeName);
+              },
+            );
           } else {
             showCupertinoDialog(
               context: context,
@@ -100,13 +112,19 @@ class _AuthUiState extends State<AuthUi> {
 
   @override
   void initState() {
-
     super.initState();
     //try to use data on disk to auto login the user
     Provider.of<UserService>(context, listen: false).autoLogin().then((value) {
       if (value) {
         loadUserData().then((value) =>
-            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName));
+            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName)).timeout(
+              Duration(seconds: 3),
+              onTimeout: () {
+                log("time up");
+                Navigator.of(context)
+                    .pushReplacementNamed(HomeScreen.routeName);
+              },
+            );
       } else {
         setState(() {
           _isLoading = false;
@@ -145,9 +163,11 @@ class _AuthUiState extends State<AuthUi> {
                     height: 40,
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     width: size.width,
-                    decoration: BoxDecoration(
+                    decoration: ShapeDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16)),
+                        shape: SmoothRectangleBorder(
+                            borderRadius: SmoothBorderRadius(
+                                cornerRadius: 10, cornerSmoothing: 1))),
                     child: TextFormField(
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
@@ -171,9 +191,11 @@ class _AuthUiState extends State<AuthUi> {
                     height: 40,
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     width: size.width,
-                    decoration: BoxDecoration(
+                    decoration: ShapeDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16)),
+                        shape: SmoothRectangleBorder(
+                            borderRadius: SmoothBorderRadius(
+                                cornerRadius: 10, cornerSmoothing: 1))),
                     child: TextFormField(
                       obscureText: true,
                       decoration: const InputDecoration(
@@ -201,9 +223,11 @@ class _AuthUiState extends State<AuthUi> {
                       margin: const EdgeInsets.only(top: 16),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       width: size.width,
-                      decoration: BoxDecoration(
+                      decoration: ShapeDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(16)),
+                          shape: SmoothRectangleBorder(
+                              borderRadius: SmoothBorderRadius(
+                                  cornerRadius: 10, cornerSmoothing: 1))),
                       child: TextFormField(
                         obscureText: true,
                         decoration: const InputDecoration(
@@ -222,8 +246,8 @@ class _AuthUiState extends State<AuthUi> {
                                 return null;
                               }
                             : (value) {
-                              return null;
-                            },
+                                return null;
+                              },
                         maxLines: 1,
                       ),
                     ),
