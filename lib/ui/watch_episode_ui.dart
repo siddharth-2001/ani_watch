@@ -59,10 +59,17 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       zoomAndPan: true,
       customControls: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        child: CupertinoControls(
-            backgroundColor: Colors.black.withOpacity(0.15),
-            iconColor: Colors.white,
-            showPlayButton: true),
+      
+          child: Material(
+            
+            type: MaterialType.transparency,
+            child: CupertinoControls(
+              
+                backgroundColor: Colors.black.withOpacity(0.15),
+                iconColor: Colors.white,
+                showPlayButton: true),
+          ),
+      
       ),
       videoPlayerController: _videoPlayerController,
       allowMuting: true,
@@ -387,9 +394,9 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                 },
                               );
                             }),
-                        IconButton(
+                        CupertinoButton(
                           onPressed: () {},
-                          icon: const Icon(
+                          child: const Icon(
                             CupertinoIcons.arrow_down_circle,
                             color: Colors.white,
                           ),

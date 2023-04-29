@@ -104,12 +104,9 @@ class _AuthUiState extends State<AuthUi> {
 
   //load user data so that they dont see the loading spinners after
   Future<void> loadUserData() async {
-    await Provider.of<AnimeService>(context, listen: false)
-        .fetchRecommendations();
     await Provider.of<TrendingAnime>(context, listen: false).getTrendingAnime();
     await Provider.of<PopularAnime>(context, listen: false).getPopularAnime();
-    await Provider.of<AnimeService>(context, listen: false)
-        .fetchCurrentlyWatching();
+   
   }
 
   @override

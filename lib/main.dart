@@ -57,14 +57,16 @@ class App extends StatelessWidget {
     final appSettings = Provider.of<AppSettings>(context);
 
     return CupertinoApp(
+      
        localizationsDelegates: const [
         DefaultMaterialLocalizations.delegate,
         DefaultCupertinoLocalizations.delegate,
         DefaultWidgetsLocalizations.delegate,
     ],
+  
       theme: CupertinoThemeData(
-         
-          textTheme: CupertinoTextThemeData(
+
+                    textTheme: CupertinoTextThemeData(
             actionTextStyle: GoogleFonts.montserrat(),
             textStyle: GoogleFonts.montserrat(),
             navLargeTitleTextStyle: const CupertinoTextThemeData().navLargeTitleTextStyle.copyWith(
@@ -75,6 +77,7 @@ class App extends StatelessWidget {
               fontFamily: GoogleFonts.montserrat().fontFamily,
               fontSize: 16
             )
+
 
           ),
           barBackgroundColor: Colors.grey.shade900.withOpacity(appSettings.blurOverlayOpacity)

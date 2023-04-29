@@ -3,6 +3,7 @@ import 'package:ani_watch/widgets/blur_image.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 //local imports
@@ -27,6 +28,7 @@ class ShowDetailUi extends StatefulWidget {
 }
 
 class _ShowDetailUiState extends State<ShowDetailUi> {
+  final fontFamily = GoogleFonts.montserrat();
   Map details = {};
   late Anime anime;
   bool _isLoading = true;
@@ -51,7 +53,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
   }
 
   final detailLabelStyle = const TextStyle(
-      color: Colors.white, fontWeight: FontWeight.w500  , fontSize: 11);
+      color: Colors.white, fontWeight: FontWeight.w600  , fontSize: 11,);
 
   Widget genreText() {
     String result = "";
@@ -77,6 +79,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
     final theme = Theme.of(context);
     final screen = MediaQuery.of(context).size;
     final appSettings = Provider.of<AppSettings>(context);
+    
 
     return SingleChildScrollView(
       child: Stack(
@@ -138,10 +141,11 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                   children: [
                                     Text(
                                       details["name"]!,
-                                      style: theme.textTheme.headlineMedium!
-                                          .copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 24
+                                      )
                                     ),
                                     SizedBox(
                                       height: screen.height * 0.025,

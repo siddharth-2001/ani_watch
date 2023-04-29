@@ -216,7 +216,7 @@ class AnimeService with ChangeNotifier {
 
     final Anime tempAnime = _animeData[id]!;
 
-    if (tempMap.length > 10) {
+    if (tempMap.length > 7) {
       for (int i = 0; i < 3; i++) {
         tempMap.remove(tempMap.keys.first);
       }
@@ -267,6 +267,9 @@ class AnimeService with ChangeNotifier {
     }
 
     if (temp.length > 4) temp.remove(temp.keys.elementAt(0));
+    
+    //to make sure that the newly added anime stays at the front
+    if(temp.containsKey(id)) temp.remove(id);
 
     temp[id] = epIndex;
 

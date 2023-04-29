@@ -13,7 +13,6 @@ import '../widgets/glass_bottom_bar.dart';
 class SearchScreen extends StatelessWidget {
   SearchScreen({super.key});
   static const routeName = '/search';
-  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +24,8 @@ class SearchScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         navigationBar: CupertinoNavigationBar(
           // leading: SizedBox(),
-          trailing: CupertinoButton(child: Text("Clear", style: TextStyle(color: Colors.greenAccent.shade400),), onPressed: ()=> Provider.of<AnimeService>(context, listen: false)
-                  .clearSearchList(),),
           middle: CupertinoSearchTextField(
-            controller: _controller,
+            
 
     
             itemColor: Colors.white60,

@@ -88,8 +88,8 @@ class WideShowPanel extends StatelessWidget {
           tag: "${id}search",
           child:
                 Container(
-                  height: 160,
-                  width: 110,
+                  height: 150,
+                  width: 150,
                   clipBehavior: Clip.hardEdge,
                   decoration: ShapeDecoration(shape: SmoothRectangleBorder(
                     borderRadius: SmoothBorderRadius(cornerRadius: 16, cornerSmoothing: 1)
