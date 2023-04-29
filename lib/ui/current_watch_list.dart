@@ -40,11 +40,11 @@ class _CurrentWatchListState extends State<CurrentWatchList> {
         : SizedBox(
           height: size.height * 0.22,
           child: ListView.builder(
+            
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              physics: const BouncingScrollPhysics(
-                  decelerationRate: ScrollDecelerationRate.fast),
+              physics: BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 final Anime anime = list[index].keys.first;
                 return CurrentWatchPanel(

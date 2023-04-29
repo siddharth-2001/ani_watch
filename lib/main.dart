@@ -90,7 +90,7 @@ class App extends StatelessWidget {
 
           case SearchScreen.routeName:
             return PageTransition(
-                child: const SearchScreen(),
+                child: SearchScreen(),
                 type: transitionType,
                 settings: settings,
                 ctx: context);

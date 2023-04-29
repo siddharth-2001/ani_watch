@@ -25,7 +25,6 @@ class FavouriteScreen extends StatelessWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             brightness: Brightness.dark,
-            trailing: CircleAvatar(),
             stretch: true,
             largeTitle: Text("Favourites", style: TextStyle(color: Colors.white),),
           ),

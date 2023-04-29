@@ -319,6 +319,11 @@ class AnimeService with ChangeNotifier {
     return _searchList;
   }
 
+  void clearSearchList() {
+    _searchList.clear();
+    notifyListeners();
+  }
+
   Anime getAnimeFromMemory(String id) {
     return _animeData[id]!;
   }
@@ -476,9 +481,7 @@ class AnimeService with ChangeNotifier {
       } else {
         log(response.statusCode.toString());
       }
-    } catch (error) {
-     
-    }
+    } catch (error) {}
   }
 }
 

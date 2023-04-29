@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 //local imports
 import '../widgets/wide_show_panel.dart';
@@ -26,10 +27,10 @@ class _SearchAnimeListState extends State<SearchAnimeList> {
       _isLoading = false;
     });
     return _isLoading == true
-        ? const Center(child: CupertinoActivityIndicator())
-        : ListView.builder(
+        ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
+        : list.isEmpty ? Center(child: Text("Search for your anime", style: TextStyle(color: Colors.white),),) : ListView.builder(
             // scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.only(top: 0, bottom: padding.bottom ,left: size.width * 0.05, right: size.width * 0.05),
+            padding: EdgeInsets.only(top: padding.top + 16, bottom: padding.bottom ,left:8, right: 8),
             itemCount: list.length,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {

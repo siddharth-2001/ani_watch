@@ -223,52 +223,56 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                     SizedBox(
                                       height: screen.height * 0.025,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        GlassButton(
-                                            icon: const Icon(
-                                              CupertinoIcons.play_rectangle,
-                                              color: Colors.white,
-                                            ),
-                                            function: () {
-                                              Provider.of<AnimeService>(context,
-                                                      listen: false)
-                                                  .addToRecommendations(
-                                                      widget.id);
-                                              context.pushTransparentRoute(
-                                                  reverseTransitionDuration:
-                                                    appSettings.transitionDuration,
-                                                  transitionDuration: appSettings.reverseTransitionDuration,
-                                                  WatchEpisodeScreen(
-                                                    id: widget.id,
-                                                    tag: "watch",
-                                                    index: 0,
-                                                  ));
-                                            }),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        GlassButton(
-                                            icon: Provider.of<AnimeService>(context)
-                                                    .isFavourite(details["id"])
-                                                ? const Icon(
-                                                    CupertinoIcons.heart_fill,
-                                                    color: Colors.white,
-                                                  )
-                                                : const Icon(
-                                                    CupertinoIcons.heart,
-                                                    color: Colors.white,
-                                                  ),
-                                            function: () {
-                                              Provider.of<AnimeService>(context,
-                                                      listen: false)
-                                                  .addToFavourite(
-                                                      details["id"]);
-                                              setState(() {});
-                                            }),
-                                      ],
+                                    Material(
+                                      type: MaterialType.transparency,
+
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          GlassButton(
+                                              icon: const Icon(
+                                                CupertinoIcons.play_rectangle,
+                                                color: Colors.white,
+                                              ),
+                                              function: () {
+                                                Provider.of<AnimeService>(context,
+                                                        listen: false)
+                                                    .addToRecommendations(
+                                                        widget.id);
+                                                context.pushTransparentRoute(
+                                                    reverseTransitionDuration:
+                                                      appSettings.transitionDuration,
+                                                    transitionDuration: appSettings.reverseTransitionDuration,
+                                                    WatchEpisodeScreen(
+                                                      id: widget.id,
+                                                      tag: "watch",
+                                                      index: 0,
+                                                    ));
+                                              }),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          GlassButton(
+                                              icon: Provider.of<AnimeService>(context)
+                                                      .isFavourite(details["id"])
+                                                  ? const Icon(
+                                                      CupertinoIcons.heart_fill,
+                                                      color: Colors.white,
+                                                    )
+                                                  : const Icon(
+                                                      CupertinoIcons.heart,
+                                                      color: Colors.white,
+                                                    ),
+                                              function: () {
+                                                Provider.of<AnimeService>(context,
+                                                        listen: false)
+                                                    .addToFavourite(
+                                                        details["id"]);
+                                                setState(() {});
+                                              }),
+                                        ],
+                                      ),
                                     ),
                                     Container(
                                       padding: EdgeInsets.symmetric(

@@ -6,6 +6,7 @@ import 'package:ani_watch/screens/home_screen.dart';
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 //local imports
@@ -117,15 +118,16 @@ class _AuthUiState extends State<AuthUi> {
     //try to use data on disk to auto login the user
     Provider.of<UserService>(context, listen: false).autoLogin().then((value) {
       if (value) {
-        loadUserData().then((value) =>
-            Navigator.of(context).pushReplacementNamed(MainScreen.routeName)).timeout(
-              Duration(seconds: 3),
-              onTimeout: () {
-                log("time up");
-                Navigator.of(context)
-                    .pushReplacementNamed(MainScreen.routeName);
-              },
-            );
+        loadUserData()
+            .then((value) => Navigator.of(context)
+                .pushReplacementNamed(MainScreen.routeName))
+            .timeout(
+          Duration(seconds: 3),
+          onTimeout: () {
+            log("time up");
+            Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
+          },
+        );
       } else {
         setState(() {
           _isLoading = false;
@@ -146,18 +148,15 @@ class _AuthUiState extends State<AuthUi> {
               color: Colors.white,
             )
           : Material(
-            child: Form(
+              type: MaterialType.transparency,
+              child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(_authMode == AuthMode.login ? "Login" : "Register",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
-                            .copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800)),
+                        style: GoogleFonts.montserrat()
+                            .copyWith(color: Colors.white, fontSize: 24)),
                     const SizedBox(
                       height: 16,
                     ),
@@ -178,7 +177,8 @@ class _AuthUiState extends State<AuthUi> {
                           _authData["email"] = value;
                         },
                         validator: (value) {
-                          if (!value!.contains("@") || !value.contains(".com")) {
+                          if (!value!.contains("@") ||
+                              !value.contains(".com")) {
                             _errorMessage = "- Please enter a valid email.";
                             return "email error";
                           }
@@ -262,7 +262,9 @@ class _AuthUiState extends State<AuthUi> {
                             style: const TextStyle(color: Colors.white)),
                         CupertinoButton(
                             child: Text(
-                              _authMode == AuthMode.login ? "Register " : "Login",
+                              _authMode == AuthMode.login
+                                  ? "Register "
+                                  : "Login",
                               style:
                                   TextStyle(color: Colors.greenAccent.shade400),
                             ),
@@ -289,7 +291,7 @@ class _AuthUiState extends State<AuthUi> {
                   ],
                 ),
               ),
-          ),
+            ),
     );
   }
 }
