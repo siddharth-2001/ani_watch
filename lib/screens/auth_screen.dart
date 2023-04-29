@@ -1,5 +1,6 @@
 import 'package:ani_watch/ui/auth_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 //local imports
 import '../widgets/blur_image.dart';
@@ -14,11 +15,11 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      extendBody: true,
+    return CupertinoPageScaffold(
+     
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
-      body: 
+      child: 
       
       Stack(
 

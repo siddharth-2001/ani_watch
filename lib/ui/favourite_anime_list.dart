@@ -42,13 +42,13 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
     final size = MediaQuery.of(context).size;
 
     return _isLoading
-        ? const Center(
-            child: CupertinoActivityIndicator(
-            color: Colors.white,
-          ))
-        : Container(
-          height: 500,
-            child: favouriteList.isEmpty
+        ? SliverFillRemaining(
+          child: const Center(
+              child: CupertinoActivityIndicator(
+              color: Colors.white,
+            )),
+        )
+        : favouriteList.isEmpty
                 ? const Center(
                   child: Text(
                       "Nothing to show",
@@ -57,15 +57,11 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
                       ),
                     ),
                 )
-                : ListView.builder(
-                    padding: EdgeInsets.only(
-                        top: 0,
-                        bottom: padding.bottom,
-                        left: size.width * 0.05,
-                        right: size.width * 0.05),
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: favouriteList.length,
-                    itemBuilder: (context, index) {
+                : SliverList(
+                  
+                  delegate: SliverChildBuilderDelegate(
+                    childCount: favouriteList.length,
+                    (context, index) {
                       final anime = favouriteList[index].details;
 
                       return WideShowPanel(
@@ -78,6 +74,7 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
                           year: anime["releaseDate"]);
                     },
                   ),
-          );
+                    
+        );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:dismissible_page/dismissible_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 //local imports
@@ -26,11 +27,11 @@ class ShowDetailScreen extends StatelessWidget {
 
       minScale: .8,
       reverseDuration: const Duration(milliseconds: 250),
-      child: Scaffold(
+      child: CupertinoPageScaffold(
 
           resizeToAvoidBottomInset: false,
           // bottomNavigationBar: GlassBottomBar(),
-          body: SingleChildScrollView(
+          child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Container(
                 height: screen.height,

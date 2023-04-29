@@ -42,7 +42,7 @@ class _YouMayLikeListState extends State<YouMayLikeList> {
           child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: list.length,
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   return Center(

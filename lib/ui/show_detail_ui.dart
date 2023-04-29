@@ -51,7 +51,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
   }
 
   final detailLabelStyle = const TextStyle(
-      color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11);
+      color: Colors.white, fontWeight: FontWeight.w500  , fontSize: 11);
 
   Widget genreText() {
     String result = "";

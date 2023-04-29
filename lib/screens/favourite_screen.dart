@@ -1,9 +1,7 @@
-import 'package:ani_watch/widgets/blur_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 //local imports
-import '../widgets/glass_bottom_bar.dart';
 import '../ui/favourite_anime_list.dart';
 
 //provider imports
@@ -27,11 +25,18 @@ class FavouriteScreen extends StatelessWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             brightness: Brightness.dark,
+            trailing: CircleAvatar(),
+            stretch: true,
             largeTitle: Text("Favourites", style: TextStyle(color: Colors.white),),
           ),
-          SliverList(delegate: SliverChildListDelegate([  
-             FavouriteAnimeList(),
-         ]),)
+             SliverPadding
+             (
+             
+              padding: EdgeInsets.only(bottom: padding.bottom + 16),
+              sliver: FavouriteAnimeList()),
+            
+
+      
 
         ],
       ),

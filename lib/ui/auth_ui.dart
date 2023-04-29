@@ -145,83 +145,52 @@ class _AuthUiState extends State<AuthUi> {
           ? const CupertinoActivityIndicator(
               color: Colors.white,
             )
-          : Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(_authMode == AuthMode.login ? "Login" : "Register",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800)),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    width: size.width,
-                    decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: SmoothRectangleBorder(
-                            borderRadius: SmoothBorderRadius(
-                                cornerRadius: 10, cornerSmoothing: 1))),
-                    child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                          border: InputBorder.none, hintText: "email"),
-                      onSaved: (value) {
-                        _authData["email"] = value;
-                      },
-                      validator: (value) {
-                        if (!value!.contains("@") || !value.contains(".com")) {
-                          _errorMessage = "- Please enter a valid email.";
-                          return "email error";
-                        }
-                        return null;
-                      },
+          : Material(
+            child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(_authMode == AuthMode.login ? "Login" : "Register",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800)),
+                    const SizedBox(
+                      height: 16,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    width: size.width,
-                    decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: SmoothRectangleBorder(
-                            borderRadius: SmoothBorderRadius(
-                                cornerRadius: 10, cornerSmoothing: 1))),
-                    child: TextFormField(
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                          border: InputBorder.none, hintText: "password"),
-                      onSaved: (value) {
-                        _authData["password"] = value;
-                      },
-                      onChanged: (value) {
-                        _currPassword = value;
-                      },
-                      validator: (value) {
-                        if (value!.length < 8) {
-                          _errorMessage +=
-                              "\n- Password must be 8 characters long.";
-                          return "password error";
-                        }
-                        return null;
-                      },
-                      maxLines: 1,
-                    ),
-                  ),
-                  if (_authMode == AuthMode.register)
                     Container(
                       height: 40,
-                      margin: const EdgeInsets.only(top: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: SmoothRectangleBorder(
+                              borderRadius: SmoothBorderRadius(
+                                  cornerRadius: 10, cornerSmoothing: 1))),
+                      child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                            border: InputBorder.none, hintText: "email"),
+                        onSaved: (value) {
+                          _authData["email"] = value;
+                        },
+                        validator: (value) {
+                          if (!value!.contains("@") || !value.contains(".com")) {
+                            _errorMessage = "- Please enter a valid email.";
+                            return "email error";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Container(
+                      height: 40,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       width: size.width,
                       decoration: ShapeDecoration(
@@ -232,62 +201,95 @@ class _AuthUiState extends State<AuthUi> {
                       child: TextFormField(
                         obscureText: true,
                         decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "confirm password"),
+                            border: InputBorder.none, hintText: "password"),
                         onSaved: (value) {
                           _authData["password"] = value;
                         },
-                        validator: _authMode == AuthMode.register
-                            ? (value) {
-                                if (value != _currPassword) {
-                                  _errorMessage +=
-                                      "\n- Passwords do not match.";
-                                  return "password error";
-                                }
-                                return null;
-                              }
-                            : (value) {
-                                return null;
-                              },
+                        onChanged: (value) {
+                          _currPassword = value;
+                        },
+                        validator: (value) {
+                          if (value!.length < 8) {
+                            _errorMessage +=
+                                "\n- Password must be 8 characters long.";
+                            return "password error";
+                          }
+                          return null;
+                        },
                         maxLines: 1,
                       ),
                     ),
-                  Row(
-                    children: [
-                      Text(
-                          _authMode == AuthMode.login
-                              ? "Dont have an account?"
-                              : "Already a user?",
-                          style: const TextStyle(color: Colors.white)),
-                      CupertinoButton(
-                          child: Text(
-                            _authMode == AuthMode.login ? "Register " : "Login",
-                            style:
-                                TextStyle(color: Colors.greenAccent.shade400),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _authMode == AuthMode.login
-                                  ? _authMode = AuthMode.register
-                                  : _authMode = AuthMode.login;
-                            });
-                          }),
-                    ],
-                  ),
-                  CupertinoButton(
-                    color: Colors.greenAccent.shade400,
-                    borderRadius: BorderRadius.circular(16),
-                    child: const Text(
-                      "Submit",
-                      style: TextStyle(fontWeight: FontWeight.w800),
+                    if (_authMode == AuthMode.register)
+                      Container(
+                        height: 40,
+                        margin: const EdgeInsets.only(top: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        width: size.width,
+                        decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: SmoothRectangleBorder(
+                                borderRadius: SmoothBorderRadius(
+                                    cornerRadius: 10, cornerSmoothing: 1))),
+                        child: TextFormField(
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "confirm password"),
+                          onSaved: (value) {
+                            _authData["password"] = value;
+                          },
+                          validator: _authMode == AuthMode.register
+                              ? (value) {
+                                  if (value != _currPassword) {
+                                    _errorMessage +=
+                                        "\n- Passwords do not match.";
+                                    return "password error";
+                                  }
+                                  return null;
+                                }
+                              : (value) {
+                                  return null;
+                                },
+                          maxLines: 1,
+                        ),
+                      ),
+                    Row(
+                      children: [
+                        Text(
+                            _authMode == AuthMode.login
+                                ? "Dont have an account?"
+                                : "Already a user?",
+                            style: const TextStyle(color: Colors.white)),
+                        CupertinoButton(
+                            child: Text(
+                              _authMode == AuthMode.login ? "Register " : "Login",
+                              style:
+                                  TextStyle(color: Colors.greenAccent.shade400),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _authMode == AuthMode.login
+                                    ? _authMode = AuthMode.register
+                                    : _authMode = AuthMode.login;
+                              });
+                            }),
+                      ],
                     ),
-                    onPressed: () {
-                      saveForm(context);
-                    },
-                  ),
-                ],
+                    CupertinoButton(
+                      color: Colors.greenAccent.shade400,
+                      borderRadius: BorderRadius.circular(16),
+                      child: const Text(
+                        "Submit",
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      onPressed: () {
+                        saveForm(context);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
+          ),
     );
   }
 }

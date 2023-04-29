@@ -48,8 +48,8 @@ class GlassShowPanel extends StatelessWidget {
                 ShowDetailScreen(id: id, image: image, tag: tag));
           },
           child: Container(
-            height: size.height * 0.2,
-            width: size.width * 0.3,
+            height: 180,
+            width: 110,
             clipBehavior: Clip.hardEdge,
             decoration: ShapeDecoration(
         shape: SmoothRectangleBorder(

@@ -22,6 +22,7 @@ class MainScreen extends StatelessWidget {
     final double iconSize = 24;
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+        inactiveColor: Colors.white60,
         backgroundColor:Colors.grey.shade900.withOpacity(appSettings.blurOverlayOpacity),
         activeColor: appSettings.appThemeColor, items: [
         BottomNavigationBarItem(

@@ -23,6 +23,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
     const fontColor = Colors.white;
     final listHeight = screen.height * 0.22;
     final wideListHeight = screen.height * 0.25;
@@ -36,6 +37,7 @@ class HomeScreen extends StatelessWidget {
       //   currIndex: 0,
       // ),
       child: CustomScrollView(
+
         physics: const BouncingScrollPhysics(),
         slivers: [
           const CupertinoSliverNavigationBar(
@@ -128,6 +130,8 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                   height: listHeight,
                   child: const Center(child: PopularAnimeList())),
+              SizedBox(height: padding.bottom + 16,)
+
             ]),
           )
         ],
