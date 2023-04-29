@@ -1,23 +1,33 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 //local imports
+
+//provider imports
+import '../provider/settings.dart';
 
 class HomeUpperUi extends StatelessWidget {
   const HomeUpperUi({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final appSettings = Provider.of<AppSettings>(context);
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Ani", style: theme.textTheme.headlineSmall!.copyWith(color: Colors.greenAccent.shade400  , fontWeight: FontWeight.w900),),
-            Text("Watch+", style: theme.textTheme.headlineSmall!.copyWith(color: Colors.white , fontWeight: FontWeight.w900),),
-          ],
-        ),
+        RichText(
+            text: TextSpan(children: [
+          TextSpan(
+            text: "Ani",
+            style: TextStyle(color: appSettings.appThemeColor, fontSize: 16),
+          ),
+          const TextSpan(
+              text: "Watch+",
+              style: TextStyle(color: Colors.white, fontSize: 16))
+        ])),
+       CircleAvatar(radius: 20, child: Image.asset("assets/icon.png"),)
       ],
     );
   }

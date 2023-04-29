@@ -47,6 +47,7 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
             color: Colors.white,
           ))
         : Container(
+          height: 500,
             child: favouriteList.isEmpty
                 ? const Center(
                   child: Text(

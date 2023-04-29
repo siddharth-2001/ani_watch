@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 //local imports
 import '../ui/recent_episodes.dart';
@@ -8,10 +10,10 @@ import '../ui/popular_anime_list.dart';
 import '../ui/current_watch_list.dart';
 import '../ui/you_may_like_list.dart';
 import '../widgets/glass_bottom_bar.dart';
-import '../widgets/blur_image.dart';
 
 //provider imports
 import '../provider/auth.dart';
+import '../provider/settings.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -24,31 +26,28 @@ class HomeScreen extends StatelessWidget {
     const fontColor = Colors.white;
     final listHeight = screen.height * 0.22;
     final wideListHeight = screen.height * 0.25;
+    final appSettigns = Provider.of<AppSettings>(context);
 
-    return Scaffold(
+    return CupertinoPageScaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
-      extendBody: true,
-      bottomNavigationBar: const GlassBottomBar(
-        currIndex: 0,
-      ),
-      body: Stack(
-        children: [
-          const BlurImageBackground(image: "assets/bg1.jpg", isAsset: true,),
-          ListView(
-            physics: const BouncingScrollPhysics(),
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.025),
-                child: const HomeUpperUi(),
-              ),
+
+      // bottomNavigationBar: const GlassBottomBar(
+      //   currIndex: 0,
+      // ),
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          const CupertinoSliverNavigationBar(
+            
+            largeTitle: Text("Watch Now", style: TextStyle(color: Colors.white),),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
               Container(
                 width: screen.width,
                 padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.025),
+                    horizontal: 16, vertical: screen.height * 0.025),
                 child: const Text(
                   "Continue Watching",
                   style: TextStyle(
@@ -64,7 +63,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 width: screen.width,
                 padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
+                    horizontal: appSettigns.pageMarginHorizontal,
                     vertical: screen.height * 0.025),
                 child: const Text(
                   "You Might Like",
@@ -81,7 +80,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 width: screen.width,
                 padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
+                    horizontal: appSettigns.pageMarginHorizontal,
                     vertical: screen.height * 0.025),
                 child: const Text(
                   "Trending Anime",
@@ -98,7 +97,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 width: screen.width,
                 padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
+                    horizontal: appSettigns.pageMarginHorizontal,
                     vertical: screen.height * 0.025),
                 child: const Text(
                   "Recent Episodes",
@@ -115,7 +114,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 width: screen.width,
                 padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
+                    horizontal: appSettigns.pageMarginHorizontal,
                     vertical: screen.height * 0.025),
                 child: const Text(
                   "Popular Anime",
@@ -129,8 +128,8 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                   height: listHeight,
                   child: const Center(child: PopularAnimeList())),
-            ],
-          ),
+            ]),
+          )
         ],
       ),
     );

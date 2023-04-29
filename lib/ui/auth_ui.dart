@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 //local imports
+import '../screens/main_screen.dart';
 
 //provider imports
 import '../provider/auth.dart';
@@ -66,13 +67,13 @@ class _AuthUiState extends State<AuthUi> {
           if (value) {
             loadUserData()
                 .then((value) => Navigator.of(context)
-                    .pushReplacementNamed(HomeScreen.routeName))
+                    .pushReplacementNamed(MainScreen.routeName))
                 .timeout(
               Duration(seconds: 3),
               onTimeout: () {
                 log("time up");
                 Navigator.of(context)
-                    .pushReplacementNamed(HomeScreen.routeName);
+                    .pushReplacementNamed(MainScreen.routeName);
               },
             );
           } else {
@@ -90,7 +91,7 @@ class _AuthUiState extends State<AuthUi> {
             .register(_authData["email"], _authData["password"])
             .then((value) => loadUserData().then((value) =>
                 Navigator.of(context)
-                    .pushReplacementNamed(HomeScreen.routeName)));
+                    .pushReplacementNamed(MainScreen.routeName)));
       }
     } else {
       showCupertinoDialog(
@@ -117,12 +118,12 @@ class _AuthUiState extends State<AuthUi> {
     Provider.of<UserService>(context, listen: false).autoLogin().then((value) {
       if (value) {
         loadUserData().then((value) =>
-            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName)).timeout(
+            Navigator.of(context).pushReplacementNamed(MainScreen.routeName)).timeout(
               Duration(seconds: 3),
               onTimeout: () {
                 log("time up");
                 Navigator.of(context)
-                    .pushReplacementNamed(HomeScreen.routeName);
+                    .pushReplacementNamed(MainScreen.routeName);
               },
             );
       } else {
