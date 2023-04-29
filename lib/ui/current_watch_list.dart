@@ -44,7 +44,7 @@ class _CurrentWatchListState extends State<CurrentWatchList> {
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 final Anime anime = list[index].keys.first;
                 return CurrentWatchPanel(

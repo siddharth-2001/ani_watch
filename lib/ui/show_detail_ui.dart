@@ -76,7 +76,6 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final screen = MediaQuery.of(context).size;
     final appSettings = Provider.of<AppSettings>(context);
     
@@ -141,7 +140,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                   children: [
                                     Text(
                                       details["name"]!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w700,
                                         fontSize: 24
@@ -227,10 +226,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                     SizedBox(
                                       height: screen.height * 0.025,
                                     ),
-                                    Material(
-                                      type: MaterialType.transparency,
-
-                                      child: Row(
+                                    Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
@@ -276,7 +272,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                                                 setState(() {});
                                               }),
                                         ],
-                                      ),
+                                      
                                     ),
                                     Container(
                                       padding: EdgeInsets.symmetric(

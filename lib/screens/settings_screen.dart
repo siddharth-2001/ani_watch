@@ -1,10 +1,8 @@
-import 'package:ani_watch/widgets/blur_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 //local imports
-import '../widgets/glass_bottom_bar.dart';
 import './auth_screen.dart';
 
 //provider imports
@@ -23,7 +21,7 @@ class SettingsScreen extends StatelessWidget {
     return CupertinoPageScaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
-      navigationBar: CupertinoNavigationBar(
+      navigationBar: const CupertinoNavigationBar(
         middle: Text("Settings", style: TextStyle(color: Colors.white),),
       ),
       child: Container(

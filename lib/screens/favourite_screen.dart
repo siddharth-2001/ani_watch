@@ -23,7 +23,7 @@ class FavouriteScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       child: CustomScrollView(
         slivers: [
-          CupertinoSliverNavigationBar(
+          const CupertinoSliverNavigationBar(
             brightness: Brightness.dark,
             stretch: true,
             largeTitle: Text("Favourites", style: TextStyle(color: Colors.white),),
@@ -32,7 +32,7 @@ class FavouriteScreen extends StatelessWidget {
              (
              
               padding: EdgeInsets.only(bottom: padding.bottom + 16),
-              sliver: FavouriteAnimeList()),
+              sliver: const FavouriteAnimeList()),
             
 
       

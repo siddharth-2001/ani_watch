@@ -38,12 +38,10 @@ class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
 
   @override
   Widget build(BuildContext context) {
-    final padding = MediaQuery.of(context).padding;
-    final size = MediaQuery.of(context).size;
 
     return _isLoading
-        ? SliverFillRemaining(
-          child: const Center(
+        ? const SliverFillRemaining(
+          child: Center(
               child: CupertinoActivityIndicator(
               color: Colors.white,
             )),

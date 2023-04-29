@@ -19,12 +19,12 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appSettings = Provider.of<AppSettings>(context);
-    final double iconSize = 24;
+    const double iconSize = 24;
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         inactiveColor: Colors.white60,
         backgroundColor:Colors.grey.shade900.withOpacity(appSettings.blurOverlayOpacity),
-        activeColor: appSettings.appThemeColor, items: [
+        activeColor: appSettings.appThemeColor, items: const [
         BottomNavigationBarItem(
             label: "Watch Now",
             icon: Icon(
@@ -53,19 +53,19 @@ class MainScreen extends StatelessWidget {
       tabBuilder: (context, index) {
         switch (index) {
           case 0:
-            return HomeScreen();
+            return const HomeScreen();
 
           case 1:
-            return FavouriteScreen();
+            return const FavouriteScreen();
 
           case 2:
-            return SearchScreen();
+            return const SearchScreen();
 
           case 3:
-            return SettingsScreen();
+            return const SettingsScreen();
 
           default:
-            return HomeScreen();
+            return const HomeScreen();
         }
       },
     );

@@ -42,7 +42,7 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
           child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: list.length,
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   return  GlassShowPanel(

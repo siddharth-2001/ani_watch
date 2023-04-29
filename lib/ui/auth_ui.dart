@@ -2,7 +2,6 @@
 import 'dart:developer';
 
 import 'package:ani_watch/provider/anime.dart';
-import 'package:ani_watch/screens/home_screen.dart';
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -70,11 +69,12 @@ class _AuthUiState extends State<AuthUi> {
                 .then((value) => Navigator.of(context)
                     .pushReplacementNamed(MainScreen.routeName))
                 .timeout(
-              Duration(seconds: 3),
+              const Duration(seconds: 3),
               onTimeout: () {
                 log("time up");
                 Navigator.of(context)
                     .pushReplacementNamed(MainScreen.routeName);
+                return null;
               },
             );
           } else {
@@ -106,7 +106,6 @@ class _AuthUiState extends State<AuthUi> {
   Future<void> loadUserData() async {
     await Provider.of<TrendingAnime>(context, listen: false).getTrendingAnime();
     await Provider.of<PopularAnime>(context, listen: false).getPopularAnime();
-   
   }
 
   @override
@@ -119,10 +118,14 @@ class _AuthUiState extends State<AuthUi> {
             .then((value) => Navigator.of(context)
                 .pushReplacementNamed(MainScreen.routeName))
             .timeout(
-          Duration(seconds: 3),
+          const Duration(seconds: 3),
           onTimeout: () {
-            log("time up");
-            Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
+            try {
+              Navigator.pushReplacementNamed(context, MainScreen.routeName);
+            } catch (error) {
+              log(error.toString());
+            }
+            return null;
           },
         );
       } else {

@@ -22,13 +22,12 @@ class _SearchAnimeListState extends State<SearchAnimeList> {
   Widget build(BuildContext context) {
     list = Provider.of<AnimeService>(context, listen: true).getSearchList;
     final padding = MediaQuery.of(context).padding;
-    final size = MediaQuery.of(context).size;
     setState(() {
       _isLoading = false;
     });
     return _isLoading == true
         ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
-        : list.isEmpty ? Center(child: Text("Search for your anime", style: TextStyle(color: Colors.white),),) : ListView.builder(
+        : list.isEmpty ? const Center(child: Text("Search for your anime", style: TextStyle(color: Colors.white),),) : ListView.builder(
             // scrollDirection: Axis.horizontal,
             padding: EdgeInsets.only(top: padding.top + 16, bottom: padding.bottom ,left:8, right: 8),
             itemCount: list.length,

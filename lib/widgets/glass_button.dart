@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -38,10 +39,10 @@ class GlassButton extends StatelessWidget {
           // // shape: BoxShape.circle,
           borderRadius: BorderRadius.circular(24),
           shadowColor: Colors.white.withOpacity(0.24),
-          child: IconButton(
+          child: CupertinoButton(
               onPressed: function,
-              icon: icon,
-              style: const ButtonStyle(splashFactory: NoSplash.splashFactory)),
+              child: icon,
+             ),
         ));
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ani_watch/provider/anime.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,21 +6,23 @@ import 'package:provider/provider.dart';
 //local imports
 import '../ui/recent_episodes.dart';
 import '../ui/trending_anime_list.dart';
-import '../ui/home_top_ui.dart';
 import '../ui/popular_anime_list.dart';
 import '../ui/current_watch_list.dart';
 import '../ui/you_may_like_list.dart';
-import '../widgets/glass_bottom_bar.dart';
 
 //provider imports
-import '../provider/auth.dart';
 import '../provider/settings.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   static const routeName = '/home';
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
@@ -37,12 +40,22 @@ class HomeScreen extends StatelessWidget {
       //   currIndex: 0,
       // ),
       child: CustomScrollView(
-
         physics: const BouncingScrollPhysics(),
         slivers: [
           const CupertinoSliverNavigationBar(
-            
-            largeTitle: Text("Watch Now", style: TextStyle(color: Colors.white),),
+            largeTitle: Text(
+              "Watch Now",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+              await Provider.of<AnimeService>(context, listen: false).fetchRecommendations().then((value) {
+                setState(() {
+                  
+                });
+              });
+            },
           ),
           SliverList(
             delegate: SliverChildListDelegate([
@@ -130,8 +143,9 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                   height: listHeight,
                   child: const Center(child: PopularAnimeList())),
-              SizedBox(height: padding.bottom + 16,)
-
+              SizedBox(
+                height: padding.bottom + 16,
+              )
             ]),
           )
         ],

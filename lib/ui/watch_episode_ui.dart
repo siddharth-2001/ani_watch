@@ -60,15 +60,22 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       customControls: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       
-          child: Material(
-            
-            type: MaterialType.transparency,
-            child: CupertinoControls(
-              
-                backgroundColor: Colors.black.withOpacity(0.15),
-                iconColor: Colors.white,
-                showPlayButton: true),
-          ),
+        
+            child: Material(
+              type: MaterialType.transparency,
+              child: CupertinoTheme(
+                data: const CupertinoThemeData(
+                  brightness: Brightness.dark,
+
+                ),
+                child: CupertinoControls(
+                  
+                    backgroundColor: Colors.black.withOpacity(0.15),
+                    iconColor: Colors.white,
+                    showPlayButton: true),
+              ),
+            ),
+          
       
       ),
       videoPlayerController: _videoPlayerController,
@@ -396,11 +403,11 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                             }),
                         CupertinoButton(
                           onPressed: () {},
+                          padding: EdgeInsets.zero,
                           child: const Icon(
                             CupertinoIcons.arrow_down_circle,
                             color: Colors.white,
                           ),
-                          padding: EdgeInsets.zero,
                         )
                       ],
                     ),
@@ -410,6 +417,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                   ),
                   Flexible(
                       child: ListView.builder(
+                        addAutomaticKeepAlives: true,
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.only(top: 0, bottom: bottomPadding),
                     itemCount: min(

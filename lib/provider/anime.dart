@@ -180,7 +180,7 @@ class AnimeService with ChangeNotifier {
     return _currWatchList.reversed.toList();
   }
 
-  Future<void> fetchRecommendations() async {
+  Future<bool> fetchRecommendations() async {
     Map tempMap;
     //try to fetch data if not available create it
     try {
@@ -190,13 +190,19 @@ class AnimeService with ChangeNotifier {
     }
     _recommendedList.clear();
 
-    for (var element in tempMap.keys) {
-      if (!_animeData.containsKey(element)) await getAnimeById(element);
+    try {
+      for (var element in tempMap.keys) {
+        if (!_animeData.containsKey(element)) await getAnimeById(element);
 
-      final tempAnime = _animeData[element]!;
+        final tempAnime = _animeData[element]!;
 
-      _recommendedList.add(tempAnime);
+        _recommendedList.add(tempAnime);
+        notifyListeners();
+      }
+    } catch (error) {
+      return false;
     }
+    return true;
   }
 
   List<Anime> get recommendedList {
@@ -234,7 +240,7 @@ class AnimeService with ChangeNotifier {
   }
 
   //get anime that the user is currently watchng
-  Future<void> fetchCurrentlyWatching() async {
+  Future<bool> fetchCurrentlyWatching() async {
     _currWatchList.clear();
 
     Map temp;
@@ -246,13 +252,19 @@ class AnimeService with ChangeNotifier {
       temp = {};
     }
 
-    for (var element in temp.keys) {
-      if (!_animeData.containsKey(element)) {
-        await getAnimeById(element);
+    try {
+      for (var element in temp.keys) {
+        if (!_animeData.containsKey(element)) {
+          await getAnimeById(element);
+        }
+        final tempAnime = _animeData[element]!;
+        _currWatchList.add({tempAnime: temp[element]});
       }
-      final tempAnime = _animeData[element]!;
-      _currWatchList.add({tempAnime: temp[element]});
+    } catch (error) {
+      return false;
     }
+
+    return true;
   }
 
   //add to currently watching
@@ -267,9 +279,9 @@ class AnimeService with ChangeNotifier {
     }
 
     if (temp.length > 4) temp.remove(temp.keys.elementAt(0));
-    
+
     //to make sure that the newly added anime stays at the front
-    if(temp.containsKey(id)) temp.remove(id);
+    if (temp.containsKey(id)) temp.remove(id);
 
     temp[id] = epIndex;
 

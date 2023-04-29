@@ -27,11 +27,12 @@ class WatchEpisodeScreen extends StatelessWidget {
       maxTransformValue: .8,
       direction: DismissiblePageDismissDirection.multi,
       dismissThresholds: const {
-        DismissiblePageDismissDirection.vertical: .2,
+        DismissiblePageDismissDirection.multi: .4
+       
       },
-      minScale: .8,
-      reverseDuration: const Duration(milliseconds: 250),
+      reverseDuration: const Duration(milliseconds: 500),
       child: CupertinoPageScaffold(
+         
           backgroundColor: Colors.black,
           resizeToAvoidBottomInset: false,
           child: 
