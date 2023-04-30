@@ -29,7 +29,6 @@ class _RecommendedAnimeListState extends State<RecommendedAnimeList> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return _isLoading == true
         ? const Center(
             child: CupertinoActivityIndicator(
@@ -38,7 +37,7 @@ class _RecommendedAnimeListState extends State<RecommendedAnimeList> {
         : ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
-              padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               physics: const BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return Center(

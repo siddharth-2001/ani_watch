@@ -1,5 +1,6 @@
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 //local imports
 import '../ui/watch_episode_ui.dart';
@@ -24,24 +25,27 @@ class WatchEpisodeScreen extends StatelessWidget {
       maxRadius: 10,
       dragSensitivity: 1.0,
       maxTransformValue: .8,
-      direction: DismissiblePageDismissDirection.down,
+      direction: DismissiblePageDismissDirection.multi,
       dismissThresholds: const {
-        DismissiblePageDismissDirection.vertical: .2,
+        DismissiblePageDismissDirection.multi: .2
+       
       },
-      minScale: .8,
-      reverseDuration: const Duration(milliseconds: 250),
-      child: Scaffold(
+      reverseDuration: const Duration(milliseconds: 500),
+      child: CupertinoPageScaffold(
+         
           backgroundColor: Colors.black,
           resizeToAvoidBottomInset: false,
-          body: SingleChildScrollView(
-              child: SizedBox(
-                  height: size.height,
-                  width: size.width,
-                  child: WatchEpisodeUi(
-                    animeId: id,
-                    index: index,
-                    tag: tag,
-                  )))),
+          child: 
+           SingleChildScrollView(
+                child: SizedBox(
+                    height: size.height,
+                    width: size.width,
+                    child: WatchEpisodeUi(
+                      animeId: id,
+                      index: index,
+                      tag: tag,
+                    ))),
+          ),
     );
   }
 }

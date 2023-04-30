@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 //local imports
 import '../widgets/wide_show_panel.dart';
@@ -8,28 +11,50 @@ import '../widgets/wide_show_panel.dart';
 import '../provider/anime.dart';
 
 class SearchAnimeList extends StatefulWidget {
-  const SearchAnimeList({super.key});
+  final String query;
+  const SearchAnimeList({super.key, required this.query});
 
   @override
   State<SearchAnimeList> createState() => _SearchAnimeListState();
 }
 
 class _SearchAnimeListState extends State<SearchAnimeList> {
-  bool _isLoading = true;
-  List<Anime> list = [];
+  late Future<void> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = Provider.of<AnimeService>(context, listen: false)
+        .searchAnime(widget.query);
+  }
+
   @override
   Widget build(BuildContext context) {
-    list = Provider.of<AnimeService>(context, listen: true).getSearchList;
+    final list = Provider.of<AnimeService>(context).getSearchList;
     final padding = MediaQuery.of(context).padding;
-    final size = MediaQuery.of(context).size;
-    setState(() {
-      _isLoading = false;
-    });
-    return _isLoading == true
-        ? const Center(child: CupertinoActivityIndicator())
-        : ListView.builder(
-            // scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.only(top: 0, bottom: padding.bottom ,left: size.width * 0.05, right: size.width * 0.05),
+
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CupertinoActivityIndicator(color: Colors.white),
+          );
+        } else {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text(
+                "Some error occurred while searching",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+          return ListView.builder(
+            padding: EdgeInsets.only(
+                top: padding.top + 16,
+                bottom: padding.bottom,
+                left: 8,
+                right: 8),
             itemCount: list.length,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
@@ -44,5 +69,8 @@ class _SearchAnimeListState extends State<SearchAnimeList> {
               );
             },
           );
+        }
+      },
+    );
   }
 }

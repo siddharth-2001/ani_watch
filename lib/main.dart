@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,7 @@ import './screens/search_screen.dart';
 import './screens/favourite_screen.dart';
 import './screens/settings_screen.dart';
 import './screens/auth_screen.dart';
+import './screens/main_screen.dart';
 
 //provider imports
 import './provider/anime.dart';
@@ -49,14 +51,33 @@ void main() {
 class App extends StatelessWidget {
   const App({super.key});
 
-  final transitionType = PageTransitionType.fade;
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          textTheme: GoogleFonts.montserratTextTheme(),
-          primaryColor: Colors.greenAccent.shade400),
+    const transitionType = PageTransitionType.fade;
+    final appSettings = Provider.of<AppSettings>(context);
+
+    return CupertinoApp(
+      localizationsDelegates: const [
+        DefaultMaterialLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+      ],
+      theme: CupertinoThemeData(
+          textTheme: CupertinoTextThemeData(
+              actionTextStyle: GoogleFonts.montserrat(),
+              textStyle: GoogleFonts.montserrat(),
+              navLargeTitleTextStyle: const CupertinoTextThemeData()
+                  .navLargeTitleTextStyle
+                  .copyWith(
+                      fontFamily: GoogleFonts.montserrat().fontFamily,
+                      fontSize: 24),
+              navTitleTextStyle: const CupertinoTextThemeData()
+                  .navTitleTextStyle
+                  .copyWith(
+                      fontFamily: GoogleFonts.montserrat().fontFamily,
+                      fontSize: 16)),
+          barBackgroundColor:
+              Colors.grey.shade900.withOpacity(appSettings.blurOverlayOpacity)),
       home: const AuthScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -68,7 +89,7 @@ class App extends StatelessWidget {
 
           case SearchScreen.routeName:
             return PageTransition(
-                child: const SearchScreen(),
+                child: SearchScreen(),
                 type: transitionType,
                 settings: settings,
                 ctx: context);
@@ -93,6 +114,12 @@ class App extends StatelessWidget {
                 type: transitionType,
                 settings: settings,
                 ctx: context);
+
+          case MainScreen.routeName:
+            return PageTransition(
+                child: const MainScreen(),
+                type: transitionType,
+                settings: settings);
 
           default:
             return PageTransition(

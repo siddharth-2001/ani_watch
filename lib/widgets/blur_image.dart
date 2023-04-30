@@ -18,8 +18,8 @@ class BlurImageBackground extends StatelessWidget {
           child: ImageFiltered(
             imageFilter: ImageFilter.blur(
               tileMode: TileMode.decal,
-              sigmaX: 10,
-              sigmaY: 10,
+              sigmaX: 25,
+              sigmaY: 25,
             ),
             child: isAsset
                 ? Image.asset(

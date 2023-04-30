@@ -158,9 +158,11 @@ class Episode {
 }
 
 class AnimeService with ChangeNotifier {
-  Map<String, Anime> _animeData = {};
+  final Map<String, Anime> _animeData = {};
 
-  final List<Anime> _recommendedList = [], _searchList = [];
+  final List<Anime> _recommendedList = [],
+      _searchList = [],
+      _favouriteList = [];
 
   final List<Map<Anime, int>> _currWatchList = [];
 
@@ -172,9 +174,6 @@ class AnimeService with ChangeNotifier {
   }
 
   int checkIndex = 0;
-
-  Map<String, dynamic> _favMap =
-      {}; //This set saves anime id string since anime objects cant be used with local storage
 
   List<Map<Anime, int>> get currWatchList {
     return _currWatchList.reversed.toList();
@@ -188,14 +187,21 @@ class AnimeService with ChangeNotifier {
     } catch (error) {
       tempMap = {};
     }
+
     _recommendedList.clear();
 
     for (var element in tempMap.keys) {
-      if (!_animeData.containsKey(element)) await getAnimeById(element);
+      try {
+        //if any recommendation fails to be fetched skip it and go to the next one.
+        await getAnimeById(element);
 
-      final tempAnime = _animeData[element]!;
+        final tempAnime = _animeData[element]!;
 
-      _recommendedList.add(tempAnime);
+        _recommendedList.add(tempAnime);
+      } catch (error) {
+        return Future.error(error);
+      }
+      notifyListeners();
     }
   }
 
@@ -216,7 +222,7 @@ class AnimeService with ChangeNotifier {
 
     final Anime tempAnime = _animeData[id]!;
 
-    if (tempMap.length > 10) {
+    if (tempMap.length > 7) {
       for (int i = 0; i < 3; i++) {
         tempMap.remove(tempMap.keys.first);
       }
@@ -242,17 +248,22 @@ class AnimeService with ChangeNotifier {
     try {
       temp = _user.userWatchData["currWatchData"];
     } catch (error) {
-      log('${error}245');
+      log(error.toString() + '245');
       temp = {};
     }
 
     for (var element in temp.keys) {
-      if (!_animeData.containsKey(element)) {
+      try {
         await getAnimeById(element);
+
+        final tempAnime = _animeData[element]!;
+        _currWatchList.add({tempAnime: temp[element]});
+      } catch (error) {
+        return Future.error(error);
       }
-      final tempAnime = _animeData[element]!;
-      _currWatchList.add({tempAnime: temp[element]});
     }
+
+    notifyListeners();
   }
 
   //add to currently watching
@@ -268,6 +279,9 @@ class AnimeService with ChangeNotifier {
 
     if (temp.length > 4) temp.remove(temp.keys.elementAt(0));
 
+    //to make sure that the newly added anime stays at the front
+    if (temp.containsKey(id)) temp.remove(id);
+
     temp[id] = epIndex;
 
     _user.userWatchData["currWatchData"] = temp;
@@ -276,47 +290,73 @@ class AnimeService with ChangeNotifier {
     await fetchCurrentlyWatching();
   }
 
-  Future<void> fetchFavData() async {
-    try {
-      _favMap = _user.userWatchData["favouritesData"];
-    } catch (error) {
-      log('${error}line 281');
-      _favMap = {};
-    }
-  }
-
   bool isFavourite(String id) {
-    return _favMap.containsKey(id) ? true : false;
+    Map temp = {};
+    try {
+      temp = _user.userWatchData["favouritesData"];
+    } catch (error) {
+      temp = {};
+    }
+
+    return temp.containsKey(id) ? true : false;
   }
 
   Future<void> addToFavourite(String id) async {
     //Also deletes an item if it is already added
-    if (_favMap.containsKey(id)) {
-      _favMap.remove(id);
-    } else {
-      _favMap[id] = id;
+    Map temp = {};
+    try {
+      temp = _user.userWatchData["favouritesData"];
+    } catch (error) {
+      temp = {};
     }
-    _user.userWatchData["favouritesData"] = _favMap;
+
+    if (temp.containsKey(id)) {
+      temp.remove(id);
+    } else {
+      temp[id] = id;
+    }
+    _favouriteList.clear();
+    _user.userWatchData["favouritesData"] = temp;
+    try {
+      await fetchFavourites();
+    } catch (error) {
+      return Future.error(error);
+    }
     _user.updateUserWatchData();
     notifyListeners();
   }
 
-  Future<List<Anime>> getFavourites() async {
-    List<Anime> result = [];
+  Future<void> fetchFavourites() async {
+    Map temp = {};
 
-    if (_favMap.isEmpty) return result;
-
-    for (var id in _favMap.keys) {
-      await getAnimeById(id);
-
-      result.add(getAnimeFromMemory(id));
+    try {
+      temp = _user.userWatchData["favouritesData"];
+    } catch (error) {
+      temp = {};
     }
 
-    return result;
+    for (var id in temp.keys) {
+      try {
+        await getAnimeById(id);
+
+        _favouriteList.add(getAnimeFromMemory(id));
+      } catch (error) {
+        return Future.error(error);
+      }
+    }
+  }
+
+  List<Anime> get favouriteList {
+    return _favouriteList;
   }
 
   List<Anime> get getSearchList {
     return _searchList;
+  }
+
+  void clearSearchList() {
+    _searchList.clear();
+    notifyListeners();
   }
 
   Anime getAnimeFromMemory(String id) {
@@ -324,35 +364,44 @@ class AnimeService with ChangeNotifier {
   }
 
   Future<void> searchAnime(String query) async {
-    final url = Uri.https('api.consumet.org', '/meta/anilist/$query');
+    try {
+      final url = Uri.https('api.consumet.org', '/meta/anilist/$query');
 
-    final response = await http.get(url);
+      final response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      _searchList.clear();
-      final body = jsonDecode(response.body)! as Map<String, dynamic>;
-      List<dynamic> list = body["results"] as List<dynamic>;
-      for (var element in list) {
-        Anime temp = Anime(
-            id: element["id"],
-            name: selectAppropriateName(element["title"]),
-            image: element["image"],
-            rating: element["rating"].toString(),
-            episodes: element["totalEpisodes"].toString());
+      switch (response.statusCode) {
+        case 200:
+          _searchList.clear();
+          final body = jsonDecode(response.body)! as Map<String, dynamic>;
+          List<dynamic> list = body["results"] as List<dynamic>;
+          for (var element in list) {
+            Anime temp = Anime(
+                id: element["id"],
+                name: selectAppropriateName(element["title"]),
+                image: element["image"],
+                rating: element["rating"].toString(),
+                episodes: element["totalEpisodes"].toString());
 
-        temp._description =
-            Bidi.stripHtmlIfNeeded(element["description"].toString());
-        temp._releaseDate = element["releaseDate"].toString();
-        List genreList = element["genres"] as List<dynamic>;
+            temp._description =
+                Bidi.stripHtmlIfNeeded(element["description"].toString());
+            temp._releaseDate = element["releaseDate"].toString();
+            List genreList = element["genres"] as List<dynamic>;
 
-        for (var genre in genreList) {
-          temp._genres.add(genre);
-        }
+            for (var genre in genreList) {
+              temp._genres.add(genre);
+            }
 
-        _searchList.add(temp);
+            _searchList.add(temp);
+          }
+
+          notifyListeners();
+          return;
+
+        default:
+          return Future.error(response.statusCode);
       }
-
-      notifyListeners();
+    } catch (error) {
+      return Future.error(error);
     }
   }
 
@@ -364,147 +413,162 @@ class AnimeService with ChangeNotifier {
     try {
       var response = await http.get(url);
 
-      if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as Map<String, dynamic>;
+      switch (response.statusCode) {
+        case 200:
+          final body = jsonDecode(response.body) as Map<String, dynamic>;
 
-        Anime temp = Anime(
-            id: body["id"],
-            name: selectAppropriateName(body["title"]),
-            image: body["image"],
-            rating: body["rating"].toString(),
-            episodes: body["totalEpisodes"].toString());
+          Anime temp = Anime(
+              id: body["id"],
+              name: selectAppropriateName(body["title"]),
+              image: body["image"],
+              rating: body["rating"].toString(),
+              episodes: body["totalEpisodes"].toString());
 
-        if (body["rating"] == null) {
-          temp._rating = "null";
-        }
+          if (body["rating"] == null) {
+            temp._rating = "null";
+          }
 
-        if (body["releaseDate"] == null) {
-          temp._releaseDate = "TBA";
-        } else {
-          temp._releaseDate = body["releaseDate"].toString();
-        }
+          if (body["releaseDate"] == null) {
+            temp._releaseDate = "TBA";
+          } else {
+            temp._releaseDate = body["releaseDate"].toString();
+          }
 
-        if (body["totalEpisodes"] == null) {
-          temp._episodes = "TBA";
-        } else {
-          temp._episodes = body["totalEpisodes"].toString();
-        }
+          if (body["totalEpisodes"] == null) {
+            temp._episodes = "TBA";
+          } else {
+            temp._episodes = body["totalEpisodes"].toString();
+          }
 
-        //add cover anime
-        if (body["cover"] == "") {
-          temp._cover = temp._image;
-        } else {
-          temp._cover = body["cover"];
-        }
+          //add cover anime
+          if (body["cover"] == "") {
+            temp._cover = temp._image;
+          } else {
+            temp._cover = body["cover"];
+          }
 
-        //adding status of anime
-        temp._status = body["status"];
+          //adding status of anime
+          temp._status = body["status"];
 
-        //adding the summary of anime
-        final details = Bidi.stripHtmlIfNeeded(body["description"].toString());
-        temp._description = details;
+          //adding the summary of anime
+          final details =
+              Bidi.stripHtmlIfNeeded(body["description"].toString());
+          temp._description = details;
 
-        //recieve episode list, create episode object and add it to anime
-        final episodeList = body["episodes"] as List<dynamic>;
+          //recieve episode list, create episode object and add it to anime
+          final episodeList = body["episodes"] as List<dynamic>;
 
-        Map tempMap;
+          Map tempMap;
 
-        // if the episode data does not exist we continue with an empty map
-        try {
-          tempMap = _user.userWatchData["episodeData"];
-        } catch (error) {
-          tempMap = {};
-        }
+          // if the episode data does not exist we continue with an empty map
+          try {
+            tempMap = _user.userWatchData["episodeData"];
+          } catch (error) {
+            tempMap = {};
+          }
 
-        for (var element in episodeList) {
-          Episode tempEpisode = Episode(
-              user: _user,
-              id: element["id"],
-              episodeNumber: element["number"].toString(),
-              image: element["image"],
-              description: element["description"].toString(),
-              title: element["title"].toString());
+          for (var element in episodeList) {
+            Episode tempEpisode = Episode(
+                user: _user,
+                id: element["id"],
+                episodeNumber: element["number"].toString(),
+                image: element["image"],
+                description: element["description"].toString(),
+                title: element["title"].toString());
 
-          //if the episode is already watched before set the last seek position
-          if (tempMap.containsKey(tempEpisode._id)) {
-            if (tempMap[tempEpisode._id].containsKey("lastSeekPosition")) {
-              tempEpisode._lastSeekPosition =
-                  parseTime(tempMap[tempEpisode._id]["lastSeekPosition"]);
+            //if the episode is already watched before set the last seek position
+            if (tempMap.containsKey(tempEpisode._id)) {
+              if (tempMap[tempEpisode._id].containsKey("lastSeekPosition")) {
+                tempEpisode._lastSeekPosition =
+                    parseTime(tempMap[tempEpisode._id]["lastSeekPosition"]);
+              }
+
+              if (tempMap[tempEpisode._id].containsKey("length")) {
+                tempEpisode._length =
+                    parseTime(tempMap[tempEpisode._id]["length"]);
+              }
             }
 
-            if (tempMap[tempEpisode._id].containsKey("length")) {
-              tempEpisode._length =
-                  parseTime(tempMap[tempEpisode._id]["length"]);
+            if (tempEpisode._title == "null") {
+              tempEpisode._title = "Title Not Available";
             }
+
+            if (tempEpisode._description == "null") {
+              tempEpisode._description = "Description Not Available";
+            }
+
+            temp._episodeList.add(tempEpisode);
           }
 
-          if (tempEpisode._title == "null") {
-            tempEpisode._title = "Title Not Available";
+          //recieve the genres as a list and assign to the anime created
+          List genreList = body["genres"] as List<dynamic>;
+
+          for (var element in genreList) {
+            temp._genres.add(element);
           }
 
-          if (tempEpisode._description == "null") {
-            tempEpisode._description = "Description Not Available";
+          //adding all the recommended anime recieved from the server
+          List recommendedList = body["recommendations"] as List<dynamic>;
+
+          for (var element in recommendedList) {
+            Anime recAnime = Anime(
+                id: element["id"].toString(),
+                name: selectAppropriateName(element["title"]),
+                image: element["image"].toString(),
+                episodes: element["episodes"].toString(),
+                rating: element["rating"].toString());
+
+            temp._recommendations.add(recAnime);
           }
 
-          temp._episodeList.add(tempEpisode);
-        }
+          //saving the created anime in a local map for future reference
+          _animeData[id] = temp;
+          notifyListeners();
+          break;
 
-        //recieve the genres as a list and assign to the anime created
-        List genreList = body["genres"] as List<dynamic>;
-
-        for (var element in genreList) {
-          temp._genres.add(element);
-        }
-
-        //adding all the recommended anime recieved from the server
-        List recommendedList = body["recommendations"] as List<dynamic>;
-
-        for (var element in recommendedList) {
-          Anime recAnime = Anime(
-              id: element["id"].toString(),
-              name: selectAppropriateName(element["title"]),
-              image: element["image"].toString(),
-              episodes: element["episodes"].toString(),
-              rating: element["rating"].toString());
-
-          temp._recommendations.add(recAnime);
-        }
-
-        //saving the created anime in a local map for future reference
-        _animeData[id] = temp;
-        notifyListeners();
-      } else {
-        log(response.statusCode.toString());
+        default:
+          return Future.error(response.body);
       }
     } catch (error) {
-     
+      return Future.error(error);
     }
   }
 }
 
 class TrendingAnime with ChangeNotifier {
-  late final List<Anime> _trendingList = [];
+  final List<Anime> _trendingList = [];
 
-  Future<void> getTrendingAnime() async {
-    var url = Uri.https('api.consumet.org', '/meta/anilist/trending');
-    var response = await http.get(url);
+  Future<void> fetchTrendingAnime() async {
+    //to catch any errors unrelated to the api request(basically errors happening with a status code of 200)
+    try {
+      var url = Uri.https('api.consumet.org', '/meta/anilist/trending');
+      var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      _trendingList.clear();
-      final body = jsonDecode(response.body)! as Map<String, dynamic>;
-      List<dynamic> list = body["results"] as List<dynamic>;
-      for (var element in list) {
-        Anime temp = Anime(
-            id: element["id"],
-            rating: element["rating"].toString(),
-            name: selectAppropriateName(element["title"]),
-            image: element["image"],
-            episodes: element["totalEpisodes"].toString());
-        _trendingList.add(temp);
+      switch (response.statusCode) {
+        case 200:
+          _trendingList.clear();
+          final body = jsonDecode(response.body)! as Map<String, dynamic>;
+          List<dynamic> list = body["results"] as List<dynamic>;
+          for (var element in list) {
+            Anime temp = Anime(
+                id: element["id"],
+                rating: element["rating"].toString(),
+                name: selectAppropriateName(element["title"]),
+                image: element["image"],
+                episodes: element["totalEpisodes"].toString());
+            _trendingList.add(temp);
+          }
+
+          notifyListeners();
+
+          return;
+
+        default:
+          return Future.error(response.statusCode);
       }
-
-      notifyListeners();
-    } else {}
+    } catch (error) {
+      return Future.error(error);
+    }
   }
 
   List<Anime> get trendingList {
@@ -516,27 +580,35 @@ class PopularAnime with ChangeNotifier {
   final List<Anime> _popularList = [];
 
   Future<void> getPopularAnime() async {
-    var url = Uri.https('api.consumet.org', '/meta/anilist/popular');
-    var response = await http.get(url);
+    try {
+      var url = Uri.https('api.consumet.org', '/meta/anilist/popular');
+      var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      _popularList.clear();
-      final body = jsonDecode(response.body)! as Map<String, dynamic>;
-      List<dynamic> list = body["results"] as List<dynamic>;
-      for (var element in list) {
-        Anime temp = Anime(
-            id: element["id"],
-            rating: element["rating"].toString(),
-            name: selectAppropriateName(element["title"]),
-            image: element["image"],
-            episodes: element["totalEpisodes"].toString());
-        _popularList.add(temp);
+      switch (response.statusCode) {
+        case 200:
+          _popularList.clear();
+          final body = jsonDecode(response.body)! as Map<String, dynamic>;
+          List<dynamic> list = body["results"] as List<dynamic>;
+          for (var element in list) {
+            Anime temp = Anime(
+                id: element["id"],
+                rating: element["rating"].toString(),
+                name: selectAppropriateName(element["title"]),
+                image: element["image"],
+                episodes: element["totalEpisodes"].toString());
+            _popularList.add(temp);
+          }
+
+          notifyListeners();
+
+          return;
+
+        default:
+          return Future.error(response.statusCode);
       }
-
-      notifyListeners();
-    } else {}
-
-    // print(_popularList);
+    } catch (error) {
+      return Future.error(error);
+    }
   }
 
   List<Anime> get popularList {
@@ -548,28 +620,35 @@ class RecentEpisodes with ChangeNotifier {
   final List<Anime> _recentList = [];
 
   Future<void> getRecentEpisodes() async {
-    var url = Uri.https('api.consumet.org', '/meta/anilist/recent-episodes');
-    var response = await http.get(url);
+    try {
+      var url = Uri.https('api.consumet.org', '/meta/anilist/recent-episodes');
+      var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      _recentList.clear();
-      final body = jsonDecode(response.body)! as Map<String, dynamic>;
-      List<dynamic> list = body["results"] as List<dynamic>;
-      for (var element in list) {
-        Anime temp = Anime(
-            id: element["id"],
-            rating: element["rating"].toString(),
-            name: selectAppropriateName(element["title"]),
-            image: element["image"],
-            episodes: element["episodeNumber"].toString());
+      switch (response.statusCode) {
+        case 200:
+          _recentList.clear();
+          final body = jsonDecode(response.body)! as Map<String, dynamic>;
+          List<dynamic> list = body["results"] as List<dynamic>;
+          for (var element in list) {
+            Anime temp = Anime(
+                id: element["id"],
+                rating: element["rating"].toString(),
+                name: selectAppropriateName(element["title"]),
+                image: element["image"],
+                episodes: element["episodeNumber"].toString());
 
-        _recentList.add(temp);
+            _recentList.add(temp);
+          }
+
+          notifyListeners();
+          return;
+
+        default:
+          return Future.error(response.statusCode);
       }
-
-      notifyListeners();
-    } else {}
-
-    // print(_popularList);
+    } catch (error) {
+      return Future.error(error);
+    }
   }
 
   List<Anime> get recentList {
