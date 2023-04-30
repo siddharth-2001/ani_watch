@@ -65,18 +65,7 @@ class _AuthUiState extends State<AuthUi> {
             .login(_authData["email"], _authData["password"])
             .then((value) {
           if (value) {
-            loadUserData()
-                .then((value) => Navigator.of(context)
-                    .pushReplacementNamed(MainScreen.routeName))
-                .timeout(
-              const Duration(seconds: 3),
-              onTimeout: () {
-                log("time up");
-                Navigator.of(context)
-                    .pushReplacementNamed(MainScreen.routeName);
-                return null;
-              },
-            );
+            Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
           } else {
             showCupertinoDialog(
               context: context,
@@ -90,9 +79,8 @@ class _AuthUiState extends State<AuthUi> {
       } else {
         Provider.of<UserService>(ctx, listen: false)
             .register(_authData["email"], _authData["password"])
-            .then((value) => loadUserData().then((value) =>
-                Navigator.of(context)
-                    .pushReplacementNamed(MainScreen.routeName)));
+            .then((value) => Navigator.of(context)
+                .pushReplacementNamed(MainScreen.routeName));
       }
     } else {
       showCupertinoDialog(
@@ -103,32 +91,19 @@ class _AuthUiState extends State<AuthUi> {
   }
 
   //load user data so that they dont see the loading spinners after
-  Future<void> loadUserData() async {
-    await Provider.of<TrendingAnime>(context, listen: false).getTrendingAnime();
-    await Provider.of<PopularAnime>(context, listen: false).getPopularAnime();
-  }
 
   @override
   void initState() {
     super.initState();
     //try to use data on disk to auto login the user
-    Provider.of<UserService>(context, listen: false).autoLogin().then((value) {
-      if (value) {
-        loadUserData()
-            .then((value) => Navigator.of(context)
-                .pushReplacementNamed(MainScreen.routeName))
-            .timeout(
-          const Duration(seconds: 3),
-          onTimeout: () {
-            try {
-              Navigator.pushReplacementNamed(context, MainScreen.routeName);
-            } catch (error) {
-              log(error.toString());
-            }
-            return null;
-          },
-        );
+    Provider.of<UserService>(context, listen: false)
+        .autoLogin()
+        .then((loggedIn) {
+      //if the auto login was successful, start to load user data
+      if (loggedIn) {
+        Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
       } else {
+        //ask for login details if auto login fails
         setState(() {
           _isLoading = false;
         });

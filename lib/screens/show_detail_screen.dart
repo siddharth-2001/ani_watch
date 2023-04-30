@@ -26,7 +26,7 @@ class ShowDetailScreen extends StatelessWidget {
       direction: DismissiblePageDismissDirection.multi,
       backgroundColor: Colors.transparent,
       dismissThresholds: const {
-        DismissiblePageDismissDirection.multi: .4,
+        DismissiblePageDismissDirection.multi: .2,
       
       },
       reverseDuration: appSettings.reverseDuration,

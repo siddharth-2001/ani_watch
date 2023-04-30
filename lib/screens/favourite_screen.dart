@@ -6,37 +6,39 @@ import '../ui/favourite_anime_list.dart';
 
 //provider imports
 
-class FavouriteScreen extends StatelessWidget {
+class FavouriteScreen extends StatefulWidget {
   const FavouriteScreen({super.key});
 
   static const routeName = '/favourites';
 
   @override
+  State<FavouriteScreen> createState() => _FavouriteScreenState();
+}
+
+class _FavouriteScreenState extends State<FavouriteScreen> {
+  @override
   Widget build(BuildContext context) {
-    final screen = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.black,
-      // bottomNavigationBar: const GlassBottomBar(
-      //   currIndex: 2,
-      // ),
       resizeToAvoidBottomInset: false,
       child: CustomScrollView(
         slivers: [
           const CupertinoSliverNavigationBar(
             brightness: Brightness.dark,
-            stretch: true,
-            largeTitle: Text("Favourites", style: TextStyle(color: Colors.white),),
+            largeTitle: Text(
+              "Favourites",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
-             SliverPadding
-             (
-             
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+              setState(() {});
+            },
+          ),
+          SliverPadding(
               padding: EdgeInsets.only(bottom: padding.bottom + 16),
               sliver: const FavouriteAnimeList()),
-            
-
-      
-
         ],
       ),
     );

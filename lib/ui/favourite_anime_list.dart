@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,63 +18,62 @@ class FavouriteAnimeList extends StatefulWidget {
 }
 
 class _FavouriteAnimeListState extends State<FavouriteAnimeList> {
-  bool _isLoading = true;
-  List<Anime> favouriteList = [];
+  late Future<void> _future;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<AnimeService>(context, listen: false)
-        .fetchFavData()
-        .then((value) {
-      Provider.of<AnimeService>(context, listen: false)
-          .getFavourites()
-          .then((value) {
-        favouriteList = value;
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    });
+    _future =
+        Provider.of<AnimeService>(context, listen: false).fetchFavourites();
   }
 
   @override
   Widget build(BuildContext context) {
+    final list = Provider.of<AnimeService>(context).favouriteList;
 
-    return _isLoading
-        ? const SliverFillRemaining(
-          child: Center(
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SliverFillRemaining(
+            child: Center(
               child: CupertinoActivityIndicator(
-              color: Colors.white,
-            )),
-        )
-        : favouriteList.isEmpty
-                ? const Center(
-                  child: Text(
-                      "Nothing to show",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                )
-                : SliverList(
-                  
-                  delegate: SliverChildBuilderDelegate(
-                    childCount: favouriteList.length,
-                    (context, index) {
-                      final anime = favouriteList[index].details;
+                color: Colors.white,
+              ),
+            ),
+          );
+        } else {
+          if (snapshot.hasError) {
+            log(snapshot.error.toString());
+            return const SliverFillRemaining(
+              child: Center(
+                child: Text(
+                  "Some error occurred while fetching favourites",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          }
 
-                      return WideShowPanel(
-                          id: anime["id"],
-                          name: anime["name"],
-                          image: anime["image"],
-                          episodes: anime["episodes"],
-                          rating: anime["rating"],
-                          genres: anime["genres"],
-                          year: anime["releaseDate"]);
-                    },
-                  ),
-                    
-        );
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              childCount: list.length,
+              (context, index) {
+                final anime = list[index].details;
+
+                return WideShowPanel(
+                    id: anime["id"],
+                    name: anime["name"],
+                    image: anime["image"],
+                    episodes: anime["episodes"],
+                    rating: anime["rating"],
+                    genres: anime["genres"],
+                    year: anime["releaseDate"]);
+              },
+            ),
+          );
+        }
+      },
+    );
   }
 }

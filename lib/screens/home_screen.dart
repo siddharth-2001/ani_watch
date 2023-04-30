@@ -35,10 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
-
-      // bottomNavigationBar: const GlassBottomBar(
-      //   currIndex: 0,
-      // ),
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -50,10 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
-              await Provider.of<AnimeService>(context, listen: false).fetchRecommendations().then((value) {
-                setState(() {
-                  
-                });
+              setState(() {
+                
               });
             },
           ),

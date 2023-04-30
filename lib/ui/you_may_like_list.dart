@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,47 +18,62 @@ class YouMayLikeList extends StatefulWidget {
 }
 
 class _YouMayLikeListState extends State<YouMayLikeList> {
-  bool _isLoading = true;
   List<Anime> list = [];
+  late Future<void> _future;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<AnimeService>(context, listen: false)
-        .fetchRecommendations()
-        .then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _future = Provider.of<AnimeService>(context, listen: false)
+        .fetchRecommendations();
   }
 
   @override
   Widget build(BuildContext context) {
     list = Provider.of<AnimeService>(context).recommendedList;
+
     final size = MediaQuery.of(context).size;
 
-    return _isLoading == true
-        ? const Center(child: CupertinoActivityIndicator(color: Colors.white,))
-        :  SizedBox(
-          height: size.height * 0.22,
-          child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: list.length,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  return Center(
-                    child: GlassShowPanel(
-                      tag: "you_may_like",
-                      id: list[index].details["id"],
-                      name: list[index].details["name"],
-                      image: list[index].details["image"],
-                      episodes: list[index].details["episodes"],
-                    ),
-                  );
-                },
-              
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CupertinoActivityIndicator(color: Colors.white),
+          );
+        } else {
+          if (snapshot.hasError) {
+            log("Error while getting recommendations: ${snapshot.error.toString()}");
+            return const Center(
+              child: Text(
+                "An error occured while getting your recommendations",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+
+          return SizedBox(
+            height: size.height * 0.22,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: list.length,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return Center(
+                  child: GlassShowPanel(
+                    tag: "you_may_like",
+                    id: list[index].details["id"],
+                    name: list[index].details["name"],
+                    image: list[index].details["image"],
+                    episodes: list[index].details["episodes"],
+                  ),
+                );
+              },
             ),
-        );
+          );
+        }
+      },
+    );
   }
 }

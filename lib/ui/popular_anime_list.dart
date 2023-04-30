@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,18 +18,13 @@ class PopularAnimeList extends StatefulWidget {
 }
 
 class _PopularAnimeListState extends State<PopularAnimeList> {
-  bool _isLoading = true;
+  late Future<void> _future;
   List<Anime> list = [];
   @override
   void initState() {
     super.initState();
-    Provider.of<PopularAnime>(context, listen: false)
-        .getPopularAnime()
-        .then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _future =
+        Provider.of<PopularAnime>(context, listen: false).getPopularAnime();
   }
 
   @override
@@ -35,31 +32,45 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
     list = Provider.of<PopularAnime>(context, listen: true).popularList;
     final size = MediaQuery.of(context).size;
 
-    return _isLoading == true
-        ? const Center(
-            child: CupertinoActivityIndicator(
-            color: Colors.white,
-          ))
-        :  SizedBox(
-          height: size.height * 0.22,
-          child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: list.length,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  return Center(
-                    child: GlassShowPanel(
-                      tag: "popular",
-                      id: list[index].details["id"],
-                      name: list[index].details["name"],
-                      image: list[index].details["image"],
-                      episodes: list[index].details["episodes"],
-                    ),
-                  );
-                },
-             
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CupertinoActivityIndicator(color: Colors.white),
+          );
+        } else {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text(
+                "Some error occurred while fetching popular anime",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+
+          return SizedBox(
+            height: size.height * 0.22,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: list.length,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return Center(
+                  child: GlassShowPanel(
+                    tag: "popular",
+                    id: list[index].details["id"],
+                    name: list[index].details["name"],
+                    image: list[index].details["image"],
+                    episodes: list[index].details["episodes"],
+                  ),
+                );
+              },
             ),
-        );
+          );
+        }
+      },
+    );
   }
 }

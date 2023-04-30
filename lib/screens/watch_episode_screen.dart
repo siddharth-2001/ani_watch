@@ -27,7 +27,7 @@ class WatchEpisodeScreen extends StatelessWidget {
       maxTransformValue: .8,
       direction: DismissiblePageDismissDirection.multi,
       dismissThresholds: const {
-        DismissiblePageDismissDirection.multi: .4
+        DismissiblePageDismissDirection.multi: .2
        
       },
       reverseDuration: const Duration(milliseconds: 500),
