@@ -39,7 +39,6 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
   late List<Episode> _episodeList;
   late Anime anime;
   late Timer timer;
-  late Future<void> _future;
 
   int currIndex = 0; //current episode index
   int currPage = 1;
@@ -48,28 +47,37 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
   Map<String, String> _allQualities = {};
   String currQuality = "default";
 
+  bool _isLoading = true;
+
   //initialize video player controller
   Future<void> video() async {
     await _videoPlayerController.initialize();
     _chewieController = ChewieController(
+     
       allowFullScreen: true,
       fullScreenByDefault: true,
       showControls: true,
       zoomAndPan: true,
       customControls: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        child: Material(
-          type: MaterialType.transparency,
-          child: CupertinoTheme(
-            data: const CupertinoThemeData(
-              brightness: Brightness.dark,
+      
+        
+            child: Material(
+              type: MaterialType.transparency,
+              child: CupertinoTheme(
+                data: const CupertinoThemeData(
+                  brightness: Brightness.dark,
+
+                ),
+                child: CupertinoControls(
+                  
+                    backgroundColor: Colors.black.withOpacity(0.15),
+                    iconColor: Colors.white,
+                    showPlayButton: true),
+              ),
             ),
-            child: CupertinoControls(
-                backgroundColor: Colors.black.withOpacity(0.15),
-                iconColor: Colors.white,
-                showPlayButton: true),
-          ),
-        ),
+          
+      
       ),
       videoPlayerController: _videoPlayerController,
       allowMuting: true,
@@ -84,77 +92,69 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     );
   }
 
-  Future<void> initialize() async {
+  @override
+  void initState() {
+    super.initState();
     final animeId = widget.animeId;
 
     anime = Provider.of<AnimeService>(context, listen: false)
         .getAnimeFromMemory(animeId);
-
     _episodeList = anime.details["episodeList"];
 
     totalEpisodes = _episodeList.length;
 
     totalPages = pagination(totalEpisodes);
-
     currIndex = widget.index;
 
     if (totalEpisodes != 0) {
-      await _episodeList[currIndex].getLink();
-      _allQualities = _episodeList[currIndex].details["link"];
+      _episodeList[currIndex].getLink().then((value) {
+        _allQualities = _episodeList[currIndex].details["link"];
+        _videoPlayerController =
+            VideoPlayerController.network(_allQualities[currQuality]!);
+        video().then((value) {
+          _episodeList[currIndex]
+              .setEpisodeLength(_videoPlayerController.value.duration);
 
-      _videoPlayerController =
-          VideoPlayerController.network(_allQualities[currQuality]!);
-
-      await video();
-      await _episodeList[currIndex]
-          .setEpisodeLength(_videoPlayerController.value.duration);
-
-      await _videoPlayerController
-          .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
-      saveSeekPosition();
+          if (context.mounted) {
+            setState(() {
+              _videoPlayerController
+                  .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
+              saveSeekPosition();
+              _isLoading = false;
+            });
+          }
+        });
+      });
     }
-
-    return;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _future = initialize();
   }
 
   Future<void> selectEpisode(int index) async {
-    try {
-      final temp = await _videoPlayerController.position;
-      _episodeList[currIndex].setLastSeekPosition(temp!);
+    await _videoPlayerController.position.then(
+      (value) => _episodeList[currIndex].setLastSeekPosition(value!),
+    );
 
+    setState(() {
+      _isLoading = true;
+      currIndex = index;
       timer.cancel();
+    });
 
-      setState(() {
-        currIndex = index;
-      });
-
-      _videoPlayerController.dispose();
-
-      await _episodeList[currIndex].getLink();
+    _videoPlayerController.dispose();
+    _episodeList[currIndex].getLink().then((value) {
       _allQualities = _episodeList[currIndex].details["link"];
-
       _videoPlayerController =
           VideoPlayerController.network(_allQualities[currQuality]!);
-
-      await video();
-
-      _episodeList[currIndex]
-          .setEpisodeLength(_videoPlayerController.value.duration);
-
-      await _videoPlayerController
-          .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
-
-      saveSeekPosition();
-    } catch (error) {
-      return Future.error(error);
-    }
+      video().then((value) {
+        setState(() {
+          _episodeList[currIndex]
+              .setEpisodeLength(_videoPlayerController.value.duration);
+          _videoPlayerController
+              .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
+          saveSeekPosition();
+          _isLoading = false;
+        });
+      });
+    });
   }
 
   //determine the number of pages for pagination of episodes
@@ -176,30 +176,27 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
   }
 
   //change
-  Future<void> changeQuality(String value) async {
-    try {
-      timer.cancel();
-
+  void changeQuality(String value) {
+    if (context.mounted) {
       setState(() {
+        _isLoading = true;
         currQuality = value;
+        timer.cancel();
       });
-
-      _videoPlayerController.dispose();
-
-      _videoPlayerController =
-          VideoPlayerController.network(_allQualities[currQuality]!);
-
-      await video();
-
-      await _videoPlayerController
-          .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
-
-      saveSeekPosition();
-
-      return;
-    } catch (error) {
-      return Future.error(error);
     }
+
+    _videoPlayerController.dispose();
+
+    _videoPlayerController =
+        VideoPlayerController.network(_allQualities[currQuality]!);
+    video().then((value) {
+      setState(() {
+        _videoPlayerController
+            .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
+        saveSeekPosition();
+        _isLoading = false;
+      });
+    });
   }
 
   List<DropdownMenuItem<Object>> dropDownPages() {
@@ -256,10 +253,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
       children: [
         Hero(
           tag: widget.animeId + widget.tag,
-          child: BlurImageBackground(
-            image: anime.details["image"],
-            isAsset: false,
-          ),
+          child: BlurImageBackground(image: anime.details["image"], isAsset: false,),
         ),
         totalEpisodes == 0
             ? const Center(
@@ -274,34 +268,15 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                   SizedBox(
                     height: devicePadding.top,
                   ),
-                  FutureBuilder(
-                    future: _future,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                            height: 250,
-                            width: size.width,
-                            child: const CupertinoActivityIndicator(
-                              color: Colors.white,
-                            ));
-                      } else {
-                        if (snapshot.hasError) {
-                          return Container(
-                              height: 250,
-                              width: size.width,
-                              child: const Text(
-                                "Some Error Occurred while loading video",
-                                style: TextStyle(color: Colors.white),
-                              ));
-                        }
-
-                        return Container(
-                            height: 250,
-                            width: size.width,
-                            child: playerWidget);
-                      }
-                    },
-                  ),
+                  _isLoading
+                      ? Container(
+                          height: 250,
+                          width: size.width,
+                          child: const CupertinoActivityIndicator(
+                            color: Colors.white,
+                          ))
+                      : Container(
+                          height: 250, width: size.width, child: playerWidget),
                   const SizedBox(
                     height: 15,
                   ),
@@ -419,8 +394,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                                     .indexOf(currQuality)),
                                         useMagnifier: true,
                                         onSelectedItemChanged: (value) {
-                                          _future = changeQuality(_allQualities
-                                              .keys
+                                          changeQuality(_allQualities.keys
                                               .elementAt(value));
                                         },
                                         children: episodeQualities()),
@@ -444,7 +418,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                   ),
                   Flexible(
                       child: ListView.builder(
-                    addAutomaticKeepAlives: true,
+                        addAutomaticKeepAlives: true,
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.only(top: 0, bottom: bottomPadding),
                     itemCount: min(
@@ -479,7 +453,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                           width: 160,
                                           clipBehavior: Clip.hardEdge,
                                           decoration: ShapeDecoration(
-                                              shadows: const [
+                                            shadows:  const [
                                                 BoxShadow(
                                                   offset: Offset(14, 18),
                                                   spreadRadius: -20,
@@ -488,11 +462,9 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                                                       0, 0, 0, 1),
                                                 )
                                               ],
-                                              shape: SmoothRectangleBorder(
-                                                  borderRadius:
-                                                      SmoothBorderRadius(
-                                                          cornerRadius: 16,
-                                                          cornerSmoothing: 1))),
+                                            shape: SmoothRectangleBorder(
+                                            borderRadius: SmoothBorderRadius(cornerRadius: 16, cornerSmoothing: 1)
+                                          )),
                                           child: Image.network(
                                             episode["image"]!,
                                             fit: BoxFit.cover,
@@ -561,7 +533,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
                             ),
                           ),
                           onTap: () {
-                            _future = selectEpisode(index);
+                            selectEpisode(index);
                             Provider.of<AnimeService>(context, listen: false)
                                 .addToCurrWatchList(anime.details["id"], index);
                           },

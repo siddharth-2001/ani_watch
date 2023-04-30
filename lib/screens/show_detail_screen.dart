@@ -23,10 +23,10 @@ class ShowDetailScreen extends StatelessWidget {
 
     return DismissiblePage(
       onDismissed: () => Navigator.of(context).pop(),
-      direction: DismissiblePageDismissDirection.multi,
+      direction: DismissiblePageDismissDirection.vertical,
       backgroundColor: Colors.transparent,
       dismissThresholds: const {
-        DismissiblePageDismissDirection.multi: .2,
+        DismissiblePageDismissDirection.vertical: .2,
       
       },
       reverseDuration: appSettings.reverseDuration,
