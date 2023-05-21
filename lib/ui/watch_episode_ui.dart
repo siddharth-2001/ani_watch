@@ -175,7 +175,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     });
   }
 
-  //change
+  //change Quality
   Future<void> changeQuality(String value) async {
     try {
       timer.cancel();
