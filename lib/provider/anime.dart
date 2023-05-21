@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:duration/duration.dart';
 import './auth.dart';
 
-String backendUrl = "aniwatch-backend-siddharth-2001.vercel.app";
+String backendUrl = "aniwatch-backend.vercel.app";
 
 class Anime with ChangeNotifier {
   String _id = "";
