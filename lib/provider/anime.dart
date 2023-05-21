@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:duration/duration.dart';
 import './auth.dart';
 
+String backendUrl = "consumet-api-production-ad7b.up.railway.app";
+
 class Anime with ChangeNotifier {
   String _id = "";
   String _name = "";
@@ -138,7 +140,7 @@ class Episode {
   }
 
   Future<void> getLink() async {
-    final url = Uri.https('api.consumet.org', '/meta/anilist/watch/$_id');
+    final url = Uri.https(backendUrl, '/meta/anilist/watch/$_id');
 
     var response = await http.get(url);
 
@@ -365,7 +367,7 @@ class AnimeService with ChangeNotifier {
 
   Future<void> searchAnime(String query) async {
     try {
-      final url = Uri.https('api.consumet.org', '/meta/anilist/$query');
+      final url = Uri.https(backendUrl, '/meta/anilist/$query');
 
       final response = await http.get(url);
 
@@ -408,7 +410,7 @@ class AnimeService with ChangeNotifier {
   Future<void> getAnimeById(String id) async {
     if (_animeData.containsKey(id)) return;
 
-    final url = Uri.https("api.consumet.org", "/meta/anilist/info/$id");
+    final url = Uri.https(backendUrl, "/meta/anilist/info/$id");
 
     try {
       var response = await http.get(url);
@@ -541,7 +543,7 @@ class TrendingAnime with ChangeNotifier {
   Future<void> fetchTrendingAnime() async {
     //to catch any errors unrelated to the api request(basically errors happening with a status code of 200)
     try {
-      var url = Uri.https('api.consumet.org', '/meta/anilist/trending');
+      var url = Uri.https(backendUrl, '/meta/anilist/trending');
       var response = await http.get(url);
 
       switch (response.statusCode) {
@@ -581,7 +583,7 @@ class PopularAnime with ChangeNotifier {
 
   Future<void> getPopularAnime() async {
     try {
-      var url = Uri.https('api.consumet.org', '/meta/anilist/popular');
+      var url = Uri.https(backendUrl, '/meta/anilist/popular');
       var response = await http.get(url);
 
       switch (response.statusCode) {
@@ -621,7 +623,7 @@ class RecentEpisodes with ChangeNotifier {
 
   Future<void> getRecentEpisodes() async {
     try {
-      var url = Uri.https('api.consumet.org', '/meta/anilist/recent-episodes');
+      var url = Uri.https(backendUrl, '/meta/anilist/recent-episodes');
       var response = await http.get(url);
 
       switch (response.statusCode) {
