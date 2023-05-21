@@ -458,7 +458,9 @@ class AnimeService with ChangeNotifier {
           temp._description = details;
 
           //recieve episode list, create episode object and add it to anime
-          final episodeList = body["episodes"] as List<dynamic>;
+          List episodeList = body["episodes"] as List<dynamic>;
+
+          episodeList = episodeList.reversed.toList();
 
           Map tempMap;
 
