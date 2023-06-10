@@ -10,7 +10,7 @@ import '../screens/search_screen.dart';
 //provider imports
 import '../provider/anime.dart';
 
-class SearchBoxUi extends StatelessWidget {
+class SearchBoxUi extends StatelessWidget  {
   const SearchBoxUi({super.key});
 
   @override
