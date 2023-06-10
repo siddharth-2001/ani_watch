@@ -24,10 +24,16 @@ Note: You will need a developer account to sign the iOS build or otherwise your 
 
 ## Screenshots
 
-![Alt text](/screenshots/IMG_1004.PNG?raw=true "Home Screen")
-![Alt text](/screenshots/IMG_1005.PNG?raw=true "Anime Detail Screen")
-![Alt text](/screenshots/IMG_1006.PNG?raw=true "Watch Screen")
-![Alt text](/screenshots/IMG_1007.PNG?raw=true "Favourite Screen")
+![Alt text](/screenshots/ss1.PNG?raw=true "")
+![Alt text](/screenshots/ss2.PNG?raw=true "")
+![Alt text](/screenshots/ss3.PNG?raw=true "")
+![Alt text](/screenshots/ss4.PNG?raw=true "")
+![Alt text](/screenshots/ss5.PNG?raw=true "")
+![Alt text](/screenshots/ss6.PNG?raw=true "")
+![Alt text](/screenshots/ss7.PNG?raw=true "")
+![Alt text](/screenshots/ss8.PNG?raw=true "")
+![Alt text](/screenshots/ss9.PNG?raw=true "")
+![Alt text](/screenshots/ss10.PNG?raw=true "")
 
 ## Features
 
