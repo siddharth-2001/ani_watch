@@ -178,7 +178,7 @@ class AnimeService with ChangeNotifier {
   int checkIndex = 0;
 
   List<Map<Anime, int>> get currWatchList {
-    return _currWatchList.reversed.toList();
+    return _currWatchList;
   }
 
   Future<void> fetchRecommendations() async {
@@ -203,12 +203,13 @@ class AnimeService with ChangeNotifier {
       } catch (error) {
         return Future.error(error);
       }
+
       notifyListeners();
     }
   }
 
   List<Anime> get recommendedList {
-    return _recommendedList;
+    return _recommendedList.reversed.toList();
   }
 
   //add anime to recommendations
@@ -670,7 +671,6 @@ String selectAppropriateName(Map names) {
         names["userreferred"] != null) {
       result = names["userreferred"];
     } else {
-      
       result = names["romaji"];
     }
   } catch (error) {
