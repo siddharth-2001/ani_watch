@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final padding = MediaQuery.of(context).padding;
     const fontColor = Colors.white;
     final listHeight = screen.height * 0.22;
-    final wideListHeight = screen.height * 0.25;
+    final wideListHeight = screen.height * 0.4;
     final appSettigns = Provider.of<AppSettings>(context);
 
     return CupertinoPageScaffold(

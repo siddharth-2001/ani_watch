@@ -25,7 +25,7 @@ class WatchEpisodeScreen extends StatelessWidget {
       maxRadius: 10,
       dragSensitivity: 1.0,
       maxTransformValue: .8,
-      direction: DismissiblePageDismissDirection.multi,
+      direction: DismissiblePageDismissDirection.startToEnd,
       dismissThresholds: const {
         DismissiblePageDismissDirection.multi: .2
        

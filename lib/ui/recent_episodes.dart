@@ -52,7 +52,7 @@ class _RecentEpisodeUiState extends State<RecentEpisodeUi> {
           }
 
           return SizedBox(
-            height: size.height * 0.22,
+            height: size.height * 0.4,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,

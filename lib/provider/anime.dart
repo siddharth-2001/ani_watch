@@ -422,7 +422,7 @@ class AnimeService with ChangeNotifier {
           Anime temp = Anime(
               id: body["id"],
               name: selectAppropriateName(body["title"]),
-              image: body["image"],
+              image: body["image"].toString(),
               rating: body["rating"].toString(),
               episodes: body["totalEpisodes"].toString());
 
@@ -476,7 +476,7 @@ class AnimeService with ChangeNotifier {
                 user: _user,
                 id: element["id"],
                 episodeNumber: element["number"].toString(),
-                image: element["image"],
+                image: element["image"].toString(),
                 description: element["description"].toString(),
                 title: element["title"].toString());
 
@@ -663,13 +663,18 @@ class RecentEpisodes with ChangeNotifier {
 String selectAppropriateName(Map names) {
   String result = "";
 
-  if (names.containsKey("english") && names["english"] != null) {
-    result = names["english"];
-  } else if (names.containsKey("userPreferred") &&
-      names["userreferred"] != null) {
-    result = names["userreferred"];
-  } else {
-    result = names["romaji"];
+  try {
+    if (names.containsKey("english") && names["english"] != null) {
+      result = names["english"];
+    } else if (names.containsKey("userPreferred") &&
+        names["userreferred"] != null) {
+      result = names["userreferred"];
+    } else {
+      
+      result = names["romaji"];
+    }
+  } catch (error) {
+    log("Error while selecting appropriate name.");
   }
 
   return result;

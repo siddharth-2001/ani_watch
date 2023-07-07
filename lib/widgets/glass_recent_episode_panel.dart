@@ -57,7 +57,7 @@ class GlassRecentPanel extends StatelessWidget {
                   Hero(
                     tag: "${id}recents",
                     child: SizedBox(
-                      height: screen.height * 0.22,
+                      height: screen.height * 0.4,
                   
                       width: screen.width * 0.9,
                 
@@ -94,14 +94,14 @@ class GlassRecentPanel extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: const TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white),
                                 ),
                                 Text(
                                   "Episode: ${int.parse(episodes)}",
                                   style: const TextStyle(
-                                      fontSize: 10, color: Colors.white),
+                                      fontSize: 11, color: Colors.white),
                                 )
                               ],
                             ),

@@ -70,13 +70,11 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
     return SingleChildScrollView(
       child: Stack(
         children: [
-          Hero(
-            tag: widget.id + widget.tag,
-            child: BlurImageBackground(
+         BlurImageBackground(
               image: widget.image,
               isAsset: false,
             ),
-          ),
+          
           SizedBox(
             height: screen.height,
             width: screen.width,
@@ -103,7 +101,7 @@ class _ShowDetailUiState extends State<ShowDetailUi> {
                     return Column(
                       children: [
                         Hero(
-                          tag: "${widget.id}watch",
+                          tag: widget.id + widget.tag,
                           child: SizedBox(
                             height: screen.height * 0.2,
                             width: screen.width,
