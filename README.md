@@ -46,3 +46,6 @@ Note: You will need a developer account to sign the iOS build or otherwise your 
 - Simple and intuitive user interface that enhances the overall viewing experience, with customizable settings and features to cater to individual preferences.
 
 AniWatch+ offers a comprehensive and immersive anime-watching experience for users, with a wide range of advanced features designed to enhance the overall viewing experience.
+
+Note*
+The project is for research purposes only and does not support piracy in any shape or form.
