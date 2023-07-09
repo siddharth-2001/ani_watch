@@ -2,26 +2,6 @@
 
 AniWatch+ is a mobile application built using the powerful Flutter framework that allows users to stream their favorite anime shows on the go. Featuring a sleek and modern user interface, AniWatch+ offers a wide variety of features to enhance the user's anime-watching experience.
 
-## Getting Started
-
-### Android
-
-To install AniWatch+ on an Android device, follow these steps:
-
-1. Download the latest APK release from the [Releases](https://github.com/siddharth-2001/stream_app/releases) page.
-2. Enable installation from unknown sources in your device's settings.
-3. Install the APK by tapping on it and following the prompts.
-
-### iOS
-
-To install AniWatch+ on an iOS device, follow these steps:
-
-1. Clone the repository to your local machine.
-2. Open the project in Xcode and select your development team in the signing settings.
-3. Build and run the app on your device.
-
-Note: You will need a developer account to sign the iOS build or otherwise your app will need to be refreshed every 7 days.
-
 ## Screenshots
 
 ![Alt text](/screenshots/ss1.PNG?raw=true "")
