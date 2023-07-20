@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final screen = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     const fontColor = Colors.white;
-    final listHeight = screen.height * 0.22;
+    final listHeight = 250.0;
     final wideListHeight = screen.height * 0.4;
     final appSettigns = Provider.of<AppSettings>(context);
 

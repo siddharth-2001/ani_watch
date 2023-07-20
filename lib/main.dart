@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:media_kit/media_kit.dart';
 
 //local imoorts
 import 'screens/home_screen.dart';
@@ -19,6 +20,8 @@ import './provider/settings.dart';
 import './provider/auth.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   runApp(MultiProvider(
     providers: [
@@ -64,6 +67,7 @@ class App extends StatelessWidget {
       ],
       theme: CupertinoThemeData(
           textTheme: CupertinoTextThemeData(
+            
               actionTextStyle: GoogleFonts.montserrat(),
               textStyle: GoogleFonts.montserrat(),
               navLargeTitleTextStyle: const CupertinoTextThemeData()
@@ -75,7 +79,8 @@ class App extends StatelessWidget {
                   .navTitleTextStyle
                   .copyWith(
                       fontFamily: GoogleFonts.montserrat().fontFamily,
-                      fontSize: 16)),
+                      fontSize: 16)
+                      ),
           barBackgroundColor:
               Colors.grey.shade900.withOpacity(appSettings.blurOverlayOpacity)),
       home: const AuthScreen(),

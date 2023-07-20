@@ -35,7 +35,7 @@ class BlurImageBackground extends StatelessWidget {
         Container(
           height: size.height,
           width: size.width,
-          color: Colors.black.withOpacity(0.5),
+          color: Colors.black.withOpacity(0.7),
         ),
       ],
     );

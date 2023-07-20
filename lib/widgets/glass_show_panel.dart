@@ -64,8 +64,8 @@ class GlassShowPanel extends StatelessWidget {
                 Hero(
                   tag: id + tag,
                   child: Container(
-                    height: size.height * 0.2,
-                    width: size.width * 0.3,
+                    height: 220,
+                    width: 150,
                     clipBehavior: Clip.hardEdge,
                     decoration: BoxDecoration(
                       boxShadow: [

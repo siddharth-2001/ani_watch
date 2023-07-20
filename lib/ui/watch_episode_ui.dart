@@ -1,16 +1,16 @@
 // ignore_for_file: sized_box_for_whitespace
-
 import 'dart:async';
 import 'dart:math';
 import 'package:ani_watch/widgets/blur_image.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:chewie/chewie.dart';
-import 'package:video_player/video_player.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
 //local imports
 import '../widgets/glass_widget.dart';
@@ -33,9 +33,7 @@ class WatchEpisodeUi extends StatefulWidget {
 }
 
 class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
-  late Chewie playerWidget;
-  late ChewieController _chewieController;
-  late VideoPlayerController _videoPlayerController;
+  
   late List<Episode> _episodeList;
   late Anime anime;
   late Timer timer;
@@ -48,41 +46,12 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
   Map<String, String> _allQualities = {};
   String currQuality = "default";
 
-  //initialize video player controller
-  Future<void> video() async {
-    await _videoPlayerController.initialize();
-    _chewieController = ChewieController(
-      allowFullScreen: true,
-      fullScreenByDefault: true,
-      showControls: true,
-      zoomAndPan: true,
-      customControls: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        child: Material(
-          type: MaterialType.transparency,
-          child: CupertinoTheme(
-            data: const CupertinoThemeData(
-              brightness: Brightness.dark,
-            ),
-            child: CupertinoControls(
-                backgroundColor: Colors.black.withOpacity(0.15),
-                iconColor: Colors.white,
-                showPlayButton: true),
-          ),
-        ),
-      ),
-      videoPlayerController: _videoPlayerController,
-      allowMuting: true,
-      allowPlaybackSpeedChanging: true,
-      maxScale: 2,
-      showControlsOnInitialize: true,
-      looping: false,
-    );
+  //new video player args
+  late final player = Player();
 
-    playerWidget = Chewie(
-      controller: _chewieController,
-    );
-  }
+  late final newController = VideoController(player);
+
+  //initialize video player controller
 
   Future<void> initialize() async {
     final animeId = widget.animeId;
@@ -99,19 +68,19 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     currIndex = widget.index;
 
     if (totalEpisodes != 0) {
+
       await _episodeList[currIndex].getLink();
+
       _allQualities = _episodeList[currIndex].details["link"];
+        
+        await player.open(Media(_allQualities[currQuality]!), play: false);
+        await newController.waitUntilFirstFrameRendered;
+        await player.seek(_episodeList[currIndex].details["lastSeekPosition"]);
 
-      _videoPlayerController =
-          VideoPlayerController.network(_allQualities[currQuality]!);
-
-      await video();
-      await _episodeList[currIndex]
-          .setEpisodeLength(_videoPlayerController.value.duration);
-
-      await _videoPlayerController
-          .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
+        _episodeList[currIndex].setEpisodeLength(player.state.duration);
+      
       saveSeekPosition();
+
     }
 
     return;
@@ -120,36 +89,33 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
   @override
   void initState() {
     super.initState();
-
+    
     _future = initialize();
+    
   }
+
 
   Future<void> selectEpisode(int index) async {
     try {
-      final temp = await _videoPlayerController.position;
-      _episodeList[currIndex].setLastSeekPosition(temp!);
-
       timer.cancel();
+      await player.pause();
+
+      _episodeList[currIndex].setLastSeekPosition(player.state.position);
+
+      await player.stop();
 
       setState(() {
         currIndex = index;
       });
 
-      _videoPlayerController.dispose();
-
       await _episodeList[currIndex].getLink();
       _allQualities = _episodeList[currIndex].details["link"];
 
-      _videoPlayerController =
-          VideoPlayerController.network(_allQualities[currQuality]!);
+      await player.open(Media(_allQualities[currQuality]!), play: false,);
+      await player.stream.buffer.first;
+      await player.seek(_episodeList[currIndex].details["lastSeekPosition"]);
 
-      await video();
-
-      _episodeList[currIndex]
-          .setEpisodeLength(_videoPlayerController.value.duration);
-
-      await _videoPlayerController
-          .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
+      _episodeList[currIndex].setEpisodeLength(player.state.duration);
 
       saveSeekPosition();
     } catch (error) {
@@ -170,8 +136,8 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
   //A timer that saves the seek position every specified duration
   void saveSeekPosition() {
     timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      _videoPlayerController.position
-          .then((value) => _episodeList[currIndex].setLastSeekPosition(value!));
+
+     _episodeList[currIndex].setLastSeekPosition(player.state.position);
     });
   }
 
@@ -184,15 +150,13 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
         currQuality = value;
       });
 
-      _videoPlayerController.dispose();
 
-      _videoPlayerController =
-          VideoPlayerController.network(_allQualities[currQuality]!);
 
-      await video();
+      await player.open(Media(_allQualities[currQuality]!));
+      await player.stream.buffer.first;
+      await player.seek(_episodeList[currIndex].details["lastSeekPosition"]);
 
-      await _videoPlayerController
-          .seekTo(_episodeList[currIndex].details["lastSeekPosition"]);
+      
 
       saveSeekPosition();
 
@@ -239,8 +203,7 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
     super.dispose();
     try {
       timer.cancel();
-      _videoPlayerController.dispose();
-      _chewieController.dispose();
+      player.dispose();
     } catch (error) {
       //means the controllers were not initialized due to no episodes being available
     }
@@ -252,326 +215,365 @@ class _WatchEpisodeUiState extends State<WatchEpisodeUi> {
 
     final devicePadding = MediaQuery.of(context).viewPadding;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    return Stack(
-      children: [
-        Hero(
-          tag: widget.animeId + widget.tag,
-          child: BlurImageBackground(
-            image: anime.details["image"],
-            isAsset: false,
-          ),
-        ),
-        totalEpisodes == 0
-            ? const Center(
-                child: Text(
-                "Episodes will be added soon",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-              ))
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: devicePadding.top,
-                  ),
-                  FutureBuilder(
-                    future: _future,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                            height: 250,
-                            width: size.width,
-                            child: const CupertinoActivityIndicator(
-                              color: Colors.white,
-                            ));
-                      } else {
-                        if (snapshot.hasError) {
-                          return Container(
-                              height: 250,
-                              width: size.width,
-                              child: const Text(
-                                "Some Error Occurred while loading video",
-                                style: TextStyle(color: Colors.white),
-                              ));
-                        }
 
-                        return Container(
-                            height: 250,
-                            width: size.width,
-                            child: playerWidget);
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          anime.details["name"],
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 11),
-                        ),
-                        Text(
-                          "EP ${currIndex + 1}:  ${_episodeList[currIndex].details["title"]!}",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 11),
-                        ),
-                      ],
+    final theme = Theme.of(context);
+
+    final videoHeight = size.height < size.width ? size.height * 0.6 : size.height * 0.4;
+    return LayoutBuilder(
+      builder: (ctx, constraints) => 
+      Stack(
+        children: [
+          Hero(
+            tag: widget.animeId + widget.tag,
+            child: BlurImageBackground(
+              image: anime.details["image"],
+              isAsset: false,
+            ),
+          ),
+          totalEpisodes == 0
+              ? const Center(
+                  child: Text(
+                  "Episodes will be added soon",
+                  style:
+                      TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+                ))
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: devicePadding.top,
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CupertinoButton(
-                            padding: EdgeInsets.zero,
-                            child: GlassWidget(
-                              height: 30,
-                              width: 80,
-                              color: Colors.blueGrey,
-                              child: Center(
-                                child: Text(
-                                  "${(currPage - 1) * 50 + 1} - ${min(currPage * 50, totalEpisodes)}",
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 12),
-                                ),
-                              ),
-                            ),
-                            onPressed: () {
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) {
-                                  return GlassContainer(
-                                    height: 250,
-                                    width: size.width,
-                                    color: Colors.blueGrey.withOpacity(0.2),
-                                    blur: 10,
-                                    borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(42)),
-                                    child: CupertinoPicker(
-                                        itemExtent: 50,
-                                        magnification: 1.22,
-                                        scrollController:
-                                            FixedExtentScrollController(
-                                                initialItem: currPage - 1),
-                                        squeeze: 1.2,
-                                        useMagnifier: true,
-                                        onSelectedItemChanged: (value) {
-                                          setState(() {
-                                            currPage = int.tryParse(
-                                                    value.toString())! +
-                                                1;
-                                          });
-                                        },
-                                        children: dropDownPages()),
-                                  );
-                                },
-                              );
-                            }),
-                        CupertinoButton(
+                    FutureBuilder(
+                      future: _future,
+                      builder: (context, snapshot) {
+    
+                        if(snapshot.connectionState == ConnectionState.waiting){
+                          return Flexible(
+                            flex: 4,
                             child: Container(
-                              height: 30,
-                              width: 80,
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(42))),
-                              child: Center(
-                                child: Text(
-                                  currQuality,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w800),
-                                ),
-                              ),
+                              child: const Center(child: CupertinoActivityIndicator(color: Colors.white)),
                             ),
-                            onPressed: () {
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) {
-                                  return GlassContainer(
-                                    height: 250,
-                                    width: size.width,
-                                    color: Colors.blueGrey.withOpacity(0.2),
-                                    blur: 10,
-                                    borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(42)),
-                                    child: CupertinoPicker(
-                                        itemExtent: 50,
-                                        magnification: 1.22,
-                                        squeeze: 1.2,
-                                        scrollController:
-                                            FixedExtentScrollController(
-                                                initialItem: _allQualities.keys
-                                                    .toList()
-                                                    .indexOf(currQuality)),
-                                        useMagnifier: true,
-                                        onSelectedItemChanged: (value) {
-                                          _future = changeQuality(_allQualities
-                                              .keys
-                                              .elementAt(value));
-                                        },
-                                        children: episodeQualities()),
-                                  );
-                                },
-                              );
-                            }),
-                        CupertinoButton(
-                          onPressed: () {},
-                          padding: EdgeInsets.zero,
-                          child: const Icon(
-                            CupertinoIcons.arrow_down_circle,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
+                          );
+                        }
+                       
+                       
+                          if (snapshot.hasError) {
+                            return Flexible(
+                              flex: 4,
+                              child: Container(
+                                  height: videoHeight,
+                                  width: size.width,
+                                  child: Text(
+                                    snapshot.error.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  )),
+                            );
+                          }
+    
+                          return Flexible(
+                            flex: 5,
+                            child: Container(
+                             
+                                child: Video(controller: newController, controls: AdaptiveVideoControls, fit: BoxFit.cover,)),
+                          );
+                        
+                      },
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Flexible(
-                      child: ListView.builder(
-                    addAutomaticKeepAlives: true,
-                    physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.only(top: 0, bottom: bottomPadding),
-                    itemCount: min(
-                        50,
-                        min(totalEpisodes - (currPage - 1) * 50,
-                            totalEpisodes)),
-                    itemBuilder: (context, index) {
-                      index += (currPage - 1) * 50;
-                      final episode = _episodeList[index].details;
-                      return ZoomTapAnimation(
-                        enableLongTapRepeatEvent: false,
-                        longTapRepeatDuration:
-                            const Duration(milliseconds: 100),
-                        begin: 1.0,
-                        end: 0.93,
-                        beginDuration: const Duration(milliseconds: 20),
-                        endDuration: const Duration(milliseconds: 120),
-                        beginCurve: Curves.decelerate,
-                        endCurve: Curves.fastOutSlowIn,
-                        child: GestureDetector(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 15, horizontal: size.width * 0.05),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        Container(
-                                          height: 90,
-                                          width: 160,
-                                          clipBehavior: Clip.hardEdge,
-                                          decoration: ShapeDecoration(
-                                              shadows: const [
-                                                BoxShadow(
-                                                  offset: Offset(14, 18),
-                                                  spreadRadius: -20,
-                                                  blurRadius: 38,
-                                                  color: Color.fromRGBO(
-                                                      0, 0, 0, 1),
-                                                )
-                                              ],
-                                              shape: SmoothRectangleBorder(
-                                                  borderRadius:
-                                                      SmoothBorderRadius(
-                                                          cornerRadius: 16,
-                                                          cornerSmoothing: 1))),
-                                          child: Image.network(
-                                            episode["image"]!,
-                                            fit: BoxFit.cover,
-                                            loadingBuilder: (context, child,
-                                                loadingProgress) {
-                                              if (loadingProgress == null) {
-                                                return child;
-                                              }
-                                              return const Center(
-                                                child:
-                                                    CupertinoActivityIndicator(
-                                                  color: Colors.white,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 0,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color:
-                                                    Colors.greenAccent.shade400,
-                                                borderRadius:
-                                                    BorderRadius.circular(24)),
-                                            width: episode["length"] ==
-                                                    Duration.zero
-                                                ? 0
-                                                : episode["lastSeekPosition"]
-                                                        .inSeconds /
-                                                    episode["length"]
-                                                        .inSeconds *
-                                                    170,
-                                            height: 4,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Flexible(
+
+                           Container(
+                            
+                               padding: EdgeInsets.symmetric(horizontal: size.width * 0.05, vertical: 10),
+                               child: Column(
+                                
+                               
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                             
+                                                    
+                                                       children: [
+                                                        
+                                  AutoSizeText(
+                                      anime.details["name"],
+                                      minFontSize: 10,
+                                      maxFontSize: 40,
+                                      maxLines: 1,
+                                      style:theme.textTheme.headlineSmall!.copyWith(color: Colors.white)
+                                                                 ),
+                                  
+                                
+                                                         
+                                                     
+                                                     AutoSizeText(
+                                    
+                                    "EP ${currIndex + 1}:  ${_episodeList[currIndex].details["title"]!}",
+                                    minFontSize: 13,
+                                    maxFontSize: 26,
+                                    maxLines: 1,
+                                    style:theme.textTheme.headlineSmall!.copyWith(color: Colors.white),
+                                  ),
+                                
+                                                       
+                                                      
+                                                 
+                                                       ],
+                                                     ),
+                             ),
+                    
+                      Container(
+                    
+                        padding: EdgeInsets.symmetric(horizontal: size.width*0.05),
+                        child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          CupertinoButton(
+                                    padding: EdgeInsets.zero,
+                                    child: GlassWidget(
+                                      height: 40,
+                                      width: 90,
+                                      color: Colors.blueGrey,
+                                      child: Center(
                                         child: Text(
-                                      "${index + 1}.  ${episode["title"]!}",
-                                      style: const TextStyle(
+                                          "${(currPage - 1) * 50 + 1} - ${min(currPage * 50, totalEpisodes)}",
+                                          style: const TextStyle(
+                                              color: Colors.white, fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (context) {
+                                          return GlassContainer(
+                                            height: 250,
+                                            width: size.width,
+                                            color: Colors.blueGrey.withOpacity(0.2),
+                                            blur: 10,
+                                            borderRadius: const BorderRadius.vertical(
+                                                top: Radius.circular(42)),
+                                            child: CupertinoPicker(
+                                                itemExtent: 50,
+                                                magnification: 1.22,
+                                                scrollController:
+                                                    FixedExtentScrollController(
+                                                        initialItem: currPage - 1),
+                                                squeeze: 1.2,
+                                                useMagnifier: true,
+                                                onSelectedItemChanged: (value) {
+                                                  setState(() {
+                                                    currPage = int.tryParse(
+                                                            value.toString())! +
+                                                        1;
+                                                  });
+                                                },
+                                                children: dropDownPages()),
+                                          );
+                                        },
+                                      );
+                                    }),
+                                                          CupertinoButton(
+                                    child: Container(
+                                      height: 40,
+                                      width: 90,
+                                      decoration: const BoxDecoration(
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 10),
-                                      overflow: TextOverflow.clip,
-                                    )),
+                                          borderRadius:
+                                              BorderRadius.all(Radius.circular(42))),
+                                      child: Center(
+                                        child: Text(
+                                          currQuality,
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (context) {
+                                          return GlassContainer(
+                                            height: 250,
+                                            width: size.width,
+                                            color: Colors.blueGrey.withOpacity(0.2),
+                                            blur: 10,
+                                            borderRadius: const BorderRadius.vertical(
+                                                top: Radius.circular(42)),
+                                            child: CupertinoPicker(
+                                                itemExtent: 50,
+                                                magnification: 1.22,
+                                                squeeze: 1.2,
+                                                scrollController:
+                                                    FixedExtentScrollController(
+                                                        initialItem: _allQualities.keys
+                                                            .toList()
+                                                            .indexOf(currQuality)),
+                                                useMagnifier: true,
+                                                onSelectedItemChanged: (value) {
+                                                  _future = changeQuality(_allQualities
+                                                      .keys
+                                                      .elementAt(value));
+                                                },
+                                                children: episodeQualities()),
+                                          );
+                                        },
+                                      );
+                                    }),
+                                                         
+                                                        ],
+                                                      ),
+                      ),
+                    
+                    
+    
+                    
+                  
+    
+                    Flexible(
+                      flex: 6,
+                        child:  GridView.builder(
+                      addAutomaticKeepAlives: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: findAxisExtent(constraints, 500), mainAxisExtent: 180),
+                      
+                      physics: const BouncingScrollPhysics(),
+                      padding: EdgeInsets.only(top: 0, bottom: bottomPadding),
+                      itemCount: min(
+                          50,
+                          min(totalEpisodes - (currPage - 1) * 50,
+                              totalEpisodes)),
+                      itemBuilder: (context, index) {
+                        index += (currPage - 1) * 50;
+                        final episode = _episodeList[index].details;
+                        return  ZoomTapAnimation(
+                            enableLongTapRepeatEvent: false,
+                            longTapRepeatDuration:
+                                const Duration(milliseconds: 100),
+                            begin: 1.0,
+                            end: 0.93,
+                            beginDuration: const Duration(milliseconds: 20),
+                            endDuration: const Duration(milliseconds: 120),
+                            beginCurve: Curves.decelerate,
+                            endCurve: Curves.fastOutSlowIn,
+                            child: GestureDetector(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: size.width * 0.05),
+                                child: Column(
+                                  children: [
+                                     Row(
+                                        children: [
+                                           SizedBox(
+                                            height: 90,
+                                            width: 160,
+                                             child: Stack(
+                                                children: [
+                                                  Container(
+                                                    height: 90,
+                                                    width: 160,
+                                                    clipBehavior: Clip.hardEdge,
+                                                    decoration: ShapeDecoration(
+                                                        shadows: const [
+                                                          BoxShadow(
+                                                            offset: Offset(14, 18),
+                                                            spreadRadius: -20,
+                                                            blurRadius: 38,
+                                                            color: Color.fromRGBO(
+                                                                0, 0, 0, 1),
+                                                          )
+                                                        ],
+                                                        shape: SmoothRectangleBorder(
+                                                            borderRadius:
+                                                                SmoothBorderRadius(
+                                                                    cornerRadius: 16,
+                                                                    cornerSmoothing: 1))),
+                                                    child: Image.network(
+                                                      episode["image"]!,
+                                                      fit: BoxFit.cover,
+                                                      loadingBuilder: (context, child,
+                                                          loadingProgress) {
+                                                        if (loadingProgress == null) {
+                                                          return child;
+                                                        }
+                                                        return const Center(
+                                                          child:
+                                                              CupertinoActivityIndicator(
+                                                            color: Colors.white,
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    bottom: 0,
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Colors.greenAccent.shade400,
+                                                          borderRadius:
+                                                              BorderRadius.circular(24)),
+                                                      width: episode["length"] ==
+                                                              Duration.zero
+                                                          ? 0
+                                                          : episode["lastSeekPosition"]
+                                                                  .inSeconds /
+                                                              episode["length"]
+                                                                  .inSeconds *
+                                                              170,
+                                                      height: 4,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                           ),
+                                          
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          Flexible(
+                                              child: Text(
+                                            "${index + 1}.  ${episode["title"]!}",
+                                            style: theme.textTheme.bodyLarge!.copyWith(color: Colors.white),
+                                            overflow: TextOverflow.clip,
+                                          )),
+                                        ],
+                                      ),
+                                  
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    AutoSizeText(
+                                      episode["description"]!,
+                                      maxFontSize: 20,
+                                      minFontSize: 11,
+
+                                      style: TextStyle(color: Colors.white),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  episode["description"]!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                  ),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              ],
+                              ),
+                              onTap: () {
+                                _future = selectEpisode(index);
+                                Provider.of<AnimeService>(context, listen: false)
+                                    .addToCurrWatchList(anime.details["id"], index);
+                              },
                             ),
-                          ),
-                          onTap: () {
-                            _future = selectEpisode(index);
-                            Provider.of<AnimeService>(context, listen: false)
-                                .addToCurrWatchList(anime.details["id"], index);
-                          },
-                        ),
-                      );
-                    },
-                  )),
-                ],
-              ),
-      ],
+                          
+                        );
+                      },
+                    )),
+                  ],
+                ),
+        ],
+      ),
     );
   }
+
+  int findAxisExtent(constraints, double minItemWidth){
+    final screenWidth = constraints.maxWidth;
+    final crossAxisCount = (screenWidth / minItemWidth).floor();
+    return crossAxisCount > 1 ? crossAxisCount : 1;
+  }
 }
+
