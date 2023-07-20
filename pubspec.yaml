@@ -39,8 +39,6 @@ dependencies:
   google_fonts: ^4.0.3
   http: ^0.13.5
   provider: ^6.0.5
-  chewie: ^1.4.0
-  video_player: ^2.6.0
   hexcolor: ^3.0.1
   intl: ^0.18.0
   zoom_tap_animation: ^1.1.0
@@ -53,6 +51,16 @@ dependencies:
   mutex: ^3.0.1
   shared_preferences: ^2.1.0
   figma_squircle: ^0.5.3
+  media_kit: ^1.0.2
+  media_kit_video: ^1.0.2                        # For video rendering.
+  
+  media_kit_native_event_loop: ^1.0.6            # Support for higher number of concurrent instances & better performance.
+  
+  media_kit_libs_android_video: ^1.1.1           # Android package for video native libraries.
+  media_kit_libs_ios_video: ^1.0.4               # iOS package for video native libraries.
+  media_kit_libs_macos_video: ^1.0.5             # macOS package for video native libraries.
+  media_kit_libs_windows_video: ^1.0.2 
+  auto_size_text: ^3.0.0
 
 flutter_icons:
   android: "launcher_icon"

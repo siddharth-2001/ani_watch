@@ -52,9 +52,7 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
             );
           }
 
-          return SizedBox(
-            height: size.height * 0.2,
-            child: ListView.builder(
+          return ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -68,7 +66,7 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
                   episodes: list[index].details["episodes"],
                 );
               },
-            ),
+            
           );
         }
       },

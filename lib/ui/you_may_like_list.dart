@@ -32,7 +32,6 @@ class _YouMayLikeListState extends State<YouMayLikeList> {
   Widget build(BuildContext context) {
     list = Provider.of<AnimeService>(context).recommendedList;
 
-    final size = MediaQuery.of(context).size;
 
     return FutureBuilder(
       future: _future,
@@ -52,9 +51,7 @@ class _YouMayLikeListState extends State<YouMayLikeList> {
             );
           }
 
-          return SizedBox(
-            height: size.height * 0.22,
-            child: ListView.builder(
+          return  ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -70,7 +67,7 @@ class _YouMayLikeListState extends State<YouMayLikeList> {
                   ),
                 );
               },
-            ),
+            
           );
         }
       },

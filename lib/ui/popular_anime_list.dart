@@ -30,7 +30,7 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
   @override
   Widget build(BuildContext context) {
     list = Provider.of<PopularAnime>(context, listen: true).popularList;
-    final size = MediaQuery.of(context).size;
+
 
     return FutureBuilder(
       future: _future,
@@ -49,9 +49,7 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
             );
           }
 
-          return SizedBox(
-            height: size.height * 0.22,
-            child: ListView.builder(
+          return  ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -67,7 +65,7 @@ class _PopularAnimeListState extends State<PopularAnimeList> {
                   ),
                 );
               },
-            ),
+            
           );
         }
       },
