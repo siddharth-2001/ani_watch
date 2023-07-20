@@ -1,5 +1,7 @@
+import 'package:ani_watch/provider/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 //local imports
 import '../ui/favourite_anime_list.dart';
@@ -19,16 +21,19 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
   @override
   Widget build(BuildContext context) {
     final padding = MediaQuery.of(context).padding;
-    return CupertinoPageScaffold(
+    final appSettigns = Provider.of<AppSettings>(context);
+    final theme = Theme.of(context);
+    return Scaffold(
       backgroundColor: CupertinoColors.black,
       resizeToAvoidBottomInset: false,
-      child: CustomScrollView(
+      body: CustomScrollView(
         slivers: [
-          const CupertinoSliverNavigationBar(
+           CupertinoSliverNavigationBar(
             brightness: Brightness.dark,
+            backgroundColor: Colors.grey.shade900.withOpacity(appSettigns.blurOverlayOpacity),
             largeTitle: Text(
               "Favourites",
-              style: TextStyle(color: Colors.white),
+              style: theme.textTheme.headlineSmall!.copyWith(color: Colors.white),
             ),
           ),
           CupertinoSliverRefreshControl(

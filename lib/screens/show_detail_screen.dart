@@ -30,10 +30,10 @@ class ShowDetailScreen extends StatelessWidget {
       
       },
       reverseDuration: appSettings.reverseDuration,
-      child: CupertinoPageScaffold(
+      child: Scaffold(
           backgroundColor: Colors.black,
           resizeToAvoidBottomInset: false,
-          child: SingleChildScrollView(
+          body: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: ShowDetailUi(
               id: id,

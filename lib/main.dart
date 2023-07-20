@@ -59,30 +59,8 @@ class App extends StatelessWidget {
     const transitionType = PageTransitionType.fade;
     final appSettings = Provider.of<AppSettings>(context);
 
-    return CupertinoApp(
-      localizationsDelegates: const [
-        DefaultMaterialLocalizations.delegate,
-        DefaultCupertinoLocalizations.delegate,
-        DefaultWidgetsLocalizations.delegate,
-      ],
-      theme: CupertinoThemeData(
-          textTheme: CupertinoTextThemeData(
-            
-              actionTextStyle: GoogleFonts.montserrat(),
-              textStyle: GoogleFonts.montserrat(),
-              navLargeTitleTextStyle: const CupertinoTextThemeData()
-                  .navLargeTitleTextStyle
-                  .copyWith(
-                      fontFamily: GoogleFonts.montserrat().fontFamily,
-                      fontSize: 24),
-              navTitleTextStyle: const CupertinoTextThemeData()
-                  .navTitleTextStyle
-                  .copyWith(
-                      fontFamily: GoogleFonts.montserrat().fontFamily,
-                      fontSize: 16)
-                      ),
-          barBackgroundColor:
-              Colors.grey.shade900.withOpacity(appSettings.blurOverlayOpacity)),
+    return MaterialApp(
+      theme: ThemeData(textTheme: GoogleFonts.montserratTextTheme()),
       home: const AuthScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {

@@ -27,9 +27,14 @@ class GlassShowPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final aspectRatio = 11 / 18;
     final appSettings = Provider.of<AppSettings>(context, listen: false);
+    final width =
+        size.width > size.height ? size.width * 0.1 : size.width * 0.3;
+    final height =
+        size.width > size.height ? size.height * 0.3 : size.height * 0.2;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding:  EdgeInsets.symmetric(horizontal: 4),
       child: ZoomTapAnimation(
         enableLongTapRepeatEvent: false,
         longTapRepeatDuration: const Duration(milliseconds: 100),
@@ -47,91 +52,82 @@ class GlassShowPanel extends StatelessWidget {
                     appSettings.reverseTransitionDuration,
                 ShowDetailScreen(id: id, image: image, tag: tag));
           },
-          child: Container(
-            height: 180,
-            width: 110,
-            clipBehavior: Clip.hardEdge,
-            decoration: ShapeDecoration(
-        shape: SmoothRectangleBorder(
-            borderRadius: SmoothBorderRadius(
-              cornerRadius: 16,
-              cornerSmoothing: 1,
-            ),
-        ),
-    ),
-            child: Stack(
-              children: [
-                Hero(
-                  tag: id + tag,
-                  child: Container(
-                    height: 220,
-                    width: 150,
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          offset: const Offset(14, 18),
-                          spreadRadius: -20,
-                          blurRadius: 38,
-                          color: Colors.black.withOpacity(0.5),
-                        )
-                      ],
-                      borderRadius: SmoothBorderRadius(
-              cornerRadius: 16,
-              cornerSmoothing: 1,
-            ),
-                    ),
-                    child: Image.network(
-                      image,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(
-                          child: CupertinoActivityIndicator(
-                            color: Colors.white,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+          child: AspectRatio(
+            aspectRatio: aspectRatio,
+            child: Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    offset: const Offset(14, 18),
+                    spreadRadius: -20,
+                    blurRadius: 38,
+                    color: Colors.black.withOpacity(0.5),
+                  )
+                ],
+                borderRadius: SmoothBorderRadius(
+                  cornerRadius: 16,
+                  cornerSmoothing: 1,
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        tileMode: TileMode.decal,
-                        sigmaX: 10,
-                        sigmaY: 10,
+              ),
+              child: LayoutBuilder(
+                builder: (p0, p1) => 
+                Stack(
+                  children: [
+                    Hero(
+                      tag: id + tag,
+                      child: AspectRatio(
+                        aspectRatio: aspectRatio,
+                        child: Image.network(
+                          image,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: CupertinoActivityIndicator(
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                      child: Container(
-                        color: Colors.black.withOpacity(0.2),
-                        height: 32,
-                        width: size.width * 0.3,
-                        child: Center(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 4, horizontal: 14),
-                            child: SizedBox(
-                              width: 110,
-                              child: Text(
-                                name,
-                                // textAlign: TextAlign.start,
-                                style: const TextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      child: ClipRect(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            tileMode: TileMode.decal,
+                            sigmaX: 10,
+                            sigmaY: 10,
+                          ),
+                          child: Container(
+                            height: 32,
+                            color: Colors.black.withOpacity(0.4),
+                            width: p1.maxWidth,
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 14),
+                                child: Text(
+                                  name,
+                                  // textAlign: TextAlign.start,
+                                  style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

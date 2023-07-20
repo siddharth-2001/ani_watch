@@ -30,7 +30,6 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
   @override
   Widget build(BuildContext context) {
     list = Provider.of<TrendingAnime>(context).trendingList;
-    final size = MediaQuery.of(context).size;
 
     return FutureBuilder(
       future: _future,
@@ -58,12 +57,14 @@ class _TrendingAnimeListState extends State<TrendingAnimeList> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               physics: const BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return GlassShowPanel(
-                  tag: "trending",
-                  id: list[index].details["id"],
-                  name: list[index].details["name"],
-                  image: list[index].details["image"],
-                  episodes: list[index].details["episodes"],
+                return Center(
+                  child: GlassShowPanel(
+                    tag: "trending",
+                    id: list[index].details["id"],
+                    name: list[index].details["name"],
+                    image: list[index].details["image"],
+                    episodes: list[index].details["episodes"],
+                  ),
                 );
               },
             

@@ -1,3 +1,4 @@
+import 'package:ani_watch/provider/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,15 +17,18 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+    final appSettigns = Provider.of<AppSettings>(context);
+    final theme = Theme.of(context);
 
     final padding = MediaQuery.of(context).padding;
-    return CupertinoPageScaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text("Settings", style: TextStyle(color: Colors.white),),
+      appBar:  CupertinoNavigationBar(
+        backgroundColor: Colors.grey.shade900.withOpacity(appSettigns.blurOverlayOpacity),
+        middle: Text("Settings", style: theme.textTheme.headlineSmall!.copyWith(color: Colors.white),),
       ),
-      child: Container(
+      body: Container(
         height: screen.height,
         width: screen.width,
         padding: EdgeInsets.only(top: padding.top),

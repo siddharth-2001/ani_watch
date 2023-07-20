@@ -31,11 +31,11 @@ class WatchEpisodeScreen extends StatelessWidget {
        
       },
       reverseDuration: const Duration(milliseconds: 500),
-      child: CupertinoPageScaffold(
+      child: Scaffold(
          
           backgroundColor: Colors.black,
           resizeToAvoidBottomInset: false,
-          child: 
+          body: 
            SingleChildScrollView(
                 child: SizedBox(
                     height: size.height,

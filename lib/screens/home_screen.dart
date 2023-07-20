@@ -28,20 +28,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final screen = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     const fontColor = Colors.white;
-    final listHeight = 250.0;
-    final wideListHeight = screen.height * 0.4;
+    final listHeight = screen.width > screen.height ? screen.height * 0.3 : screen.height * 0.2;
+    final wideListHeight =  screen.width > screen.height ? screen.height * 0.4 : screen.height * 0.3;
     final appSettigns = Provider.of<AppSettings>(context);
+    final theme = Theme.of(context);
 
-    return CupertinoPageScaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
-      child: CustomScrollView(
+      body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          const CupertinoSliverNavigationBar(
+          CupertinoSliverNavigationBar(
+            backgroundColor: Colors.grey.shade900.withOpacity(appSettigns.blurOverlayOpacity),
             largeTitle: Text(
               "Watch Now",
-              style: TextStyle(color: Colors.white),
+              style: theme.textTheme.headlineSmall!.copyWith(color: Colors.white) ,
             ),
           ),
           CupertinoSliverRefreshControl(
